@@ -1,0 +1,720 @@
+<style>
+  .fade-scale {
+  transform: scale(0);
+  opacity: 0;
+  -webkit-transition: all .25s linear;
+  -o-transition: all .25s linear;
+  transition: all .25s linear;
+}
+
+.fade-scale.in {
+  opacity: 1;
+  transform: scale(1);
+}
+.dot {
+  height: 5px;
+  width: 5px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+</style>
+
+
+<!-- ============================================================== -->
+<!-- toggle and nav items -->
+<!-- ============================================================== -->
+<ul class="navbar-nav float-left mr-auto">
+    <li class="nav-item d-none d-md-block">
+        <a (click)="toggleSidebar.emit()" class="nav-link sidebartoggler waves-effect waves-light"
+            href="javascript:void(0)" data-sidebartype="mini-sidebar">
+            <i class="sl-icon-menu font-20"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <span class="nav-link waves-effect waves-light" style="font-weight: 600;">{{pageInfo?.title}}</span>
+    </li>
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Messages -->
+    <!-- ============================================================== -->
+    <!-- <li class="nav-item" ngbDropdown>
+        <a ngbDropdownToggle class="nav-link waves-effect waves-dark" href="javascript:void(0)" id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="font-20 ti-email"></i>
+
+        </a>
+        <div class="mailbox" aria-labelledby="2" ngbDropdownMenu>
+            <span class="with-arrow">
+                <span class="bg-danger"></span>
+            </span>
+            <ul class="list-style-none">
+                <li>
+                    <div class="drop-title bg-danger text-white">
+                        <h4 class="m-b-0 m-t-5">5 New</h4>
+                        <span class="font-light">Messages</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="message-center message-body" [perfectScrollbar]="config">
+                        Message
+                        <a href="javascript:void(0)" class="message-item" *ngFor="let mymessage of mymessages">
+                            <span class="user-img">
+                                <img src="{{mymessage.useravatar}}" alt="user" class="rounded-circle">
+                                <span class="profile-status {{mymessage.status}} pull-right"></span>
+                            </span>
+                            <span class="mail-contnet">
+                                <h5 class="message-title">{{mymessage.from}}</h5>
+                                <span class="mail-desc">{{mymessage.subject}}</span>
+                                <span class="time">{{mymessage.time}}</span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a class="nav-link text-center link" href="javascript:void(0);">
+                        <b>See all e-Mails</b>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li> -->
+    <!-- ============================================================== -->
+    <!-- End Messages -->
+    <!-- ============================================================== -->
+
+
+</ul>
+<!-- ============================================================== -->
+<!-- Right side toggle and nav items -->
+<!-- ============================================================== -->
+<ul class="navbar-nav float-right">
+    <!-- ============================================================== -->
+
+    <li class="nav-item" ngbDropdown>
+        <div class="nav-link waves-effect waves-dark">
+            <button class="btn btn-outline-default" id="dropdownBasic1" ngbDropdownToggle
+                style="border-radius: 5px;height: 34px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+                <i class="mdi mdi-plus-box-outline"></i> <b> New </b><i class=" fas fa-angle-down"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <a class="dropdown-item" routerLink="/tickets/new">New Ticket</a>
+                <a class="dropdown-item" routerLink="/tickets/compose-email">New Email</a>
+                <a class="dropdown-item" *ngIf="viewcontact" style="cursor: pointer;" (click)="contactmodal(contactcontent)">New Contact</a>
+                <a class="dropdown-item" *ngIf="viewcompany" style="cursor: pointer;" (click)="companymodal(companycontent)" >New Company</a>
+
+            </div>
+        </div>
+    </li>
+
+
+    <!-- Search -->
+    <!-- ============================================================== -->
+    <li class="nav-item search-box">
+        <a (click)="showSearch = !showSearch" class="nav-link waves-effect waves-dark" href="javascript:void(0)">
+            <i class="ti-search" style="color: black;"></i>
+        </a>
+        <form style="width: 40% !important;left: 48% !important;" class="app-search position-absolute" [ngClass]="{'show-search': showSearch}">
+            <input type="text" class="form-control" (keyup)='updateFilter($event)' placeholder="Search Tickets, Contacts">
+            <a class="srh-btn" (click)="showSearch = !showSearch">
+                <i class="ti-close font-16"></i>
+            </a>
+              <div class="card" style="margin-bottom: 0px !important;">
+                <div class="card-body">
+                  <ngb-tabset type="pills">
+                    <ngb-tab title=" All ">
+                      <ng-template ngbTabContent>
+                        <hr>
+                        <h5 *ngIf="ticketssearched.length > 0">Tickets</h5>
+                          <div class="row" *ngFor="let t of ticketssearched">
+                            <a class="dropdown-item" [routerLink]="['/detail-ticket']" [queryParams]="{ id: t.tguid }" style="overflow: hidden;">
+                              <span style="background-color: #e0f5f0;border: 1px solid #b4e5d9;min-width: 24px;
+                              height: 24px;
+                              display: inline-flex;
+                              justify-content: center;
+                              align-items: center;
+                              border-radius: 50%;
+                              margin-right: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" style="fill: #007958;width: 15px;height: 15px;vertical-align: middle;"><path d="M.267 12.874V10.23a3.824 3.824 0 013.818-3.831h23.831a3.825 3.825 0 013.818 3.831v2.644l-1.018.563c-1.076.595-1.736 1.665-1.736 2.83s.66 2.235 1.736 2.83l1.018.563v2.644a3.824 3.824 0 01-3.818 3.831H4.085a3.825 3.825 0 01-3.818-3.831V19.66l1.018-.563c1.076-.595 1.736-1.665 1.736-2.83s-.66-2.235-1.736-2.83l-1.018-.563zm4.72 3.393c0 1.948-1.107 3.648-2.753 4.558v1.478c0 1.026.829 1.857 1.851 1.857h23.831a1.855 1.855 0 001.851-1.857v-1.478c-1.646-.91-2.753-2.61-2.753-4.558s1.107-3.648 2.753-4.558v-1.478a1.854 1.854 0 00-1.851-1.857H4.085a1.855 1.855 0 00-1.851 1.857v1.478c1.646.91 2.753 2.61 2.753 4.558zm5.981-5.14h10.065a3.825 3.825 0 013.818 3.831v2.6a3.824 3.824 0 01-3.818 3.831H10.968a3.825 3.825 0 01-3.818-3.831v-2.6a3.824 3.824 0 013.818-3.831zm0 1.973a1.855 1.855 0 00-1.851 1.857v2.6c0 1.026.829 1.857 1.851 1.857h10.065a1.855 1.855 0 001.851-1.857v-2.6a1.854 1.854 0 00-1.851-1.857H10.968z"></path></svg>
+                              </span>
+                               {{t.subject}}
+                            </a>
+                          </div>
+                          <br>
+                          <h5 *ngIf="contactsssearched.length > 0">Contacts</h5>
+                          <div class="row" *ngFor="let c of contactsssearched">
+                            <a class="dropdown-item" style="padding: 6px !important;display: flex !important;margin-left: 12px !important;
+                            width: 100% !important;align-items: center !important;overflow: hidden;" [routerLink]="['/detail-contact']" [queryParams]="{ id: c.conGuid }">
+                              <span style="background-color: #e5f2fd;border: 1px solid #bbdcfe;min-width: 24px;
+                              height: 24px;
+                              display: inline-flex;
+                              justify-content: center;
+                              align-items: center;
+                              border-radius: 50%;
+                              margin-right: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" style="fill: #2c5cc5;width: 15px;height: 15px;" data-name="Layer 2" viewBox="0 0 20 20" class="app-icon app-icon--smallsecondary pull-left"><path d="M10 3.92a3 3 0 103 3 3 3 0 00-3-3zm0 4.54a1.57 1.57 0 111.57-1.57A1.57 1.57 0 0110 8.46zM16.06 1H3.94A2.94 2.94 0 001 3.94v12.12A2.94 2.94 0 003.94 19h12.12A2.94 2.94 0 0019 16.06V3.94A2.94 2.94 0 0016.06 1zM5.78 17.6l.67-4A1.54 1.54 0 018 12.27h4a1.54 1.54 0 011.52 1.29l.67 4zm11.82-1.54a1.54 1.54 0 01-1.54 1.54h-.42l-.71-4.27A2.93 2.93 0 0012 10.87H8a2.93 2.93 0 00-2.9 2.46l-.74 4.27h-.42a1.54 1.54 0 01-1.54-1.54V3.94A1.54 1.54 0 013.94 2.4h12.12a1.54 1.54 0 011.54 1.54z"></path></svg>
+                              </span>
+                              <div style="min-width: 0;">
+                                <div class="ellipsis">
+                                  {{c.fullname}}
+                                </div>
+                                <div style="font-size: 13px;color: #6f7c87;">
+                                    <div data-test-id="email-id">{{c.email}}</div>
+                                </div>
+                              </div>
+
+                            </a>
+                          </div>
+
+                          <span *ngIf="ticketssearched.length === 0 && contactsssearched.length === 0">
+                            <div style="animation: fadeIn .2s ease-in-out;
+                            padding: 50px 20px 60px;
+                            text-align: center;">
+                              <img src="https://apfassetsblue.freshdesk.com/production/a/assets/images/empty-states/search-list-c1a7f1780b7869d00c1d8415a28a1404ca2fdc7e5d27d2e1a02a1bfb94ff8b2a.svg" alt="No results found" style="width: 36%;max-width: 144px;">
+                              <p class="mt-8 mb-0" style="font-weight: 700;">No results found</p>
+                              <p class="text--xsmall mt-4">Please try again with a different keyword.</p>
+                            </div>
+                          </span>
+                      </ng-template>
+                    </ngb-tab>
+                    <ngb-tab title="Tickets">
+                      <ng-template ngbTabContent>
+                        <hr>
+                        <h5 *ngIf="ticketssearched.length > 0">Tickets</h5>
+                          <div class="row" *ngFor="let t of ticketssearched">
+                            <a class="dropdown-item" [routerLink]="['/detail-ticket']" [queryParams]="{ id: t.tguid }" style="overflow: hidden;">
+                              <span style="background-color: #e0f5f0;border: 1px solid #b4e5d9;min-width: 24px;
+                              height: 24px;
+                              display: inline-flex;
+                              justify-content: center;
+                              align-items: center;
+                              border-radius: 50%;
+                              margin-right: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" style="fill: #007958;width: 15px;height: 15px;vertical-align: middle;"><path d="M.267 12.874V10.23a3.824 3.824 0 013.818-3.831h23.831a3.825 3.825 0 013.818 3.831v2.644l-1.018.563c-1.076.595-1.736 1.665-1.736 2.83s.66 2.235 1.736 2.83l1.018.563v2.644a3.824 3.824 0 01-3.818 3.831H4.085a3.825 3.825 0 01-3.818-3.831V19.66l1.018-.563c1.076-.595 1.736-1.665 1.736-2.83s-.66-2.235-1.736-2.83l-1.018-.563zm4.72 3.393c0 1.948-1.107 3.648-2.753 4.558v1.478c0 1.026.829 1.857 1.851 1.857h23.831a1.855 1.855 0 001.851-1.857v-1.478c-1.646-.91-2.753-2.61-2.753-4.558s1.107-3.648 2.753-4.558v-1.478a1.854 1.854 0 00-1.851-1.857H4.085a1.855 1.855 0 00-1.851 1.857v1.478c1.646.91 2.753 2.61 2.753 4.558zm5.981-5.14h10.065a3.825 3.825 0 013.818 3.831v2.6a3.824 3.824 0 01-3.818 3.831H10.968a3.825 3.825 0 01-3.818-3.831v-2.6a3.824 3.824 0 013.818-3.831zm0 1.973a1.855 1.855 0 00-1.851 1.857v2.6c0 1.026.829 1.857 1.851 1.857h10.065a1.855 1.855 0 001.851-1.857v-2.6a1.854 1.854 0 00-1.851-1.857H10.968z"></path></svg>
+                              </span>
+                               {{t.subject}}
+                            </a>
+                          </div>
+                          <span *ngIf="ticketssearched.length === 0">
+                            <div style="animation: fadeIn .2s ease-in-out;
+                            padding: 50px 20px 60px;
+                            text-align: center;">
+                              <img src="https://apfassetsblue.freshdesk.com/production/a/assets/images/empty-states/search-list-c1a7f1780b7869d00c1d8415a28a1404ca2fdc7e5d27d2e1a02a1bfb94ff8b2a.svg" alt="No results found" style="width: 36%;max-width: 144px;">
+                              <p class="mt-8 mb-0" style="font-weight: 700;">No results found</p>
+                              <p class="text--xsmall mt-4">Please try again with a different keyword.</p>
+                            </div>
+                          </span>
+                      </ng-template>
+                    </ngb-tab>
+                    <ngb-tab title="Contacts">
+                      <ng-template ngbTabContent>
+                        <hr>
+                        <h5 *ngIf="contactsssearched.length > 0">Contacts</h5>
+                          <div class="row" *ngFor="let c of contactsssearched">
+                            <a class="dropdown-item" style="padding: 6px !important;display: flex !important;margin-left: 12px !important;
+                            width: 100% !important;align-items: center !important;overflow: hidden;" [routerLink]="['/detail-contact']" [queryParams]="{ id: c.conGuid }">
+                              <span style="background-color: #e5f2fd;border: 1px solid #bbdcfe;min-width: 24px;
+                              height: 24px;
+                              display: inline-flex;
+                              justify-content: center;
+                              align-items: center;
+                              border-radius: 50%;
+                              margin-right: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" style="fill: #2c5cc5;width: 15px;height: 15px;" data-name="Layer 2" viewBox="0 0 20 20" class="app-icon app-icon--smallsecondary pull-left"><path d="M10 3.92a3 3 0 103 3 3 3 0 00-3-3zm0 4.54a1.57 1.57 0 111.57-1.57A1.57 1.57 0 0110 8.46zM16.06 1H3.94A2.94 2.94 0 001 3.94v12.12A2.94 2.94 0 003.94 19h12.12A2.94 2.94 0 0019 16.06V3.94A2.94 2.94 0 0016.06 1zM5.78 17.6l.67-4A1.54 1.54 0 018 12.27h4a1.54 1.54 0 011.52 1.29l.67 4zm11.82-1.54a1.54 1.54 0 01-1.54 1.54h-.42l-.71-4.27A2.93 2.93 0 0012 10.87H8a2.93 2.93 0 00-2.9 2.46l-.74 4.27h-.42a1.54 1.54 0 01-1.54-1.54V3.94A1.54 1.54 0 013.94 2.4h12.12a1.54 1.54 0 011.54 1.54z"></path></svg>
+                              </span>
+                              <div style="min-width: 0;">
+                                <div class="ellipsis">
+                                  {{c.fullname}}
+                                </div>
+                                <div style="font-size: 13px;color: #6f7c87;">
+                                    <div data-test-id="email-id">{{c.email}}</div>
+                                </div>
+                              </div>
+                            </a>
+                          </div>
+
+                          <span *ngIf="contactsssearched.length === 0">
+                            <div style="animation: fadeIn .2s ease-in-out;
+                            padding: 50px 20px 60px;
+                            text-align: center;">
+                              <img src="https://apfassetsblue.freshdesk.com/production/a/assets/images/empty-states/search-list-c1a7f1780b7869d00c1d8415a28a1404ca2fdc7e5d27d2e1a02a1bfb94ff8b2a.svg" alt="No results found" style="width: 36%;max-width: 144px;">
+                              <p class="mt-8 mb-0" style="font-weight: 700;">No results found</p>
+                              <p class="text--xsmall mt-4">Please try again with a different keyword.</p>
+                            </div>
+                          </span>
+
+                      </ng-template>
+                    </ngb-tab>
+                  </ngb-tabset>
+                </div>
+              </div>
+        </form>
+    </li>
+    <!-- ============================================================== -->
+
+
+
+    <!-- ============================================================== -->
+    <!-- Comment -->
+    <!-- ============================================================== -->
+    <li class="nav-item" ngbDropdown placement="bottom-right">
+        <a ngbDropdownToggle class="nav-link waves-effect waves-dark" href="javascript:void(0)" (click)="noti()" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="far fa-bell font-20" style="color: black;"></i>
+            <span class="dot" *ngIf="notificationdot"></span>
+        </a>
+        <div class="mailbox" ngbDropdownMenu>
+            <span class="with-arrow" style="right: 8px;">
+                <span class="bg-primary"></span>
+            </span>
+            <ul class="list-style-none">
+                <li>
+                    <div class="drop-title bg-primary text-white">
+                      <h4 class="m-b-0 m-t-5">Notifications</h4>
+                        <!-- <h4 class="m-b-0 m-t-5">{{count.length}} New</h4>
+                        <span class="font-light">Notifications</span> -->
+                    </div>
+                </li>
+                <li>
+                    <div class="message-center notifications" [perfectScrollbar]="config">
+                      <div *ngFor="let notification of notifications">
+                        <a  [routerLink]="['/tickets/filters/all-tickets']" class="message-item">
+                            <span class="btn btn-circle {{notification['btn']}}">
+                                <i class="{{notification['icon']}}"></i>
+                            </span>
+                            <span class="mail-contnet">
+                                <h5 class="message-title">{{notification['title']}}</h5>
+                                <span class="mail-desc">{{notification['subject']}}</span>
+                                <span class="time">{{timezonedate(notification['time']) | timeAgo}}</span>
+                            </span>
+                        </a>
+                      </div>
+                    </div>
+                </li>
+                <!-- <li>
+                    <a class="nav-link text-center m-b-5" href="javascript:void(0);">
+                        <strong>Check all notifications</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li> -->
+            </ul>
+        </div>
+    </li>
+    <!-- ============================================================== -->
+    <!-- End Comment -->
+    <!-- mega menu -->
+    <!-- ============================================================== -->
+    <!-- <li class="nav-item mega-dropdown" ngbDropdown [autoClose]="false">
+        <a ngbDropdownToggle class="nav-link waves-effect waves-dark" href="javascript:void(0)" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="ti-gift font-20"></i>
+        </a>
+        <div ngbDropdownMenu>
+            <div class="mega-dropdown-menu row">
+                <div class="col-lg-3 col-xlg-2 m-b-30">
+                    <h5 class="m-b-20">Carousel</h5>
+                    <ngb-carousel>
+                        <ng-template ngbSlide>
+                            <img src="assets/images/big/img1.jpg" class="img-fluid" alt="Random first slide">
+                            <div class="carousel-caption">
+                                <h3 class="text-white font-bold">First slide label</h3>
+                            </div>
+                        </ng-template>
+                        <ng-template ngbSlide>
+                            <img src="assets/images/big/img2.jpg" class="img-fluid" alt="Random second slide">
+                            <div class="carousel-caption">
+                                <h3 class="text-white font-bold">Second slide label</h3>
+                            </div>
+                        </ng-template>
+                        <ng-template ngbSlide>
+                            <img src="assets/images/big/img3.jpg" class="img-fluid" alt="Random third slide">
+                            <div class="carousel-caption">
+                                <h3 class="text-white font-bold">Third slide label</h3>
+                            </div>
+                        </ng-template>
+                    </ngb-carousel>
+
+                </div>
+                <div class="col-lg-3 m-b-30">
+                    <h5 class="m-b-20">Accordion</h5>
+
+                    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" class="accordion nav-accordion">
+                        <ngb-panel title="Simple">
+                            <ng-template ngbPanelContent>
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid.
+                            </ng-template>
+                        </ngb-panel>
+                        <ngb-panel>
+                            <ng-template ngbPanelTitle>
+                                <span>&#9733;
+                                    <b>Fancy</b> title &#9733;</span>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid.
+                            </ng-template>
+                        </ngb-panel>
+                        <ngb-panel title="Disabled" [disabled]="true">
+                            <ng-template ngbPanelContent>
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid.
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
+                </div>
+                <div class="col-lg-3  m-b-30">
+                    <h5 class="m-b-20">Contact Us</h5>
+
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="exampleInputname1" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Enter email"> </div>
+                        <div class="form-group">
+                            <textarea class="form-control" id="exampleTextarea" rows="3"
+                                placeholder="Message"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </form>
+                </div>
+                <div class="col-lg-3 col-xlg-4 m-b-30">
+                    <h5 class="m-b-20">List style</h5>
+
+                    <ul class="list-style-none">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-check text-success"></i> You can give link</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-check text-success"></i> Give link</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-check text-success"></i> Another Give link</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-check text-success"></i> Forth link</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-check text-success"></i> Another fifth link</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </li> -->
+    <!-- ============================================================== -->
+    <!-- End mega menu -->
+    <!-- ============================================================== -->
+
+
+
+    <!-- create new -->
+    <!-- ============================================================== -->
+    <!-- <li class="nav-item" ngbDropdown placement="bottom-right">
+        <a ngbDropdownToggle class="nav-link" href="javascript:void(0)" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <i class="flag-icon flag-icon-us font-18"></i>
+        </a>
+        <div class="dropdown-menu-right" aria-labelledby="navbarDropdown2" ngbDropdownMenu>
+            <a class="dropdown-item" href="#">
+                <i class="flag-icon flag-icon-us"></i> English</a>
+            <a class="dropdown-item" href="#">
+                <i class="flag-icon flag-icon-fr"></i> French</a>
+            <a class="dropdown-item" href="#">
+                <i class="flag-icon flag-icon-es"></i> Spanish</a>
+            <a class="dropdown-item" href="#">
+                <i class="flag-icon flag-icon-de"></i> German</a>
+        </div>
+    </li> -->
+
+    <!-- ============================================================== -->
+    <!-- User profile and search -->
+    <!-- ============================================================== -->
+    <li class="nav-item" ngbDropdown placement="bottom-right">
+        <a ngbDropdownToggle class="nav-link text-muted waves-effect waves-dark pro-pic" href="javascript:void(0)"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{{url}}{{agentdata.photo}}" alt="user" class="rounded-circle" width="31">
+        </a>
+        <div class="dropdown-menu-right user-dd" ngbDropdownMenu>
+            <span class="with-arrow">
+                <span class="bg-primary"></span>
+            </span>
+            <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
+                <div class="">
+                    <img src="{{url}}{{agentdata.photo}}" alt="user" class="img-circle" width="60">
+                </div>
+                <div class="m-l-10">
+                    <h4 class="m-b-0">{{agentdata.username}}</h4>
+                    <p class=" m-b-0">{{agentdata.email}}</p>
+                </div>
+            </div>
+            <!-- <a class="dropdown-item" href="javascript:void(0)">
+                <i class="ti-user m-r-5 m-l-5"></i> My Profile</a> -->
+            <!-- <a class="dropdown-item" href="javascript:void(0)">
+                <i class="ti-wallet m-r-5 m-l-5"></i> My Balance</a>
+            <a class="dropdown-item" href="javascript:void(0)">
+                <i class="ti-email m-r-5 m-l-5"></i> Inbox</a> -->
+            <!-- <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="javascript:void(0)">
+                <i class="ti-settings m-r-5 m-l-5"></i> Account Setting</a> -->
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/login">
+                <i class="fa fa-power-off m-r-5 m-l-5"></i> Sign Out</a>
+            <!-- <div class="dropdown-divider"></div>
+            <div class="p-l-30 p-10">
+                <a href="javascript:void(0)" class="btn btn-sm btn-success btn-rounded">View Profile</a>
+            </div> -->
+        </div>
+    </li>
+    <!-- ============================================================== -->
+    <!-- User profile and search -->
+    <!-- ============================================================== -->
+</ul>
+
+
+
+<ng-template #contactcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user-plus"></i> New contact</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="margin-left: 10px;">
+
+    <p>When someone reaches out to you, they become a contact in your account. You can create companies and associate
+      contacts with them.
+
+    <br>
+      <form class="form" (ngSubmit)="Addcontact()" #f="ngForm" >
+
+
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-4">
+          <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+            <img class="profilepic__img avatar-block" *ngIf="message == null" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="https://indfassetsblue.freshdesk.com/production/a/assets/images/avatar-bg-1ad8d01850ad9c12a249bf4e54b10b7b.png">
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-8">
+            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+              <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+             <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+          </div>
+       </div>
+    </div>
+  </div>
+  <br>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Full Name <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" placeholder="Enter the name of this person" minlength="4" maxlength="24" id="fullname" [(ngModel)]="this.contact.fullname" name="fullname" required  #fullname="ngModel" >
+          <small class="form-text text-danger" *ngIf="!fullname.valid && (fullname.dirty || fullname.touched)">Please enter First name!</small>
+          </div>
+
+      </div>
+
+      <br>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Title</label>
+          <input type="email" class="form-control" placeholder="Enter a title" [(ngModel)]="this.contact.title" name="title"  #title="ngModel" >
+          </div>
+
+      </div>
+
+      <br>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+
+          <label style="font-size: 12px;">Email address <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" id="email" email placeholder="Enter an email address" [(ngModel)]="this.contact.email" name="email" required  #email="ngModel" >
+          <small class="form-text text-danger" *ngIf="!email.valid && (email.dirty || email.touched)">Please enter a email address!</small>
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Phone Number</label>
+          <input type="text" class="form-control" placeholder="Enter a phone number" [(ngModel)]="this.contact.mobilephone" name="mobilephone" #mobilephone="ngModel" maxlength="14" minlength="8" (change)="number(this.contact.mobilephone)">
+          <small class="form-text text-danger" *ngIf="!mobilephone.valid && (mobilephone.dirty || mobilephone.touched)">Please enter a Phone number!</small>
+          <small class="form-text text-danger" *ngIf="number(this.contact.mobilephone) === false">Please enter Number Only</small>
+        </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;"> Work Phone <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" placeholder="Enter a phone number" required [(ngModel)]="this.contact.workphone" name="workphone" #workphone="ngModel" maxlength="14" minlength="8">
+          <small class="form-text text-danger" *ngIf="!workphone.valid && (workphone.dirty || workphone.touched)">Please enter a Mobile number!</small>
+          <small class="form-text text-danger" *ngIf="number(this.contact.workphone) === false">Please enter Number Only</small>
+        </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+
+          <label style="font-size: 12px;">Twitter</label>
+          <input type="text" class="form-control" placeholder="Enter a Twitter Id" [(ngModel)]="this.contact.tweeterid" name="tweeterid"  #tweeterid="ngModel" >
+          </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Company <span style="color: red;">*</span></label>
+          <select class="form-control" [(ngModel)]="this.contact.comGuid" name="comGuid" required #comGuid="ngModel" >
+            <option *ngFor="let comp of companydrop" [value]="comp.comGuid">{{comp.companyname}}</option>
+          </select>
+          <!-- <input type="text" class="form-control" placeholder="Company" [(ngModel)]="this.contact.comGuid" name="comGuid"  #comGuid="ngModel" > -->
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Address</label>
+          <textarea placeholder="Enter the address of this person" class="form-control" [(ngModel)]="this.contact.address" name="address"  #address="ngModel"></textarea>
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Time Zone <span style="color: red;">*</span></label>
+          <select class="form-control" [(ngModel)]="this.contact.timezone" name="timezone" required  #timezone="ngModel">
+            <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                  <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Perth</option>
+                  <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Darwin</option>
+                  <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Brisbane</option>
+                  <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="05">(GMT+10:30) Adelaide</option>
+                  <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Canberra, Melbourne, Sydney</option>
+                  <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Hobart</option>
+          </select>
+          <small class="form-text text-danger" *ngIf="!timezone.valid && (timezone.dirty || timezone.touched)">Please select a timezone!</small>
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >Tags</label>
+          <select class="form-control" [(ngModel)]="this.contact.tags" name="tags"  #tags="ngModel">
+            <option *ngFor="let tags of tagdrop" [value]="tags.tagGuid">{{tags.tagname}}</option>
+          </select>
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >About</label>
+          <textarea placeholder="Enter some text" class="form-control" [(ngModel)]="this.contact.about" name="about"  #about="ngModel"></textarea>
+          </div>
+      </div>
+
+      </form>
+
+  </div>
+  <div class="modal-footer">
+
+    <button  class="btn btn-dark" [disabled]="!f.valid" (click)="Addcontact()"  style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+      <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+       Create</button>
+    &nbsp;&nbsp;
+    <button type="button" class="btn btn-outline-default" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #companycontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-industry"></i> New company</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="margin-left: 10px;">
+
+    <p>When someone reaches out to you, they become a contact in your account. You can create companies and associate contacts with them.
+
+    <br>
+      <form class="form" (ngSubmit)="Addcompany()" #f1="ngForm" >
+
+
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-4">
+          <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+            <img class="profilepic__img avatar-block" *ngIf="message == null" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="https://indfassetsblue.freshdesk.com/production/a/assets/images/avatar-bg-1ad8d01850ad9c12a249bf4e54b10b7b.png">
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-8">
+            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+              <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+             <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+          </div>
+       </div>
+    </div>
+  </div>
+  <br>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Company Name <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.company.companyname" name="companyname" required #companyname="ngModel" >
+          <small class="form-text text-danger" *ngIf="!companyname.valid && (companyname.dirty || companyname.touched)">Please enter Company name!</small>
+          </div>
+
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Discription</label>
+          <textarea placeholder="Write something that describes this company" class="form-control" rows="4" [(ngModel)]="this.company.description" name="description"  #description="ngModel"></textarea>
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >Notes</label>
+          <textarea placeholder="Add notes about this company - maybe something about a recent deal, etc." rows="3" class="form-control" [(ngModel)]="this.company.notes" name="notes"  #notes="ngModel"></textarea>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >Domains for this compan</label>
+          <input type="text" class="form-control" placeholder="eg: mycompany1.com" [(ngModel)]="this.company.domainforthiscompany" name="domainforthiscompany"  #domainforthiscompany="ngModel">
+          </div>
+      </div>
+
+      </form>
+
+  </div>
+  <div class="modal-footer">
+
+    <button  class="btn btn-dark" [disabled]="!f1.valid" (click)="Addcompany()"  style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+      <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+       Create</button>
+    &nbsp;&nbsp;
+    <button type="button" class="btn btn-outline-default" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

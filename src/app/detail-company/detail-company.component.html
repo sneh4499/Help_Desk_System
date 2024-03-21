@@ -1,0 +1,245 @@
+<div class="row" style="background-color: #f5f7f9;margin-top: -10px;">
+  <div style="margin: 10px 10px 10px 20px;">
+    <a routerLink="/listcompanies/list" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+      <b><i class="fas fa-arrow-left"></i> Go Back</b>
+     </a>
+     &nbsp;
+    <button type="button" [disabled]="editbtn" (click)="editmodal(editcontent,guid)" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+     <b><i class="sl-icon-note"></i> Edit</b>
+    </button>
+    &nbsp;
+    <button type="button" [disabled]="dltdtn" (click)="deletemodal(deletecontent,guid)" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+      <b><i class="fas fa-trash-alt"></i> Delete</b>
+     </button>
+
+  </div>
+</div>
+
+<br>
+<div class="row">
+  <!-- Column -->
+  <div class="col-lg-4 col-xlg-3 col-md-5">
+      <div class="card">
+          <div class="card-body">
+              <div class="m-t-30 text-center">
+                  <img src="{{url}}{{logo}}" class="rounded-circle" width="150" />
+                  <h4 class="card-title m-t-10"> {{companyname}}</h4>
+
+                  <!-- <h6 class="card-subtitle">Accoubts Manager Amix corp</h6> -->
+                  <div class="row text-center justify-content-md-center">
+                      <div class="col-12">
+                          <a href="javascript:void(0)" class="link">
+                              <i class="icon-people m-r-10"></i>
+                             <b>{{ contact.length }}</b> Contact
+                          </a>
+                      </div>
+                  </div>
+                  <div class="row text-center justify-content-md-center" style="margin-top: 5px;">
+                      <div class="col-12">
+                          <a href="javascript:void(0)" class="link">
+                              <i class="icon-picture m-r-10"></i>
+                             <a href="https://{{website}}" target="_blank">{{website}}</a>
+                          </a>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+          <div>
+              <hr> </div>
+          <div class="card-body">
+
+              <small class="text-muted p-t-30 db">Description</small>
+              <h6>{{description}}</h6>
+              <!-- <div class="map-box">
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d470029.1604841957!2d72.29955005258641!3d23.019996818380896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e848aba5bd449%3A0x4fcedd11614f6516!2sAhmedabad%2C+Gujarat!5e0!3m2!1sen!2sin!4v1493204785508"
+                      width="100%" height="150" frameborder="0" style="border:0" allowfullscreen></iframe>
+              </div> -->
+
+          </div>
+      </div>
+  </div>
+  <!-- Column -->
+  <!-- Column -->
+  <div class="col-lg-8 col-xlg-9 col-md-7">
+      <div class="card">
+          <ngb-tabset type="pills" class="custom-pills">
+              <ngb-tab title="Contacts">
+                  <ng-template ngbTabContent>
+                      <div class="card-body">
+                          <div class="profiletimeline">
+                            <div *ngFor="let contact of contactlist">
+                              <a href="/#/detail-contact?id={{contact.conGuid}}" class="sl-item">
+                                  <div class="sl-left">
+                                      <img src="{{url}}{{contact.uploadphoto}}" alt="user" class="rounded-circle" />
+                                  </div>
+                                  <div class="sl-right">
+                                      <div>
+                                          {{contact.fullname}}
+                                          <p>{{contact.email}}</p>
+                                      </div>
+                                  </div>
+                              </a>
+                            </div>
+                          </div>
+                      </div>
+                  </ng-template>
+              </ngb-tab>
+              <ngb-tab title="Tickets">
+                <ng-template ngbTabContent>
+                    <div class="card-body">
+
+                      <div *ngFor="let tickets of ticketarray">
+                      <div style="background-color: #f5f7f9;">
+                        <h5 class="mt-0 mb-1">
+                          <br>
+                          <div class="row" style="margin-left: 10px;">
+                            <div class="col-lg-1 col-md-2 col-sm-3" style="margin-top: 18px;">
+                              <i class="fas fa-ticket-alt fa-2x"></i>
+                            </div>
+                            <div class="col-lg-8 col-md-10 col-sm-9">
+                              <a href="/#/detail-ticket?id={{tickets.tguid}}">{{tickets.subject}}</a>
+                              &nbsp; &nbsp;<span *ngIf="tickets.tagGu !== null" style="color: #12344d;
+                              border: 1px solid #cfd7df;
+                              background-color: #fff;
+                              font-weight: 600;
+                              font-size: 11px;
+                              -webkit-font-smoothing: antialiased;
+                              padding: 0 5px;
+                              display: inline-block;
+                              border-radius: 4px;">{{tickets.tagGu.tagname}}</span>
+                              <br>
+                              <small>{{timezonedate(tickets.datetime) | date: 'dd/MM/yyyy hh:mm a'}}</small>
+                              <br><br>
+                              <small style="font-weight: normal !important;"><i class="fa fa-envelope"></i> Status: {{tickets.status}}
+                              - Priority: {{tickets.priority}}
+                              </small><br>
+                              <p></p>
+                            </div>
+                          </div>
+                        </h5>
+                        </div>
+                      </div>
+
+                    </div>
+                </ng-template>
+            </ngb-tab>
+              <ngb-tab title="Notes">
+                  <ng-template ngbTabContent>
+                      <div class="card-body">
+                         <div>
+
+                          <hr>
+                          {{note}}
+                          <hr>
+                         </div>
+                      </div>
+                  </ng-template>
+              </ngb-tab>
+          </ngb-tabset>
+      </div>
+  </div>
+  <!-- Column -->
+</div>
+
+
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Delete Company</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+      <h3>Are You Sure You Want to Delete this ?</h3>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #editcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Edit Company</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="margin-left: 10px;">
+
+    <p>When someone reaches out to you, they become a contact in your account. You can create companies and associate contacts with them.
+
+    <br>
+      <form class="form" (ngSubmit)="update()" #f1="ngForm" >
+
+
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-4">
+          <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-8">
+            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+              <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+             <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+          </div>
+       </div>
+    </div>
+  </div>
+  <br>
+
+  <div class="row" style="display: none;">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+      <label style="font-size: 12px;">Company GUID <span style="color: red;">*</span></label>
+      <input type="text" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.company.comguid" name="comguid"   #comguid="ngModel" >
+      <small class="form-text text-danger" *ngIf="!comguid.valid && (comguid.dirty || comguid.touched)">Please enter First name!</small>
+      </div>
+
+  </div>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Company Name <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.company.companyname" name="companyname"   #companyname="ngModel" >
+          <small class="form-text text-danger" *ngIf="!companyname.valid && (companyname.dirty || companyname.touched)">Please enter First name!</small>
+          </div>
+
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Discription</label>
+          <textarea placeholder="Write something that describes this company" class="form-control" rows="4" [(ngModel)]="this.company.description" name="description"  #description="ngModel"></textarea>
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >Notes</label>
+          <textarea placeholder="Add notes about this company - maybe something about a recent deal, etc." rows="3" class="form-control" [(ngModel)]="this.company.notes" name="notes"  #notes="ngModel"></textarea>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >Domains for this compan</label>
+          <input type="text" class="form-control" placeholder="eg: mycompany1.com" [(ngModel)]="this.company.domainforthiscompany" name="domainforthiscompany"  #domainforthiscompany="ngModel">
+          </div>
+      </div>
+
+      </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark"  [disabled]="!f1.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" (click)="update()"> <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Update Company</button>
+    <button type="button" class="btn btn-light" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

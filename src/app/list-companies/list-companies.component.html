@@ -1,0 +1,332 @@
+<style>
+  :host ::ng-deep .datatable-body-cell {
+    font-size: 13px !important;
+  }
+  :host ::ng-deep .datatable-header-cell-wrapper {
+    font-size: 14px !important;
+    font-weight: 800;
+  }
+  :host ::ng-deep .datatable-header-cell {
+    background-color: #f5f7f9;
+  }
+  :host ::ng-deep .material .table-striped .table-responsive {
+    border: none;
+  }
+  :host ::ng-deep .datatable-body-cell-label {
+    width: 300px;
+  }
+  .card-body {
+    padding: 0 !important;
+  }
+</style>
+
+<div class="row" style="background-color: #f5f7f9;margin-top: -10px;font-size: 13px;">
+  <div class="col-3">
+    <span style="float: left;margin: 13px 8px 3px 23px;">
+     <span class="input-group mb-3" style="height: 20px;">
+                <span class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                </span>
+                <input type="text" (keyup)='updateFilter($event)' class="form-control" placeholder="Search for company" aria-describedby="basic-addon1">
+              </span>
+    </span>
+  </div>
+
+  <div class="col-5" style="margin-left: -30px;">
+    <span *ngIf="tab" style="float: left;margin: 13px 8px 3px 23px;">
+      <button type="button" (click)="Deletecompanies(deletecompanies)" class="btn btn-outline-default"
+        style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+        <b><i class="far fa-trash-alt"></i> Delete</b>
+      </button>
+    </span>
+  </div>
+
+  <div class="col-4">
+    <span style="float: right;margin: 15px -15px 10px 30px;">
+      <button class="btn btn-outline-default" placement="bottom" ngbTooltip="Export to excel" (click)="exportmodal(exportcontent)" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+        <i class="mdi mdi-export"></i> <b> Export </b>
+      </button>
+    </span>
+
+  </div>
+
+</div>
+
+<div class="row" *ngIf="!pageaccess">
+  <div class="col-12 m-t-30">
+        <ngb-alert type="danger" [dismissible]="false">
+            <strong>Sorry !</strong> You Don't have permission to access this page. Please Contact adminitstrator.
+            <a routerLink="/starter">Go back to Home</a>
+          </ngb-alert>
+        </div>
+</div>
+
+<br>
+
+<div class="row" *ngIf="pageaccess">
+  <!-- column -->
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+
+              <ngx-datatable #table [rows]="rows"  class='material table-striped table-responsive'  [columnMode]="'force'" [loadingIndicator]="loading"  [headerHeight]="50" [footerHeight]="50"
+              [rowHeight]="'auto'" [limit]="50" [sorts]="[{prop: 'name', dir: 'desc'}]" [selectionType]="'checkbox'" (select)="onSelect($event)" [selected]="selected">
+
+              <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="checkboxes">
+              </ngx-datatable-column>
+                        <!-- <ngx-datatable-column name="Guid" cellClass="d-flex align-items-center"></ngx-datatable-column> -->
+
+                        <ngx-datatable-column name="Name" prop="companyname" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <div class="row">
+                              <div class="col-3">
+                                <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="44px" height="44px" alt="'picture" data-test-user="user-avatar" src="{{url}}{{row.uploadlogo}}">
+                              </div>
+                              <div class="col-8" style="margin-left: 5px;">
+                               <a [routerLink]="['/detail-company']" [queryParams]="{ id: row.comGuid }">{{row.companyname}}</a>
+
+                              </div>
+                            </div>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Description" prop="description" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <span>{{row.description}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Contacts" prop="contacts" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <span>{{row.contact.length}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Action" [sortable]="false" [canAutoResize]="false" [width]="165" [draggable]="false" [resizeable]="false" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template let-rowIndex="row.comGuid" let-row="row" let-value="value">
+                            <button *ngIf="editbtn" class="btn btn-outline-default" placement="top" ngbTooltip="Edit" style="width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="editmodal(editcontent,rowIndex)"><i class="sl-icon-note" style="margin: -5px;"></i></button>
+                              <button *ngIf="dltdtn" class="btn btn-outline-default" placement="top" ngbTooltip="Delete" style="width: 34px;height: 34px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="deletemodal(deletecontent,rowIndex)"><i class="fas fa-trash-alt" style="margin: -5px;"></i></button>
+
+                            <!-- <button *ngIf="editbtn" class="btn btn-outline-primary" (click)="editmodal(editcontent,rowIndex)"><i class="sl-icon-note"></i></button>
+                            <button *ngIf="dltdtn" class="btn btn-outline-danger" (click)="deletemodal(deletecontent,rowIndex)"><i class="fa fa-trash"></i></button> -->
+                          </ng-template>
+                        </ngx-datatable-column>
+
+
+              </ngx-datatable>
+
+               </div>
+        </div>
+      </div>
+
+  </div>
+
+  <div class="table-responsive" style="display: none;">
+    <table class="table" #myTable id="myTable">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Company name</th>
+                <th scope="col">description</th>
+                <th scope="col">notes</th>
+                <th scope="col">domain</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let a of rows">
+                <th scope="row">{{a.companyname}}</th>
+                <td>{{a.description}}</td>
+                <td >{{a.notes}}</td>
+                <td>{{a.domainforthiscompany}}</td>
+            </tr>
+
+        </tbody>
+    </table>
+  </div>
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Company</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <p>Are you sure you want to permanently delete this company? Deleting a company will not delete its contacts.</p>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Cancel</button>
+    <button type="button" class="btn btn-danger btn-raised mr-1" style="background-color: #d72d30;border-radius: 5px;font-weight: 500;" (click)="Delete(this.id)">Delete</button>
+    <!-- <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button> -->
+  </div>
+</ng-template>
+
+<ng-template #deletecompanies let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Companies</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <p>Are you sure you want to permanently delete this company? Deleting a company will not delete its contacts.</p>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Deletemultiple()">Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+
+    <button type="button" class="btn btn-light" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Cancel</button>
+    <button type="button" class="btn btn-danger btn-raised mr-1" style="background-color: #d72d30;border-radius: 5px;font-weight: 500;" (click)="Deletemultiple()">Delete</button>
+
+  </div>
+</ng-template>
+
+
+<ng-template #editcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Edit Company</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="margin-left: 10px;">
+
+    <p>When someone reaches out to you, they become a contact in your account. You can create companies and associate contacts with them.
+
+    <br>
+      <form class="form" (ngSubmit)="update()" #f1="ngForm" >
+
+
+  <div class="row">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-4">
+          <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-8">
+            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+              <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+             <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+          </div>
+       </div>
+    </div>
+  </div>
+  <br>
+
+  <div class="row" style="display: none;">
+    <div class="col-lg-10 col-md-10 col-sm-12">
+      <label style="font-size: 12px;">Company GUID <span style="color: red;">*</span></label>
+      <input type="text" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.company.comguid" name="comguid"   #comguid="ngModel" >
+      <small class="form-text text-danger" *ngIf="!comguid.valid && (comguid.dirty || comguid.touched)">Please enter First name!</small>
+      </div>
+
+  </div>
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Company Name <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.company.companyname" name="companyname"   #companyname="ngModel" >
+          <small class="form-text text-danger" *ngIf="!companyname.valid && (companyname.dirty || companyname.touched)">Please enter First name!</small>
+          </div>
+
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Discription</label>
+          <textarea placeholder="Write something that describes this company" class="form-control" rows="4" [(ngModel)]="this.company.description" name="description"  #description="ngModel"></textarea>
+          </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >Notes</label>
+          <textarea placeholder="Add notes about this company - maybe something about a recent deal, etc." rows="3" class="form-control" [(ngModel)]="this.company.notes" name="notes"  #notes="ngModel"></textarea>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;" >Domains for this company</label>
+          <input type="text" class="form-control" placeholder="eg: mycompany1.com" [(ngModel)]="this.company.domainforthiscompany" name="domainforthiscompany"  #domainforthiscompany="ngModel">
+          </div>
+      </div>
+
+      </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark"  [disabled]="!f1.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" (click)="update()"> <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Update Company</button>
+    <button type="button" class="btn btn-light" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #exportcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-upload"></i> Export Company</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="margin: 20px;">
+
+    <div class="row">
+      <div class="col-12">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox" name="selectall" [(ngModel)]="this.exportdata.selectall" #selectall="ngModel" (change)="selectallchk()"> Select all fields
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="name" [(ngModel)]="this.exportdata.name" #name="ngModel" (change)="change(this.exportdata.name)"> Company name
+                  <!-- (change)="change(this.exportdata.name, 'name')" -->
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="description" [(ngModel)]="this.exportdata.description" #description="ngModel" (change)="change(this.exportdata.description)"> Description
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="notes" [(ngModel)]="this.exportdata.notes" #notes="ngModel" (change)="change(this.exportdata.notes)"> Notes
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="domain" [(ngModel)]="this.exportdata.domain" #domain="ngModel" (change)="change(this.exportdata.domain)"> Domains for this company
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+    </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-dark" (click)="export()" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+      <i class="fa fa-spinner fa-spin" *ngIf="exportloading"></i>Export</button>
+    <button class="btn btn-outline-default" (click)="c('Close click')" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">Close</button>
+  </div>
+</ng-template>

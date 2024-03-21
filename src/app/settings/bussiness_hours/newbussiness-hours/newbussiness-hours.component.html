@@ -1,0 +1,784 @@
+<style>
+  card .card-title {
+    margin-bottom: 10px;
+  }
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+</style>
+
+<div class="row">
+  <div class="col-lg-9 col-md-12 cole-sm-12 m-t-30">
+      <div class="card" >
+        <span style="padding: 15px 28px 0;">
+          <a routerLink="/settings/bussiness_hours/viewbussiness-hours" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+            <b><i class="fas fa-arrow-left"></i> Go Back</b>
+           </a>
+        </span>
+          <div class="card-body" style="padding: 20px 26px 0;">
+            <form class="form" #f="ngForm" >
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <h3 style="color: black;font-weight: 600;">Business Hours
+                  <button *ngIf="!updatebtn" class="btn btn-dark" (click)="onTemplateFormSubmit()" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white;float: right;margin-left: 10px;">
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                     Save</button>
+
+                     <button *ngIf="updatebtn" class="btn btn-dark" (click)="update()" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white;float: right;margin-left: 10px;">
+                      <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                       Update</button>
+
+                  &nbsp;&nbsp;
+                  <a routerLink="/settings/bussiness_hours/viewbussiness-hours" class="btn btn-outline-default" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);color: black;float: right;">
+                     <b> Cancel </b>
+                  </a>
+                </h3>
+                <br>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                  <label style="font-size: 12px;">Name <span style="color: red;">*</span></label>
+                  <input type="text" class="form-control" [(ngModel)]="this.bhours.name" name="name" placeholder="eg: India Bussiness Hours" required  #name="ngModel" >
+                  <small class="form-text text-danger" *ngIf="!name.valid && (name.dirty || name.touched)">Please enter Name!</small>
+
+              </div>
+              </div>
+            <br>
+
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <label style="font-size: 12px;">Description</label>
+                <textarea type="text" class="form-control" [(ngModel)]="this.bhours.description" name="description" placeholder="eg: This Bussiness hours belongs to Indian Timezone"  #description="ngModel" ></textarea>
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <label style="font-size: 12px;">Time Zone </label>
+                <select class="form-control" [(ngModel)]="this.bhours.timezone" name="timezone"  #timezone="ngModel">
+                  <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                    <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Perth</option>
+                    <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Darwin</option>
+                    <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Brisbane</option>
+                    <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="05">(GMT+10:30) Adelaide</option>
+                    <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Canberra, Melbourne, Sydney</option>
+                    <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Hobart</option>
+                </select>
+                <small class="form-text text-danger" *ngIf="!timezone.valid && (timezone.dirty || timezone.touched)">Please select a timezone!</small>
+                </div>
+            </div>
+
+            <!-- <br>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Agents</label>&nbsp;&nbsp;
+                <span style="color: blue;">No Agent - Add</span>
+                </div>
+            </div> -->
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-2 col-md-12 col-sm-12">
+                <label style="font-size: 12px;">Hours</label>
+              </div>
+              <div class="col-lg-9">
+                <fieldset class="radio">
+                  <label>
+                      <input type="radio" value="false" [(ngModel)]="this.bhours.hours" name="hours" #hours="ngModel"> 24 hrs x 7 days
+                  </label>
+              </fieldset>
+              <fieldset class="radio">
+                  <label>
+                      <input type="radio" value="true" [(ngModel)]="this.bhours.hours" name="hours" #hours="ngModel"> Select working days/hours
+                  </label>
+              </fieldset>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="bhours.hours === 'true'">
+              <div class="col-lg-3 col-md-1 col-sm-1">
+
+              </div>
+              <div class="col-lg-9 col-md-11 col-sm-11">
+
+                <fieldset class="checkbox">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="this.bhours.monday" name="monday" #monday="ngModel"> Monday
+                      <div class="row" style="margin-left: 20px;" *ngIf="bhours.monday">
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.monstarttime" name="monstarttime" #monstarttime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.monstarttimeam" name="monstarttimeam" #monstarttimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-1 col-sm-1 col-md-1" style="width: 50px;margin-left: 10px;"> to</div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.monendtime" name="monendtime" #monendtime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.monendtimeam" name="monendtimeam" #monendtimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2" style="width: 70px;">
+
+                        </div>
+                      </div>
+
+                  </label>
+                </fieldset>
+
+                <fieldset class="checkbox">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="this.bhours.tuesday" name="tuesday" #tuesday="ngModel"> Tuesday
+                      <div class="row" style="margin-left: 20px;" *ngIf="bhours.tuesday">
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.tuestarttime" name="tuestarttime" #tuestarttime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.tuestarttimeam" name="tuestarttimeam" #tuestarttimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-1 col-sm-1 col-md-1" style="width: 50px;margin-left: 10px;"> to</div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.tueendtime" name="tueendtime" #tueendtime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.tueendtimeam" name="tueendtimeam" #tueendtimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2" style="width: 70px;">
+
+                        </div>
+                      </div>
+
+                  </label>
+                </fieldset>
+
+                <fieldset class="checkbox">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="this.bhours.wednesday" name="wednesday" #wednesday="ngModel"> Wednesday
+                      <div class="row" style="margin-left: 20px;" *ngIf="bhours.wednesday">
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.wedstarttime" name="wedstarttime" #wedstarttime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.wedstarttimeam" name="wedstarttimeam" #wedstarttimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-1 col-sm-1 col-md-1" style="width: 50px;margin-left: 10px;"> to</div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.wedendtime" name="wedendtime" #wedendtime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.wedendtimeam" name="wedendtimeam" #wedendtimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2" style="width: 70px;">
+
+                        </div>
+                      </div>
+
+                  </label>
+                </fieldset>
+
+                <fieldset class="checkbox">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="this.bhours.thursday" name="thursday" #thursday="ngModel"> Thursday
+                      <div class="row" style="margin-left: 20px;" *ngIf="bhours.thursday">
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.thustarttime" name="thustarttime" #thustarttime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.thustarttimeam" name="thustarttimeam" #thustarttimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-1 col-sm-1 col-md-1" style="width: 50px;margin-left: 10px;"> to</div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.thuendtime" name="thuendtime" #thuendtime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.thuendtimeam" name="thuendtimeam" #thuendtimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2" style="width: 70px;">
+
+                        </div>
+                      </div>
+
+                  </label>
+                </fieldset>
+
+                <fieldset class="checkbox">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="this.bhours.friday" name="friday" #friday="ngModel"> Friday
+                      <div class="row" style="margin-left: 20px;" *ngIf="bhours.friday">
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.fristarttime" name="fristarttime" #fristarttime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.fristarttimeam" name="fristarttimeam" #fristarttimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-1 col-sm-1 col-md-1" style="width: 50px;margin-left: 10px;"> to</div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.friendtime" name="friendtime" #friendtime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.friendtimeam" name="friendtimeam" #friendtimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2" style="width: 70px;">
+
+                        </div>
+                      </div>
+
+                  </label>
+                </fieldset>
+
+                <fieldset class="checkbox">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="this.bhours.saturday" name="saturday" #saturday="ngModel"> Saturday
+                      <div class="row" style="margin-left: 20px;" *ngIf="bhours.saturday">
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.satstarttime" name="satstarttime" #satstarttime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.satstarttimeam" name="satstarttimeam" #satstarttimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-1 col-sm-1 col-md-1" style="width: 50px;margin-left: 10px;"> to</div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.satendtime" name="satendtime" #satendtime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.satendtimeam" name="satendtimeam" #satendtimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2" style="width: 70px;">
+
+                        </div>
+                      </div>
+
+                  </label>
+                </fieldset>
+
+                <fieldset class="checkbox">
+                  <label>
+                      <input type="checkbox" [(ngModel)]="this.bhours.sunday" name="sunday" #sunday="ngModel"> Sunday
+                      <div class="row" style="margin-left: 20px;" *ngIf="bhours.sunday">
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.sunstarttime" name="sunstarttime" #sunstarttime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.sunstarttimeam" name="sunstarttimeam" #sunstarttimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-1 col-sm-1 col-md-1" style="width: 50px;margin-left: 10px;"> to</div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.sunendtime" name="sunendtime" #sunendtime="ngModel">
+                            <option value="1">1:00</option>
+                            <option value="1:30">1:30</option>
+                            <option value="2">2:00</option>
+                            <option value="2:30">2:30</option>
+                            <option value="3">3:00</option>
+                            <option value="3:30">3:30</option>
+                            <option value="4">4:00</option>
+                            <option value="4:30">4:30</option>
+                            <option value="5">5:00</option>
+                            <option value="5:30">5:30</option>
+                            <option value="6">6:00</option>
+                            <option value="6:30">6:30</option>
+                            <option value="7">7:00</option>
+                            <option value="7:30">7:30</option>
+                            <option value="8">8:00</option>
+                            <option value="8:30">8:30</option>
+                            <option value="9">9:00</option>
+                            <option value="9:30">9:30</option>
+                            <option value="10">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12">12:00</option>
+                            <option value="12:30">12:30</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2">
+                          <select class="form-control" style="width: 80px;" [(ngModel)]="this.bhours.sunendtimeam" name="sunendtimeam" #sunendtimeam="ngModel">
+                            <option value="am">am</option>
+                            <option value="pm">pm</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-2 col-sm-2 col-md-2" style="width: 70px;">
+
+                        </div>
+                      </div>
+
+                  </label>
+                </fieldset>
+              </div>
+            </div>
+
+            <br><br>
+            <form class="form" #f1="ngForm" >
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <h3 style="color: black;font-weight: 400;">
+                  Yearly Holiday List
+                </h3>
+                <div class="card" style="border: 1px solid #eee;border-radius: 6px;">
+                  <div class="card-body" style="background-color: #fbfbfb;border-bottom: 1px solid #eee;padding: 10px;">
+                    <div class="row">
+                      <div class="col-2">
+                        <select class="form-control" required [(ngModel)]="this.holi.month" name="month" #month="ngModel">
+                          <option>Jan</option>
+                          <option>Feb</option>
+                          <option>Mar</option>
+                          <option>Apr</option>
+                          <option>May</option>
+                          <option>Jun</option>
+                          <option>Jul</option>
+                          <option>Aug</option>
+                          <option>Sep</option>
+                          <option>Oct</option>
+                          <option>Nov</option>
+                          <option>Dec</option>
+                        </select>
+                      </div>
+
+                      <div class="col-2">
+                        <select class="form-control" required [(ngModel)]="this.holi.day" name="day"  #day="ngModel">
+                          <option *ngFor='let item of [].constructor(31);let i = index'>{{i + 1}}</option>
+                        </select>
+                      </div>
+
+                      <div class="col-6">
+                        <input type="text" class="form-control" required placeholder="Holiday name" [(ngModel)]="this.holi.holidayname" name="holidayname" #holidayname="ngModel">
+                        <small class="form-text text-danger" *ngIf="!holidayname.valid && (holidayname.dirty || holidayname.touched)">Please Holiday Name!</small>
+                      </div>
+
+
+                      <div class="col-2">
+                        <button class="btn" [disabled]="!f1.valid" (click)="addholiday(); f1.reset()" style="border-radius: 4px;border: 1px #dadfe3 solid;background-image: linear-gradient(to bottom, #ffffff,#f3f5f7);">
+                          <i class="fa fa-spinner fa-spin" *ngIf="loadingholibtn"></i><span style="color: #183247;font-weight: 500;letter-spacing: 0.3px;"> Add Holiday</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row" *ngFor="let holidays of holidaydata;let i = index">
+                      <div class="col-1"><i class="fa fa-times" style="cursor: pointer;" (click)="delete(holidays)" placement="top" ngbTooltip="Remove"></i></div>
+                      <div class="col-2">{{holidays['month']}} {{holidays['day']}}</div>
+                      <div class="col-6">{{holidays['holidayname']}}</div>
+                      <br><br>
+                    </div>
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>
+          </form>
+
+            <br>
+
+
+            <br>
+            <div class="row">
+              <div class="col-12">
+                <button *ngIf="!updatebtn" class="btn btn-dark" (click)="onTemplateFormSubmit()" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white;float: right;margin-left: 10px;">
+                  <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                   Save</button>
+
+                   <button *ngIf="updatebtn" class="btn btn-dark" (click)="update()" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white;float: right;margin-left: 10px;">
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                     Update</button>
+
+                &nbsp;&nbsp;
+                <a routerLink="/settings/bussiness_hours/viewbussiness-hours" class="btn btn-outline-default" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);color: black;float: right;">
+                   <b> Cancel </b>
+                </a>
+              </div>
+            </div>
+
+            <br>
+          </form>
+          </div>
+
+          </div>
+      </div>
+
+
+      <div class="col-lg-3 col-md-12 col-sm-12 m-t-30" style="background-color: #f5f7f9;">
+        <br>
+        <div style="margin-top: 10px;margin-left: 20px;">
+              <h5>Understanding Roles</h5>
+              <p>Roles allow you to create and edit access permissions for agents. You can create new roles, specify what actions agents with these roles can perform within your help desk, and assign the role to agents.
+                <br><br>
+                For example, you can create a role for your Support Co-ordinators, allowing them to update fields and assign tickets, and even add notes internally, but not reply to customers.
+                <br><br>
+                Once you create and save a new Role you will be able to assign it to agents when you create or edit their profile by clicking on the Agents icon under the admin tab.</p>
+
+              <h5>Admin Privileges</h5>
+              <p>You can nominate whether you want an agent to have access to settings under the Admin tab. Agents with admin access can be Operation Agents with limited access, or Super Admins with the ability to edit all configurations. You can have as many Super Admins with the ability to view and modify your billing details, or as few as one.</p>
+
+      </div>
+    </div>
+  </div>

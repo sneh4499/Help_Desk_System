@@ -1,0 +1,117 @@
+<div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background: rgb(235, 239, 243);position: relative;
+box-shadow: rgba(18, 52, 77, 0.16) 0px 0px 5px 0px, rgba(18, 52, 77, 0.04) 0px 12px 36px 0px;border-radius: 10px;margin-top: -50px;">
+  <!-- style="background:url(assets/images/big/auth-bg.jpg) no-repeat center center;" -->
+  <div class="auth-box">
+      <div id="loginform" [ngClass]="{'d-none': recoverform}">
+          <div class="logo">
+              <span class="db"><img src="{{url}}{{systemdata.logo}}" alt="logo" /></span>
+              <h5 class="font-medium m-b-20">Sign In</h5>
+          </div>
+          <!-- Form -->
+          <div class="row">
+              <div class="col-12">
+
+                <form class="form ng-untouched ng-pristine ng-invalid" (ngSubmit)="onTemplateFormSubmit()" #f="ngForm" novalidate="">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="floatEmail">Email</label>
+                        <input class="form-control ng-untouched ng-pristine ng-invalid" email="" id="floatEmail" style="width: 100%;
+                        height: 48px;
+                        box-sizing: border-box;
+                        appearance: none;
+                        border-radius: 4px;
+                        border-width: 1px;
+                        border-style: solid;
+                        border-image: initial;
+                        background: white;
+                        border-color: rgb(228, 53, 56);
+                        transition: border-color 0.3s ease-in-out 0s;" [(ngModel)]="this.login.email" name="email" #email="ngModel" required type="email">
+                        <!---->
+                        <small class="form-text text-danger" *ngIf="!this.email.valid && (this.email.dirty || this.email.touched)">Please Enter a Valid Email!</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group"><label for="floatPassword">Password</label>
+                        <input class="form-control ng-untouched ng-pristine ng-invalid" style="width: 100%;
+                        height: 48px;
+                        box-sizing: border-box;
+                        appearance: none;
+                        border-radius: 4px;
+                        border-width: 1px;
+                        border-style: solid;
+                        border-image: initial;
+                        background: white;
+                        border-color: rgb(228, 53, 56);
+                        transition: border-color 0.3s ease-in-out 0s;" id="floatPassword" [(ngModel)]="this.login.password" name="password" #password="ngModel" required maxlength="24" minlength="4" name="floatPassword" ngmodel="" required="" type="password">
+                        <!---->
+                        <small class="form-text text-danger" *ngIf="!this.password.valid && (this.password.dirty || this.password.touched)">Please Enter a Valid Password!</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                            <label class="custom-control-label" for="customCheck1">Keep me Logged In</label>
+                            <a (click)="showRecoverForm()" href="javascript:void(0)" id="to-recover" class="text-dark float-right"><i class="fa fa-lock m-r-5"></i> Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center">
+                    <div class="col-xs-12 p-b-20">
+                        <button class="btn btn-block btn-lg btn-info" [disabled]="!f.valid" type="submit" style="background-color: rgb(18, 52, 77);font-size: 14px;font-weight: 600;border-radius: 3px;height: 50px;">
+                          <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                          &nbsp; Sign In
+                        </button>
+                    </div>
+                </div>
+                <!-- <div class="text-center">OR</div>
+                <br>
+                <div class="form-group text-center">
+                  <div class="col-xs-12 p-b-20">
+                      <button class="btn btn-block btn-lg btn-info" (click)="onTemplateFormSubmit()" type="submit" style="font-size: 14px;font-weight: 600;height: 50px;"><img src="https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png" style="background-color: white;float: left;" height="25px"> Sign In With Google</button>
+                  </div>
+              </div> -->
+                </form>
+
+              </div>
+          </div>
+      </div>
+      <div id="recoverform" [ngClass]="{'d-block': recoverform}">
+          <div class="logo">
+              <span class="db"><img src="{{url}}{{systemdata.logo}}" alt="logo" /></span>
+              <h5 class="font-medium m-b-20">Recover Password</h5>
+              <span>Enter your Email and instructions will be sent to you!</span>
+          </div>
+          <div class="row m-t-20">
+              <!-- Form -->
+              <form class="col-12" (ngSubmit)="recoverpassword()" #f1="ngForm">
+                  <!-- email -->
+                  <div class="form-group row">
+                      <div class="col-12">
+                          <input class="form-control form-control-lg" id="email" email type="text" [(ngModel)]="this.login.recoveremail" name="recoveremail" #recoveremail="ngModel" required placeholder="Email Address">
+                          <small class="form-text text-danger" *ngIf="!this.recoveremail.valid && (this.recoveremail.dirty || this.recoveremail.touched)">Please Enter a Valid Email!</small>
+                      </div>
+                  </div>
+                  <!-- pwd -->
+                  <div class="row m-t-20">
+                      <div class="col-12">
+                          <button class="btn btn-block btn-lg btn-info" [disabled]="!f1.valid" type="submit" style="background-color: rgb(18, 52, 77);font-size: 14px;font-weight: 600;border-radius: 3px;height: 50px;" >
+                            <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                            &nbsp; Reset</button>
+                          <br>
+                          <a (click)="showRecoverForm()" href="javascript:void(0)" id="to-recover" class="text-dark textx-center"><i class="fas fa-arrow-left m-r-5"></i> Back To Login</a>
+
+                      </div>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,214 @@
+<style>
+    .page-wrapper > .container-fluid {
+      padding: 0px !important;
+  }
+  .m-t-30 {
+       margin-top: 0px;
+  }
+  </style>
+
+  <div class="row">
+    <div class="col-lg-9 col-md-12 col-sm-12 m-t-30" style="max-height: 100%;overflow-y: scroll;">
+      <div class="card" >
+        <span style="padding: 15px 28px 0;">
+          <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+            <b><i class="fas fa-arrow-left"></i> Go Back</b>
+           </a>
+        </span>
+        <div class="card-body" style="padding: 40px 28px 0;">
+          <h3 style="color: black;font-weight: 600;"> Manage Tags </h3>
+
+            <br>
+            <div class="list-page-body" id="TagsList">
+
+              <form class="form" (ngSubmit)="onTemplateFormSubmit()" #f="ngForm" >
+                <div id="tags-list" class="detailed_view tags-list">
+                  <div class="row">
+                    <div class="col-4">
+                      <input type="text" class="form-control" [(ngModel)]="this.tagdata.tagname" name="tagname" placeholder="Tag name" required  #tagname="ngModel" >
+                      <small class="form-text text-danger" *ngIf="!tagname.valid && (tagname.dirty || tagname.touched)">Please enter tag name!</small>
+                    </div>
+
+                  <div class="col-4">
+                    <button  class="btn btn-dark" id="btnsubmit" [disabled]="!f.valid" style="width: 90px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+                      <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                      Add</button>
+                  </div>
+
+                    <div class="col-4">
+                      <div class="input-group mb-3" style="height: 20px;">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" (keyup)='updateFilter($event)' class="form-control" placeholder="Search for tags" aria-describedby="basic-addon1">
+                      </div>
+                    </div>
+                </div>
+            <br><br>
+            <div class="table-responsive" style="border-radius: 5px;">
+              <div style="margin-left: 50%;margin-right: auto;" *ngIf="loadingtbl"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+            <table class="table table-striped" style="border-radius: 2px;border: 1px solid #cfd7df;">
+              <tbody>
+                <tr *ngFor="let a of tagtable">
+              <td class="name" >
+                      <a (click)="deletemodal(deletecontent,a.tagGuid)" title="Delete" style="cursor: pointer;"><i class="far fa-trash-alt" style="color: red;"></i> </a>
+                      &nbsp; &nbsp;
+                      <a (click)="editmodal(editcontent,a.tagGuid)" title="Edit" style="cursor: pointer;"><i class="sl-icon-note" style="color: blue;"></i> </a>
+                      &nbsp; &nbsp;
+                      <span class="tag-name">
+                        {{a.tagname}}
+                    </span>
+                    <span id="tag_text_container_82000021101" class="hide">
+                      <input type="text" tag_id="82000021101" class="textbox tag_text" value="vnvjhhh" maxlength="32">
+                    </span>
+
+              </td>
+
+
+              <td class=" tickets muted disabled" id="Tickets_82000021101" data-tag-type="Helpdesk::Ticket">
+                <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ tagname: a.tagname }">
+                  <span class="oval-border">
+                    <i class="fa fa-ticket-alt" id="" size="16"></i>
+                    <span class="cnt-label"> {{a.ticket.length}}</span>
+                  </span>
+                </a>
+            </td>
+
+              <td class=" customers muted disabled" id="Customers_82000021101" data-tag-type="User">
+                <span class="oval-border">
+                  <i class="fa fa-user  fsize-16 " id="" size="16"></i>
+                  <span class="cnt-label"> {{a.contact.length}}</span>
+
+                </span>
+            </td>
+
+              <!-- <td class=" articles muted disabled" id="Articles_82000021101" data-tag-type="Solution::Article">
+                <span class="oval-border">
+                  <i class="fa fa-newspaper fsize-16 " id="" size="16"></i>
+                  <span class="cnt-label">0</span>
+
+                </span>
+            </td> -->
+
+
+              <td class="total">
+                <span class="tags-total-counter"> {{a.contact.length + a.ticket.length}}</span>
+              </td>
+            </tr>
+
+
+              </tbody>
+            </table>
+
+        </div>
+
+            <div id="tag-dialog-confirm" title="Merge Tags" class="hide">
+              <p>
+                <i class="ficon-warning"></i>
+                Tag with the same name exists. Do you want to merge these tags?
+              </p>
+            </div>
+            <div id="tag-delete-confirm" class="hide">
+              <p>
+                Are you sure you want to delete the selected tag(s)?
+              </p>
+            </div>
+            <div id="tag-remove-confirm" title="Remove Tag association" class="hide">
+              <p>
+                <span class="ficon-warning"></span>
+                Are you sure you want to remove the tag association?
+                Please note that this can take several minutes to complete if you remove tags from a large number of association
+              </p>
+            </div></div>
+              <input type="hidden" name="authenticity_token" value="bPvo38sWSa8eYo98LBOxCEsW6y9FXvm0DIjMvEmEoB0="></form>
+
+              </div>
+        </div>
+        <br>
+
+
+
+          </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-12 col-sm-12 m-t-30" style="max-height: 550px;overflow-y: scroll;background-color: #f5f7f9;">
+      <br>
+      <div style="margin-top: 10px;margin-left: 20px;">
+        <div class="sidepanel">
+            <i class="common-icon-help"></i>
+                  <h5 class="lead">
+Managing Tags
+</h5>
+<p>This page shows you a list of all tags that are currently being used in your helpdesk. By default, you can get the usage count for every tag, including the number of linked tickets, customers or solution articles at a glance by looking them up from the list. If you want to, you can also open up a complete list of tagged items by clicking on the corresponding numbers.</p>
+<p>When you want to rename them altogether, click on the tag names to update all of their instances automatically. Additionally, you can choose to merge two or more tags together by giving them the same name.</p>
+<p>Tag count is available for:</p>
+<p><i class="fa fa-ticket-alt" id="cm-sb-toggle" size="16"></i>
+<span class="translation_missing" title="translation missing: en.helpdesk.tags.index.tickets"> Tickets</span> </p>
+<p><i class="fa fa-user icolor fsize-16 " id="cm-sb-toggle" size="16"></i> Contacts  </p>
+<p><i class="fa fa-newspaper fsize-16 " id="cm-sb-toggle" size="16"></i> Articles </p>
+
+        </div>
+
+    </div>
+  </div>
+
+  </div>
+
+
+
+  <ng-template #deletecontent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title"><i class="fas fa-tag"></i> Delete Tag</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+        <h3>Are You Sure You Want to Delete this ?</h3>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">Yes Delete</button>
+      <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>
+
+
+  <ng-template #editcontent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title"><i class="fas fa-tag"></i> Edit Tag</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <form class="form" (ngSubmit)="update()" #f1="ngForm" >
+
+
+        <div class="row" style="display: none;">
+          <div class="col-lg-12 col-md-8 col-sm-12">
+              <label style="font-size: 12px;">Guid <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="this.tagdata.tagGuid" name="tagGuid" required  #tagGuid="ngModel">
+            <small class="form-text text-danger" *ngIf="!tagGuid.valid && (tagGuid.dirty || tagGuid.touched)">Please enter a group name!</small>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <input type="text" class="form-control" [(ngModel)]="this.tagdata.tagname" name="tagname" placeholder="Tag name" required  #tagname="ngModel" >
+            <small class="form-text text-danger" *ngIf="!tagname.valid && (tagname.dirty || tagname.touched)">Please enter tag name!</small>
+          </div>
+        </div>
+
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-dark" (click)="update()"  [disabled]="!f1.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" > <i class="fa fa-spinner fa-spin" *ngIf="loading1"></i> Update</button>
+      <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>

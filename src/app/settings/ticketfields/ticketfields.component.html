@@ -1,0 +1,142 @@
+<style>
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+
+  .loader {
+  margin: 5px 0 0 102px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 1s linear infinite; /* Safari */
+    animation: spin 1s linear infinite;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
+
+<div class="row">
+  <div class="col-lg-9 col-md-12 col-sm-12 m-t-30" style="max-height: 100%;overflow-y: scroll;">
+    <div class="card" >
+      <span style="padding: 15px 28px 0;">
+        <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+          <b><i class="fas fa-arrow-left"></i> Go Back</b>
+         </a>
+      </span>
+      <div class="card-body" style="padding: 40px 36px 0;">
+        <h3 style="color: black;font-weight: 600;">Ticket Fields
+          <a routerLink="/settings/roles/newrole" class="btn btn-dark" style="float: right;;background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">New Role</a>
+        </h3>
+
+      <br>
+            <div class="table-responsive" style="border-radius: 5px;">
+              <div style="margin-left: 50%;margin-right: auto;"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+              <!-- *ngIf="loading" -->
+                <table class="table table-striped" style="border-radius: 2px;border: 1px solid #cfd7df;">
+
+                    <!-- <tbody>
+                        <tr *ngFor="let a of roles">
+                          <td scope="row" style="width: 70%;"><a href="/#/settings/roles/newrole?id={{a.roleGuid}}" style="color: blue;"> {{a.rolename}} </a> <br>
+                            <small>{{a.description}}</small></td>
+                          <td style="color: blue;"><a (click)="agentmodal(agentscontent,a.roleGuid)" title="View" style="cursor: pointer;"> {{a.agents.length}} Agent </a></td>
+                          <td><a *ngIf="a.rolename != 'Administrator'" (click)="deletemodal(deletecontent,a.roleGuid)" title="Delete" style="cursor: pointer;"> <i class="fa fa-trash" style="color: red;"></i> </a></td>
+                      </tr>
+                    </tbody> -->
+                </table>
+            </div>
+
+
+      <br>
+    </div>
+  </div>
+  </div>
+
+  <div class="col-lg-3 col-md-12 col-sm-12 m-t-30" style="max-height: 500px;overflow-y: scroll;background-color: #f5f7f9;">
+    <br>
+    <div style="margin-top: 10px;margin-left: 20px;">
+          <h5>Understanding Roles</h5>
+          <p>Roles allow you to create and edit access permissions for agents. You can create new roles, specify what actions agents with these roles can perform within your help desk, and assign the role to agents.
+            <br><br>
+            For example, you can create a role for your Support Co-ordinators, allowing them to update fields and assign tickets, and even add notes internally, but not reply to customers.
+            <br><br>
+            Once you create and save a new Role you will be able to assign it to agents when you create or edit their profile by clicking on the Agents icon under the admin tab.</p>
+
+          <h5>Admin Privileges</h5>
+          <p>You can nominate whether you want an agent to have access to settings under the Admin tab. Agents with admin access can be Operation Agents with limited access, or Super Admins with the ability to edit all configurations. You can have as many Super Admins with the ability to view and modify your billing details, or as few as one.</p>
+
+  </div>
+</div>
+
+</div>
+
+<!--
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Delete Role</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+      <h3>Are You Sure You Want to Delete this ?</h3>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">
+      <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #agentscontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"> Agent list</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+
+        <div class="loader" *ngIf="loadingmodal"></div>
+
+        <div *ngIf="agents.length == '0'" class="row">
+          <h4>No agents having this role.</h4>
+        </div>
+        <div *ngFor="let contact of agents">
+            <div class="row">
+              <div class="col-3">
+                <img src="{{url}}/{{contact.uploadphoto}}" alt="user" width="50px;" class="rounded-circle" />
+              </div>
+              <div class="col-9">
+                {{contact.fullname}}
+                <p>{{contact.email}}</p>
+              </div>
+            </div>
+            <hr>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template> -->

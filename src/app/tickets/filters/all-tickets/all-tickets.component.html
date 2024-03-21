@@ -1,0 +1,1015 @@
+<style>
+  a:hover {
+    color: blue;
+  }
+
+</style>
+<div class="row" style="background-color: #f5f7f9;margin-top: -10px;font-size: 13px; box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);">
+  <div class="col-8">
+    <span style="float: left;margin: 18px 10px 10px 23px;">
+      <fieldset class="checkbox">
+        <label>
+          <span *ngIf="cardview">
+            <input type="checkbox" [ngModel]="ticketdata.all" value="Bike" (change)="onSelectall($event.target)">
+            &nbsp;&nbsp;
+            Sort by : <select style="border: none;background: #f5f7f9;cursor: pointer;" name="sort" (change)="sortcards($event.target)" placement="bottom" ngbTooltip="Sort Tickets">
+              <option selected>Date Created</option>
+              <option>Priority</option>
+              <option>Status</option>
+            </select>&nbsp;
+          </span>
+
+          <span *ngIf="tab">
+            <button type="button" (click)="Assigntickets(assigncontent)" class="btn btn-outline-default"
+              style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+              <b><i class="icon-Add-User"></i> Assign</b>
+            </button>
+            &nbsp;
+
+            <button type="button" (click)="Closetickets()" class="btn btn-outline-default"
+              style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+              <b> <i class="fa fa-spinner fa-spin" *ngIf="closeloading"></i> <i class="far fa-check-circle"
+                  *ngIf="closeloading == false"></i> Close</b>
+            </button>
+            &nbsp;
+
+            <button type="button" (click)="Deletetickets(deletecontent)" class="btn btn-outline-default"
+              style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+              <b><i class="far fa-trash-alt"></i> Delete</b>
+            </button>
+          </span>
+        </label>
+      </fieldset>
+    </span>
+  </div>
+  <div class="col-4">
+    <span style="float: right;margin: 15px 10px 10px 30px;">
+      Layout: <select style="border: none;background: #f5f7f9;cursor: pointer;" (change)="changelayout()"
+        [(ngModel)]="this.ticketdata.layout" name="layput" #layput="ngModel" placement="bottom" ngbTooltip="Change Layout">
+        <option value="card">Card View</option>
+        <option value="table">Table View</option>
+      </select>
+      &nbsp;&nbsp;
+      <button class="btn btn-outline-default" placement="bottom" ngbTooltip="Export to excel" (click)="exportmodal(exportcontent)" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+        <i class="mdi mdi-export"></i> <b> Export </b>
+      </button>&nbsp;
+      <button class="btn btn-outline-default" placement="bottom" ngbTooltip="Filters" (click)="filtertab()" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+        <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: -3px;" width="15" height="15" viewBox="0 0 32 32" class="app-icon app-icon--small icon-detail-right"><path d="M20.038 4.29H4.895a.606.606 0 00-.606.606v22.21c0 .335.271.606.606.606h15.143V4.291zm2.423 0v23.421h4.644a.606.606 0 00.606-.606V4.895a.606.606 0 00-.606-.606h-4.644zM4.895 1.867h22.21a3.029 3.029 0 013.029 3.029v22.21a3.029 3.029 0 01-3.029 3.029H4.895a3.029 3.029 0 01-3.029-3.029V4.896a3.029 3.029 0 013.029-3.029zM13.479 16l-4.191-4.191a1.211 1.211 0 011.713-1.713l5.048 5.048c.473.473.473 1.24 0 1.713l-5.048 5.048a1.211 1.211 0 01-1.713-1.713l4.191-4.191z"></path></svg>
+      </button>
+
+    </span>
+
+  </div>
+</div>
+
+<br>
+
+<div class="row" *ngIf="!cardview">
+  <!-- column -->
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="row" *ngIf="showfilter">
+          <div class="col-3"></div>
+
+          <div class="col-6" *ngIf="tagfilter != null">
+            Showing results for Tag - "{{tagfilter}}" &nbsp; <a (click)="redirect()"
+              style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+          </div>
+
+          <div class="col-6" *ngIf="statusfilter != null">
+            Showing results for Status - "{{statusfilter}}" &nbsp; <a (click)="redirect()"
+              style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+          </div>
+
+          <div class="col-6" *ngIf="unassignedfilter != null">
+            Showing results for Agent - "{{unassignedfilter}}" &nbsp; <a (click)="redirect()"
+              style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+          </div>
+
+          <div class="col-3"></div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-sm-3 col-md-3 col-lg-3">
+            <div class="input-group mb-3" style="height: 20px;">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+              </div>
+              <input type="text" (keyup)='updateFilter($event)' class="form-control" placeholder="Search"
+                aria-describedby="basic-addon1">
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <ngx-datatable #table [rows]="rows" class='material table-striped table-responsive' [columnMode]="'force'"
+                [loadingIndicator]="loading" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+                [selectionType]="'checkbox'" (select)="onSelect($event)" [selected]="selected" [limit]="50"
+                [sorts]="[{prop: 'name', dir: 'desc'}]">
+
+                <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                  [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="checkboxes">
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column name="Contact" prop="conGu.fullname" cellClass="d-flex align-items-center">
+                  <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    <div class="row">
+                      <div class="col-3">
+                        <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="44px" height="44px"
+                          alt="'picture" data-test-user="user-avatar" src="{{url}}{{row.conGu.uploadphoto}}">
+                      </div>
+                      <div class="col-8" style="margin-left: 5px;">
+                        <!-- <a [routerLink]="['/detail-ticket']"[queryParams]="{ id: row.tguid }"> -->
+                          {{row.conGu.fullname}}
+                        <!-- </a> -->
+
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Subject" prop="subject" cellClass="d-flex align-items-center">
+                  <ng-template ngx-datatable-cell-template let-row="row" let-value="value" >
+                    <a [routerLink]="['/detail-ticket']" [queryParams]="{ id: row.tguid }">
+                    <span (mouseover)="filterreplybyid(row.tguid)" placement="bottom" ngbPopover="{{replybyid}}"
+                    triggers="mouseenter:mouseleave" popoverTitle="{{repliername}}">{{row.subject}}</span>
+                    </a>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Group" prop="ggu.groupname" cellClass="d-flex align-items-center">
+                  <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    <span *ngIf="row.ggu == null"></span>
+                    <span *ngIf="row.ggu != null">{{row.ggu.groupname}}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column name="Agent" prop="agGu.fullname" cellClass="d-flex align-items-center">
+                  <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    <span *ngIf="row.agGuid == null"></span>
+                    <span *ngIf="row.agGuid != null">{{row.agGu.fullname}}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Priority" prop="priority" cellClass="d-flex align-items-center">
+                  <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    <span *ngIf="row.priority === 'Low'"
+                    style="height: 10px;width: 10px;background-color: #a0d76a;display: inline-block;"></span>
+                  <span *ngIf="row.priority === 'Medium'"
+                    style="height: 10px;width: 10px;background-color:blue;display: inline-block;"></span>
+                  <span *ngIf="row.priority === 'High'"
+                    style="height: 10px;width: 10px;background-color: orange;display: inline-block;"></span>
+                  <span *ngIf="row.priority === 'Urgent'"
+                    style="height: 10px;width: 10px;background-color: red;display: inline-block;"></span>
+                  &nbsp;
+                   <span>{{row.priority}}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Status" prop="status" cellClass="d-flex align-items-center">
+                  <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                    <span class="label label-warning" *ngIf="row.status === 'Open'" style="background-color: blue;font-size: 85%;font-weight: 600;">{{row.status}}</span>
+                    <span class="label label-warning" *ngIf="row.status === 'Resolved'" style="background-color: #a0d76a;font-size: 85%;font-weight: 600;">{{row.status}}</span>
+                    <span class="label label-warning" *ngIf="row.status === 'Pending'" style="background-color: orange;font-size: 85%;font-weight: 600;">{{row.status}}</span>
+                    <span class="label label-warning" *ngIf="row.status === 'Close'" style="background-color: Red;font-size: 85%;font-weight: 600;">{{row.status}}</span>
+                    <span class="label label-warning" *ngIf="row.status === 'Waiting on Customer'" style="background-color: orange;font-size: 85%;font-weight: 600;">{{row.status}}</span>
+                    <span class="label label-warning" *ngIf="row.status === 'Waiting on Third Party'" style="background-color: orange;font-size: 85%;font-weight: 600;">{{row.status}}</span>
+
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <!-- <ngx-datatable-column name="Action" [sortable]="false" [canAutoResize]="false" [width]="165" [draggable]="false" [resizeable]="false" cellClass="d-flex align-items-center">
+                                                                <ng-template ngx-datatable-cell-template let-rowIndex="row.comGuid" let-row="row" let-value="value">
+                                                                  <button class="btn btn-outline-primary" (click)="editmodal(editcontent,rowIndex)"><i class="sl-icon-note"></i></button>
+                                                                  <button class="btn btn-outline-danger" (click)="deletemodal(deletecontent,rowIndex)"><i class="fa fa-trash"></i></button>
+                                                                </ng-template>
+                                                              </ngx-datatable-column> -->
+
+
+              </ngx-datatable>
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+    <!---->
+  </div>
+</div>
+
+<div *ngIf="cardview">
+  <div class="row">
+    <div class="col-lg-9" *ngIf="viewfiltertab">
+
+      <div class="row" style="margin-bottom: -15px;" *ngFor="let a of rows">
+        <!-- column -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex flex-row">
+                <div class="align-self-center" style="margin-right: 10px;margin-top: 6px;">
+                  <fieldset class="checkbox">
+                    <label>
+                      <input type="checkbox" [ngModel]="ticketdata.chk" value="{{a.tguid}}" (change)="onSelectcardcheck($event.target)">
+                    </label>
+                  </fieldset>
+                </div>
+                <!-- <div class="round align-self-center round-success">
+                            <i class="ti-wallet"></i>
+                        </div> -->
+
+
+                <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="44px" height="44px"
+                  alt="'picture" data-test-user="user-avatar" src="{{url}}{{a.conGu.uploadphoto}}">
+
+                <div class="m-l-10 align-self-center" style="font-size: 12px;">
+                  <span *ngIf="a.tagGu !== null" style="color: #12344d;
+                                      border: 1px solid #cfd7df;
+                                      background-color: #fff;
+                                      font-weight: 600;
+                                      font-size: 11px;
+                                      -webkit-font-smoothing: antialiased;
+                                      padding: 0 5px;
+                                      display: inline-block;
+                                      border-radius: 4px;margin-bottom: 5px;">{{a.tagGu.tagname}}</span>
+
+                  <a [routerLink]="['/detail-ticket']" [queryParams]="{ id: a.tguid }">
+                    <h5 (mouseover)="filterreplybyid(a.tguid)" class="m-b-0 text-muted" *ngIf="a.status === 'Close'" style="margin-bottom: 5px;color: black;"
+                      placement="bottom" ngbPopover="{{replybyid}}"
+                      triggers="mouseenter:mouseleave" popoverTitle="{{repliername}}">
+                      {{a.subject}}
+                    </h5>
+                    <h5 (mouseover)="filterreplybyid(a.tguid)" class="m-b-0 text" *ngIf="a.status !== 'Close'" style="margin-bottom: 5px;color: black;"
+                      placement="bottom" ngbPopover="{{replybyid}}"
+                      triggers="mouseenter:mouseleave" popoverTitle="{{repliername}}">
+                      {{a.subject}}
+                    </h5>
+                  </a>
+                  <span><b>{{a.conGu.fullname}} </b>&nbsp;
+                    <span
+                      style="height: 5px;width: 5px;margin-bottom: 2px;background-color: #a1aab2;border-radius: 50%;display: inline-block;"></span>&nbsp;
+                    <span *ngIf="a.status === 'Close'">Closed &nbsp;
+                      <span style="height: 5px;width: 5px;margin-bottom: 2px;background-color: #a1aab2;border-radius: 50%;display: inline-block;"></span>&nbsp;
+                      Resolved</span>
+                    <span *ngIf="a.status !== 'Close'">Created {{timezonedate(a.datetime)}} &nbsp;
+                      <span *ngIf="timezonedate(a.datetime) === 0">Created today &nbsp;</span>
+                      <span style="height: 5px;width: 5px;margin-bottom: 2px;background-color: #a1aab2;border-radius: 50%;display: inline-block;"></span>&nbsp;
+                    {{a.status}}</span>
+                    </span>
+
+                </div>
+                <div class="ml-auto align-self-center" style="margin-right: 65px;">
+                  <span style="margin-bottom: 5px;margin-left: 3px;">
+                    <span *ngIf="a.priority === 'Low'"
+                      style="height: 10px;width: 10px;background-color: #a0d76a;display: inline-block;"></span>
+                    <span *ngIf="a.priority === 'Medium'"
+                      style="height: 10px;width: 10px;background-color:blue;display: inline-block;"></span>
+                    <span *ngIf="a.priority === 'High'"
+                      style="height: 10px;width: 10px;background-color: orange;display: inline-block;"></span>
+                    <span *ngIf="a.priority === 'Urgent'"
+                      style="height: 10px;width: 10px;background-color: red;display: inline-block;"></span>
+                    &nbsp;
+
+                    <select style="border: none;background:white;cursor: pointer;" name="priority"
+                      (change)="updatepriority($event.target.value, a.tguid)" [(ngModel)]="a.priority" #priority="ngModel"
+                      placement="left" ngbTooltip="Priority">
+                      <option value="Low"> Low</option>
+                      <option value="Medium"> Medium</option>
+                      <option value="High"> High</option>
+                      <option value="Urgent"> Urgent</option>
+                    </select>
+                  </span><br>
+                  <span style="margin-bottom: 5px;">
+                    <i class="sl-icon-user-follow"></i> &nbsp;
+                    <a (click)="Assignsingleticket(assignsinglecontent,a.tguid)" style="cursor: pointer;"><span
+                        style="color: black;font-weight: 400;" placement="left" ngbTooltip="Assign a group or agent">
+                        <span *ngIf="a.ggu === null">.... / .... </span> <span *ngIf="a.ggu !== null"> {{a.ggu.groupname}} / </span>
+                          <span *ngIf="a.agGu === null">.... / .... </span> <span *ngIf="a.agGu !== null">  {{a.agGu.fullname}} </span><i class="fas fa-angle-down"></i></span></a>
+                    <!-- <select style="border: none;background:white;" name="tags" placement="left" ngbTooltip="Assign a group or agent">
+                                <option selected>Services &... / Tony Harri...</option>
+                              </select> -->
+                  </span><br>
+                  <span>
+                    <i class="mdi mdi-pulse"></i> &nbsp;
+                    <select style="border: none;background:white;width: 50%;cursor: pointer;" name="status"
+                      (change)="updatestatus($event.target.value, a.tguid)" [(ngModel)]="a.status" #status="ngModel"
+                      placement="left" ngbTooltip="Status">
+                      <option>Open</option>
+                      <option>Pending</option>
+                      <option>Resolved</option>
+                      <option>Close</option>
+                      <option>Waiting on Customer</option>
+                      <option>Waiting on Third Party</option>
+                    </select>
+                    <i class="fa fa-spinner fa-spin" *ngIf="stupdate"></i>
+                  </span>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12" *ngIf="!viewfiltertab">
+
+      <div class="row" *ngIf="showfilter">
+        <div class="col-3"></div>
+
+        <div class="col-6" *ngIf="tagfilter != null">
+          Showing results for Tag - "{{tagfilter}}" &nbsp; <a (click)="redirect()"
+            style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+        </div>
+
+        <div class="col-6" *ngIf="statusfilter != null">
+          Showing results for Status - "{{statusfilter}}" &nbsp; <a (click)="redirect()"
+            style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+        </div>
+
+        <div class="col-6" *ngIf="unassignedfilter != null">
+          Showing results for Agent - "{{unassignedfilter}}" &nbsp; <a (click)="redirect()"
+            style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+        </div>
+
+        <div class="col-6" *ngIf="groupfilter != null">
+          Showing results for Group - "{{groupfilter}}" &nbsp; <a (click)="redirect()"
+            style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+        </div>
+
+        <div class="col-6" *ngIf="agentfilter != null">
+          Showing results for Agent - "{{agentfilter}}" &nbsp; <a (click)="redirect()"
+            style="color: red;cursor: pointer;"> <i class="fa fa-times"></i> Remove Filter</a>
+        </div>
+
+        <div class="col-3"></div>
+        <br>
+      </div>
+
+
+      <div class="row" style="margin-bottom: -15px;" *ngFor="let a of rows">
+        <!-- column -->
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex flex-row">
+                <div class="align-self-center" style="margin-right: 10px;margin-top: 6px;">
+                  <fieldset class="checkbox">
+                    <label>
+                      <input type="checkbox" [ngModel]="ticketdata.chk" value="{{a.tguid}}" (change)="onSelectcardcheck($event.target)">
+                    </label>
+                  </fieldset>
+                </div>
+                <!-- <div class="round align-self-center round-success">
+                            <i class="ti-wallet"></i>
+                        </div> -->
+
+
+                <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="44px" height="44px"
+                  alt="'picture" data-test-user="user-avatar" src="{{url}}{{a.conGu.uploadphoto}}">
+
+                <div class="m-l-10 align-self-center" style="font-size: 12px;">
+                  <span *ngIf="a.tagGu !== null" style="color: #12344d;
+                                      border: 1px solid #cfd7df;
+                                      background-color: #fff;
+                                      font-weight: 600;
+                                      font-size: 11px;
+                                      -webkit-font-smoothing: antialiased;
+                                      padding: 0 5px;
+                                      display: inline-block;
+                                      border-radius: 4px;margin-bottom: 5px;">{{a.tagGu.tagname}}</span>
+
+                  <a [routerLink]="['/detail-ticket']" [queryParams]="{ id: a.tguid }">
+                    <h5 (mouseover)="filterreplybyid(a.tguid)" class="m-b-0 text-muted" *ngIf="a.status === 'Close'" style="margin-bottom: 5px;color: black;"
+                      placement="bottom" ngbPopover="{{replybyid}}"
+                      triggers="mouseenter:mouseleave" popoverTitle="{{repliername}}">
+                      {{a.subject}}
+                    </h5>
+                    <h5 (mouseover)="filterreplybyid(a.tguid)" class="m-b-0 text" *ngIf="a.status !== 'Close'" style="margin-bottom: 5px;color: black;"
+                      placement="bottom" ngbPopover="{{replybyid}}"
+                      triggers="mouseenter:mouseleave" popoverTitle="{{repliername}}">
+                      {{a.subject}}
+                    </h5>
+                  </a>
+                  <span><b>{{a.conGu.fullname}} </b>&nbsp;
+                    <span
+                      style="height: 5px;width: 5px;margin-bottom: 2px;background-color: #a1aab2;border-radius: 50%;display: inline-block;"></span>&nbsp;
+                    <span *ngIf="a.status === 'Close'">Closed &nbsp;
+                      <span style="height: 5px;width: 5px;margin-bottom: 2px;background-color: #a1aab2;border-radius: 50%;display: inline-block;"></span>&nbsp;
+                      Resolved</span>
+                    <span *ngIf="a.status !== 'Close'">Created {{timezonedate(a.datetime)}} &nbsp;
+                      <span *ngIf="timezonedate(a.datetime) === 0">Created today &nbsp;</span>
+                      <span style="height: 5px;width: 5px;margin-bottom: 2px;background-color: #a1aab2;border-radius: 50%;display: inline-block;"></span>&nbsp;
+                    {{a.status}}</span>
+                    </span>
+
+                </div>
+                <div class="ml-auto align-self-center" style="margin-right: 92px;">
+                  <span style="margin-bottom: 5px;margin-left: 3px;">
+                    <span *ngIf="a.priority === 'Low'"
+                      style="height: 10px;width: 10px;background-color: #a0d76a;display: inline-block;"></span>
+                    <span *ngIf="a.priority === 'Medium'"
+                      style="height: 10px;width: 10px;background-color:blue;display: inline-block;"></span>
+                    <span *ngIf="a.priority === 'High'"
+                      style="height: 10px;width: 10px;background-color: orange;display: inline-block;"></span>
+                    <span *ngIf="a.priority === 'Urgent'"
+                      style="height: 10px;width: 10px;background-color: red;display: inline-block;"></span>
+                    &nbsp;
+
+                    <select style="border: none;background:white;cursor: pointer;" name="priority"
+                      (change)="updatepriority($event.target.value, a.tguid)" [(ngModel)]="a.priority" #priority="ngModel"
+                      placement="left" ngbTooltip="Priority">
+                      <option value="Low"> Low</option>
+                      <option value="Medium"> Medium</option>
+                      <option value="High"> High</option>
+                      <option value="Urgent"> Urgent</option>
+                    </select>
+                  </span><br>
+                  <span style="margin-bottom: 5px;">
+                    <i class="sl-icon-user-follow"></i> &nbsp;
+                    <a (click)="Assignsingleticket(assignsinglecontent,a.tguid)" style="cursor: pointer;"><span
+                        style="color: black;font-weight: 400;" placement="left" ngbTooltip="Assign a group or agent">
+                        <span *ngIf="a.ggu === null">.... /  </span> <span *ngIf="a.ggu !== null"> {{a.ggu.groupname}} /</span>
+                        <span *ngIf="a.agGu === null">.... </span><span *ngIf="a.agGu !== null"> {{a.agGu.fullname}} </span><i class="fas fa-angle-down"></i></span></a>
+                    <!-- <select style="border: none;background:white;" name="tags" placement="left" ngbTooltip="Assign a group or agent">
+                                <option selected>Services &... / Tony Harri...</option>
+                              </select> -->
+                  </span><br>
+                  <span>
+                    <i class="mdi mdi-pulse"></i> &nbsp;
+                    <select style="border: none;background:white;width: 50%;cursor: pointer;" name="status"
+                      (change)="updatestatus($event.target.value, a.tguid)" [(ngModel)]="a.status" #status="ngModel"
+                      placement="left" ngbTooltip="Status">
+                      <option>Open</option>
+                      <option>Pending</option>
+                      <option>Resolved</option>
+                      <option>Close</option>
+                      <option>Waiting on Customer</option>
+                      <option>Waiting on Third Party</option>
+                    </select>
+                    <i class="fa fa-spinner fa-spin" *ngIf="stupdate"></i>
+                  </span>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3" *ngIf="viewfiltertab">
+        <div class="card" style="background-color: #f5f7f9;">
+          <form class="form" #f="ngForm" novalidate>
+          <div class="card-body" style="max-height: 450px;overflow-y: scroll;">
+            <div>
+              <div>
+                <span style="font-size: 16px;font-weight: 500;">FILTERS</span>
+                <a style="cursor: pointer;" (click)="clearfilters(f)"><span style="float: right;font-size: 12px;color: red;"> <i class="fa fa-times"></i> Clear Filters</span></a>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2" for="fullname">Agents</label>
+                  <ng-multiselect-dropdown [placeholder]="'Select Agent'" name="fullname" required #agent="ngModel"
+                    [data]="agents" [(ngModel)]="this.ticketdata.agent" [settings]="agentsdropdownSettings">
+                    <!-- [disabled]="!disableagentdrop" -->
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2" for="groupname">Groups</label>
+                  <ng-multiselect-dropdown [placeholder]="'Select Group'" required name="groupname" #groups="ngModel"
+                    [data]="groupname" [(ngModel)]="this.ticketdata.grou" [settings]="groupdropdownSettings">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Created</label>
+                  <select class="form-control" name="created" style="background-color: #f5f7f9;border: 1px solid #adadad;" [(ngModel)]="this.ticketdata.created" #created="ngModel">
+                      <!-- <option value="">Please Select</option> -->
+                      <option value="5m">Within 5 minutes</option>
+                      <option value="15m">Within 15 minutes</option>
+                      <option value="30m">Within 30 minutes</option>
+                      <option value="1h">Within 1 hour</option>
+                      <option value="4h">Within 4 hour</option>
+                      <option value="12h">Within 12 hour</option>
+                      <option value="0">Today</option>
+                      <option value="1d">Yesterday</option>
+                      <option value="7d">Last 7 days</option>
+                      <option value="30d">Last 30 days</option>
+                      <option value="60d">Last 60 days</option>
+                    </select>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Resolved</label>
+                  <select class="form-control" name="created" style="background-color: #f5f7f9;border: 1px solid #adadad;" [(ngModel)]="this.ticketdata.resolved" #resolved="ngModel">
+                      <!-- <option value="">Please Select</option> -->
+                      <option value="5m">Within 5 minutes</option>
+                      <option value="15m">Within 15 minutes</option>
+                      <option value="30m">Within 30 minutes</option>
+                      <option value="1h">Within 1 hour</option>
+                      <option value="4h">Within 4 hour</option>
+                      <option value="12h">Within 12 hour</option>
+                      <option value="0">Today</option>
+                      <option value="1d">Yesterday</option>
+                      <option value="7d">Last 7 days</option>
+                      <option value="30d">Last 30 days</option>
+                      <option value="60d">Last 60 days</option>
+                    </select>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Status</label>
+                  <select class="form-control" name="status" style="background-color: #f5f7f9;border: 1px solid #adadad;" [(ngModel)]="this.ticketdata.status" #status="ngModel">
+                      <option>Open</option>
+                      <option>Pending</option>
+                      <option>Resolved</option>
+                      <option>Close</option>
+                      <option>Waiting on Customer</option>
+                      <option>Waiting on Third Party</option>
+                    </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Priority</label>
+                  <select class="form-control" name="priority" style="background-color: #f5f7f9;border: 1px solid #adadad;" [(ngModel)]="this.ticketdata.priority" #priority="ngModel">
+                      <option value="Low"> Low</option>
+                      <option value="Medium"> Medium</option>
+                      <option value="High"> High</option>
+                      <option value="Urgent"> Urgent</option>
+                    </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Type</label>
+                  <select class="form-control" [(ngModel)]="this.ticketdata.type" style="background-color: #f5f7f9;border: 1px solid #adadad;" name="type" #type="ngModel">
+                    <option *ngFor="let types of typedrop" [value]="types.typeGuid">{{types.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Tags</label>
+                  <select class="form-control" [(ngModel)]="this.ticketdata.tagsfilter" style="background-color: #f5f7f9;border: 1px solid #adadad;" name="tagsfilter" #tagsfilter="ngModel">
+                    <option *ngFor="let tags of tagdrop" [value]="tags.tagGuid">{{tags.tagname}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Companies</label>
+                  <select class="form-control" [(ngModel)]="this.ticketdata.companyfilter" style="background-color: #f5f7f9;border: 1px solid #adadad;" name="companyfilter" #companyfilter="ngModel">
+                    <option *ngFor="let comp of companydrop" [value]="comp.comGuid">{{comp.companyname}}</option>
+                  </select>
+                </div>
+              </div> -->
+
+              <div class="row">
+                <div class="col-12">
+                  <label class="mr-sm-2">Contacts</label>
+                  <select class="form-control" [(ngModel)]="this.ticketdata.contactfilter" style="background-color: #f5f7f9;border: 1px solid #adadad;" name="contactfilter" #contactfilter="ngModel">
+                    <option *ngFor="let cont of contactdrop" [value]="cont.conGuid">{{cont.fullname}}</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <br>
+          <button  class="btn btn-dark" (click)="applyfilter()" id="btnsubmit" style="margin-left: 10%;margin-right: 10%;width: 80%;border-radius: 5px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+             Apply</button>
+             <br>
+          </form>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="table-responsive" style="display: none;">
+  <table class="table" #myTable id="myTable">
+      <thead class="thead-light">
+          <tr>
+              <th scope="col">tguid</th>
+              <th scope="col">Subject</th>
+              <th scope="col">Status</th>
+              <th scope="col">Priority</th>
+              <th scope="col">Agent</th>
+              <th scope="col">Group</th>
+              <th scope="col">Type</th>
+              <th scope="col">Createddate</th>
+              <th scope="col">Resolveddate</th>
+              <th scope="col">Tags</th>
+              <th scope="col">Lastmodifieddate</th>
+              <th scope="col">Ticketdescription</th>
+
+              <th scope="col">Contact name</th>
+              <th scope="col">Contact email</th>
+              <th scope="col">Contact workphone</th>
+              <th scope="col">Contact mobilephone</th>
+              <th scope="col">Contact twitter</th>
+              <th scope="col">Contact Id</th>
+              <th scope="col">Contact timezone</th>
+              <th scope="col">Contact language</th>
+              <th scope="col">Contact title</th>
+              <th scope="col">Contact tags</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let a of rows">
+              <th scope="row">{{a.tguid}}</th>
+              <td>{{a.subject}}</td>
+              <td >{{a.status}}</td>
+              <td>{{a.priority}}</td>
+              <td *ngIf="a.agGu === null"></td><td *ngIf="a.agGu !== null">{{a.agGu.fullname}}</td>
+              <td *ngIf="a.ggu === null"></td><td *ngIf="a.ggu !== null">{{a.ggu.groupname}}</td>
+              <td>{{a.type}}</td>
+              <td>{{a.datetime}}</td>
+              <td></td>
+              <td *ngIf="a.tagGu === null"></td><td *ngIf="a.tagGu !== null">{{a.tagGu.tagname}}</td>
+              <td></td>
+              <td>{{a.description}}</td>
+
+              <td>{{a.conGu.fullname}}</td>
+              <td>{{a.conGu.email}}</td>
+              <td >{{a.conGu.workphone}}</td>
+              <td>{{a.conGu.mobilephone}}</td>
+              <td>{{a.conGu.tweeterid}}</td>
+              <td>{{a.conGu.conGuid}}</td>
+              <td>{{a.conGu.timezone}}</td>
+              <td>{{a.conGu.language}}</td>
+              <td>{{a.conGu.title}}</td>
+              <td *ngIf="a.conGu.tagGu === null"></td><td *ngIf="a.conGu.tagGu !== null">{{a.conGu.tagGu.tagname}}</td>
+              <td></td>
+          </tr>
+
+      </tbody>
+  </table>
+</div>
+
+
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="far fa-trash-alt"></i> Delete Tickets</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <h3>Are You Sure You Want to Delete this ?</h3>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete()"><i class="fa fa-spinner fa-spin" *ngIf="loader"></i> Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #assigncontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Assign tickets to agent</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="form" #f="ngForm">
+      <div class="row">
+        <div class="col-12">
+          <label class="mr-sm-2" for="groupname">Group <span style="color: red;">*</span></label>
+          <ng-multiselect-dropdown [placeholder]="'Select Group'" required name="groupname" #groups="ngModel"
+            [data]="groupname" [(ngModel)]="this.ticketdata.groups" [settings]="groupdropdownSettings"
+            (onSelect)="Groupselect($event)" (onDeSelect)="Groupdeselect($event)" [disabled]="!cangroupchange">
+          </ng-multiselect-dropdown>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-12">
+          <label class="mr-sm-2" for="fullname">Agent <span style="color: red;">*</span></label>
+          <ng-multiselect-dropdown [placeholder]="'Select Agent'" name="fullname" required #agents="ngModel"
+            [data]="agentname" [(ngModel)]="this.ticketdata.agents" [settings]="agentsdropdownSettings"
+            (onSelect)="Agentselect($event)" [disabled]="!disableagentdrop">
+          </ng-multiselect-dropdown>
+          <!-- <select class="form-control" [(ngModel)]="this.ticketdata.agent" name="agent" required  #agent="ngModel">
+                <option *ngFor="let agents of agentdrop" [value]="agents.agGuid">{{agents.fullname}}</option>
+              </select> -->
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" [disabled]="!f.valid" (click)="Assignagent()" class="btn btn-dark"
+      style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+      <i class="fa fa-spinner fa-spin" *ngIf="closeloading"></i> Assign</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #assignsinglecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Assign ticket to agent</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="form" #f="ngForm">
+
+      <div class="row" style="display: none;">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <label style="font-size: 12px;">TGuid<span style="color: red;">*</span></label>
+          <input type="email" class="form-control" [(ngModel)]="this.ticketdata.tguid" name="tguid" required  #tguid="ngModel" >
+          <small class="form-text text-danger" *ngIf="!tguid.valid && (tguid.dirty || tguid.touched)">Please enter Full name!</small>
+          </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <label class="mr-sm-2" for="groupname">Group <span style="color: red;">*</span></label>
+          <ng-multiselect-dropdown [placeholder]="'Select Group'" required name="groupname" #groups="ngModel"
+            [data]="groupname" [(ngModel)]="this.ticketdata.groupsingle" [settings]="groupdropdownSettings"
+            (onSelect)="Groupselect($event)" (onDeSelect)="Groupdeselect($event)" [disabled]="!cangroupchange">
+          </ng-multiselect-dropdown>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-12">
+          <label class="mr-sm-2" for="fullname">Agent <span style="color: red;">*</span></label>
+          <ng-multiselect-dropdown [placeholder]="'Select Agent'" name="fullname" required #agents="ngModel"
+            [data]="agentname" [(ngModel)]="this.ticketdata.agentsingle" [settings]="agentsdropdownSettings"
+            (onSelect)="Agentselect($event)" [disabled]="!disableagentdrop">
+          </ng-multiselect-dropdown>
+          <!-- <select class="form-control" [(ngModel)]="this.ticketdata.agent" name="agent" required  #agent="ngModel">
+                <option *ngFor="let agents of agentdrop" [value]="agents.agGuid">{{agents.fullname}}</option>
+              </select> -->
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" [disabled]="!f.valid" (click)="Assignsingleagent()" class="btn btn-dark"
+      style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+      <i class="fa fa-spinner fa-spin" *ngIf="closeloading"></i> Assign</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #exportcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-upload"></i> Export Tickets</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="max-height: 400px;overflow-y: scroll;margin: 20px;overflow-x: hidden;">
+
+
+    <div style="border: 1px solid #ccc;padding: 20px;">
+      <h5>Ticket fields</h5> <br>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="ticketid" [(ngModel)]="this.exportdata.ticketid" #ticketid="ngModel"> Ticket ID
+                  <!-- (change)="change(this.exportdata.name, 'name')" -->
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="subject" [(ngModel)]="this.exportdata.subject" #subject="ngModel"> Subject
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="status" [(ngModel)]="this.exportdata.status" #status="ngModel"> Status
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="priority" [(ngModel)]="this.exportdata.priority" #priority="ngModel"> Priority
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="agent" [(ngModel)]="this.exportdata.agent" #agent="ngModel"> Agent
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="group" [(ngModel)]="this.exportdata.group" #group="ngModel" > Group
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="type" [(ngModel)]="this.exportdata.type" #type="ngModel"> Type
+              </label>
+            </fieldset>
+          </div>
+
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="createddate" [(ngModel)]="this.exportdata.createddate" #createddate="ngModel" > Created Date
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="resolveddate" [(ngModel)]="this.exportdata.resolveddate" #resolveddate="ngModel"> Resolved Date
+              </label>
+            </fieldset>
+          </div>
+
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="tags" [(ngModel)]="this.exportdata.tags" #tags="ngModel"> Tags
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="lastmodifieddate" [(ngModel)]="this.exportdata.lastmodifieddate" #lastmodifieddate="ngModel"> Last modified Date
+              </label>
+            </fieldset>
+          </div>
+
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="description" [(ngModel)]="this.exportdata.description" #description="ngModel"> Ticket Description
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+    </div>
+
+    <br>
+
+    <div style="border: 1px solid #ccc;padding: 20px;">
+      <h5>Contact fields</h5> <br>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="fullname" [(ngModel)]="this.exportdata.fullname" #fullname="ngModel"> Full name
+                  <!-- (change)="change(this.exportdata.name, 'name')" -->
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="email" [(ngModel)]="this.exportdata.email" #email="ngModel"> Email
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="workphone" [(ngModel)]="this.exportdata.workphone" #workphone="ngModel"> Work Phone
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="mobilephone" [(ngModel)]="this.exportdata.mobilephone" #mobilephone="ngModel"> Mobile Phone
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="twitter" [(ngModel)]="this.exportdata.twitter" #twitter="ngModel"> Twitter ID
+              </label>
+            </fieldset>
+          </div>
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="contactid" [(ngModel)]="this.exportdata.contactid" #contactid="ngModel"> Contact ID
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="timezone" [(ngModel)]="this.exportdata.timezone" #timezone="ngModel"> Timezone
+              </label>
+            </fieldset>
+          </div>
+
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="language" [(ngModel)]="this.exportdata.language" #language="ngModel"> Language
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox"  name="title" [(ngModel)]="this.exportdata.title" #title="ngModel"> Title
+              </label>
+            </fieldset>
+          </div>
+
+          <div class="col-6">
+            <fieldset class="checkbox">
+              <label>
+                  <input type="checkbox" name="contacttags" [(ngModel)]="this.exportdata.contacttags" #contacttags="ngModel" > Contact Tags
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-dark" (click)="export()" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+      <i class="fa fa-spinner fa-spin" *ngIf="exportloading"></i>Export</button>
+    <button class="btn btn-outline-default" (click)="c('Close click')" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">Close</button>
+  </div>
+</ng-template>

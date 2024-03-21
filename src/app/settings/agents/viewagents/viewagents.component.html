@@ -1,0 +1,510 @@
+<style>
+  card .card-title {
+    margin-bottom: 10px;
+  }
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+  }
+  .m-t-30 {
+      margin-top: 0px;
+  }
+  :host ::ng-deep .datatable-body-cell {
+    font-size: 14px !important;
+  }
+  :host ::ng-deep .datatable-header-cell-wrapper {
+    font-size: 14px !important;
+    font-weight: 800;
+  }
+  :host ::ng-deep .datatable-header-cell {
+    background-color: #f5f7f9;
+  }
+  :host ::ng-deep .material .table-striped .table-responsive {
+    border: none;
+  }
+  :host ::ng-deep .datatable-body-cell-label {
+    width: 300px;
+  }
+  .ngx-datatable {
+    /* display: block; */
+    overflow-x: auto;
+  }
+
+</style>
+
+<div class="row">
+  <div class="col-12 m-t-30">
+      <div class="card" >
+
+        <span style="padding: 15px 28px 0;">
+          <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+            <b><i class="fas fa-arrow-left"></i> Go Back</b>
+           </a>
+        </span>
+          <div class="card-body" style="padding: 40px 36px 0;">
+            <div class="row">
+              <div class="col-lg-7 col-md-6">
+                <h3 style="color: black;font-weight: 600;">Agents</h3>
+                <!-- <p>
+                  An agent in Arise Solar is anybody who needs to access, work on and resolve your support tickets. The list shows all agents currently in your helpdesk. Hover over an agent to edit details. Learn more
+                </p> -->
+              </div>
+              <div class="col-lg-2 col-md-0"></div>
+              <div class="col-lg-3 col-md-6">
+                <a routerLink="/settings/agents/newagent" class="btn btn-dark" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">New agent</a>
+                &nbsp;&nbsp;
+                <button class="btn btn-outline-default" (click)="exportmodal(exportcontent)" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+                  <i class="mdi mdi-export"></i> <b> Export </b>
+                </button>
+              </div>
+          </div>
+          <br>
+
+          <div class="row">
+            <div class="col-sm-3 col-md-3 col-lg-3">
+              <div class="input-group mb-3" style="height: 20px;">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                </div>
+                <input type="text" (keyup)='updateFilter($event)' class="form-control" placeholder="Search for agents" aria-describedby="basic-addon1">
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-12">
+              <div class="card" style="border: none;">
+
+                <ngx-datatable #table [rows]="rows"  class='material table-striped table-responsive'  [columnMode]="'force'" [loadingIndicator]="loading"  [headerHeight]="50" [footerHeight]="50"
+                [rowHeight]="'auto'" [limit]="50" [sorts]="[{prop: 'name', dir: 'desc'}]">
+
+                  <!-- <ngx-datatable-column name="Guid" cellClass="d-flex align-items-center"></ngx-datatable-column> -->
+
+                  <ngx-datatable-column name="Name" prop="fullname" cellClass="d-flex align-items-center" [width]="400">
+                    <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                      <div class="row">
+                        <div class="col-3">
+                          <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="40px" height="40px" alt="'picture" data-test-user="user-avatar" src="{{url}}{{row.uploadphoto}}">
+                        </div>
+                        <div class="col-9" style="padding-left: 0px">
+                          {{row.fullname}}<br>{{row.email}}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="Roles" prop="roleGu.rolename" cellClass="d-flex align-items-center">
+                    <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                      <span *ngIf="row.roleGu !== null">{{row.roleGu.rolename}}</span>
+                      <span *ngIf="row.roleGu === null"></span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="Group" prop="ggu.groupname" cellClass="d-flex align-items-center">
+                    <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                      <span *ngIf="row.ggu !== null">{{row.ggu.groupname}}</span>
+                      <span *ngIf="row.ggu === null"></span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="Last Seen" cellClass="d-flex align-items-center">
+                    <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                      <span *ngIf="row.login == null"></span>
+                      <span *ngIf="row.login != null">{{row.login[0].lastlogin | timeAgo}}</span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="" [sortable]="false" [canAutoResize]="false" [width]="165" [draggable]="false" [resizeable]="false" cellClass="d-flex align-items-center">
+                    <ng-template ngx-datatable-cell-template let-rowIndex="row.agGuid" let-row="row" let-value="value">
+                      <button class="btn btn-outline-default" placement="top" ngbTooltip="Edit" style="width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="editmodal(editcontent,rowIndex)">
+                        <i class="fas fa-pencil-alt" style="margin: -5px;"></i>
+                      </button>
+                      <button class="btn btn-outline-default" placement="top" ngbTooltip="Delete" style="width: 34px;height: 34px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="deletemodal(deletecontent,rowIndex)">
+                        <i class="fas fa-trash-alt" style="margin: -5px;"></i>
+                      </button>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                </ngx-datatable>
+
+                <div class="table-responsive" style="display: none;">
+                    <table class="table" #myTable id="myTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <!-- <th scope="col" *ngIf="!exportname" style="display: none;">Name</th> -->
+
+                                <th scope="col">Email</th>
+                                <!-- <th scope="col" *ngIf="!exportemail" style="display: none;">Email</th> -->
+
+                                <th scope="col">Role</th>
+                                <!-- <th scope="col" *ngIf="!exportrole" style="display: none;">Role</th> -->
+
+                                <th scope="col">Group</th>
+                                <!-- <th scope="col" *ngIf="!exportgroups" style="display: none;">Group</th> -->
+
+                                <th scope="col">Phone</th>
+                                <!-- <th scope="col" *ngIf="!exportphone" style="display: none;">Phone</th> -->
+
+                                <th scope="col">Language</th>
+                                <!-- <th scope="col" *ngIf="!exportlanguage" style="display: none;">Language</th> -->
+
+                                <th scope="col">Agent Type</th>
+                                <!-- <th scope="col" *ngIf="!exportagenttype" style="display: none;">Agent Type</th> -->
+
+                                <th scope="col">Last Seen</th>
+                                <!-- <th scope="col" *ngIf="!exportlastseen" style="display: none;">Last Seen</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let a of rows">
+                                <th scope="row">
+                                      {{a.fullname}}
+                                  </th>
+                                  <!-- <th scope="row" *ngIf="!exportname" style="display: none;">
+                                    {{a.fullname}}
+                                </th> -->
+
+                                <td>{{a.email}}</td>
+                                <!-- <td *ngIf="!exportemail" style="display: none;">{{a.email}}</td> -->
+
+                                <td> <span *ngIf="a.roleGu === null"></span>
+                                <span *ngIf="a.roleGu !== null">{{a.roleGu.rolename}}</span></td>
+                                <!-- <td *ngIf="!exportrole" style="display: none;">{{a.roleGu.rolename}}</td> -->
+
+                                <td><span *ngIf="a.ggu === null"></span>
+                                  <span *ngIf="a.ggu !== null">{{a.ggu.groupname}}</span></td>
+                                <!-- <td *ngIf="!exportgroups" style="display: none;">{{a.ggu.groupname}}</td> -->
+
+                                <td>{{a.phone}}</td>
+                                <!-- <td *ngIf="!exportphone" style="display: none;">{{a.phone}}</td> -->
+
+                                <td>{{a.language}}</td>
+                                <!-- <td *ngIf="!exportlanguage" style="display: none;">{{a.language}}</td> -->
+
+                                <td>{{a.occasional}}</td>
+                                <!-- <td *ngIf="!exportagenttype" style="display: none;">{{a.occasional}}</td> -->
+
+                                <td><span *ngIf="a.login == null"></span>
+                                  <span *ngIf="a.login != null">{{a.login[0].lastlogin}}</span></td>
+                                <!-- <td *ngIf="!exportlastseen" style="display: none;">{{a.login[0].lastlogin}}</td> -->
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Agent</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <p style="margin: 10px;">The deleted agent will be available as a contact. This will remove all agent information from the helpdesk. Are you sure you want to proceed?</p>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Cancel</button>
+    <button type="button" class="btn btn-danger btn-raised mr-1" style="background-color: #d72d30;border-radius: 5px;font-weight: 500;" (click)="Delete(this.id)">Confirm</button>
+
+  </div>
+</ng-template>
+
+
+<ng-template #editcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Edit Agent</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div style="margin-left: 50%;margin-right: auto;" *ngIf="loadingdata"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+    <form class="form" #f="ngForm" style="margin-left: 5px;margin-right: 5px;">
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <h3 style="color: black;font-weight: 600;">New agent</h3>
+          <br>
+          <h5>Agent Type</h5>
+          <div class="row">
+            <div class="col-6">
+              <div class="card">
+                <label for="radio1" style="margin-bottom: 0rem !important;">
+                  <fieldset class="radio">
+                    <label>
+                      <div class="card-body" style="padding: 0.95rem !important;cursor: pointer;">
+                        <input type="radio" value="full" [(ngModel)]="this.agent.agenttype" name="agenttype" #agenttype="ngModel"> Full Time
+                      </div>
+                    </label>
+                  </fieldset>
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+            <div class="card">
+              <label for="radio1" style="margin-bottom: 0rem !important;">
+                <fieldset class="radio">
+                  <label>
+                    <div class="card-body" style="padding: 0.95rem !important;cursor: pointer;">
+                      <input type="radio" value="occasional" [(ngModel)]="this.agent.agenttype" name="agenttype" #agenttype="ngModel"> Occasional (3 day Passes)
+                    </div>
+                  </label>
+                </fieldset>
+            </label>
+            </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <h5>Agent details</h5>
+
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12" style="display: none;">
+          <label style="font-size: 12px;">AgGuid<span style="color: red;">*</span></label>
+          <input type="email" class="form-control" [(ngModel)]="this.agent.agGuid" name="agGuid" required  #fullname="ngModel" >
+          <small class="form-text text-danger" *ngIf="!fullname.valid && (fullname.dirty || fullname.touched)">Please enter Full name!</small>
+          </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <label style="font-size: 12px;">Email address <span style="color: red;">*</span></label>
+          <input type="text" id="email" email class="form-control" [(ngModel)]="this.agent.email" name="email" required  #email="ngModel" >
+          <small class="form-text text-danger" *ngIf="!email.valid && (email.dirty || email.touched)">Please enter a email address!</small>
+        </div>
+      </div>
+
+      <br>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <label style="font-size: 12px;">Full Name <span style="color: red;">*</span></label>
+          <input type="email" class="form-control" [(ngModel)]="this.agent.fullname" name="fullname" required  #fullname="ngModel" >
+          <small class="form-text text-danger" *ngIf="!fullname.valid && (fullname.dirty || fullname.touched)">Please enter Full name!</small>
+          </div>
+
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+          <label style="font-size: 12px;">Phone Number <span style="color: red;">*</span></label>
+          <input type="number" class="form-control" [(ngModel)]="this.agent.phone" name="phone" required  #phone="ngModel"  maxlength="14" minlength="8" (change)="number(this.agent.phone)">
+          <small class="form-text text-danger" *ngIf="!phone.valid && (phone.dirty || phone.touched)">Please enter a Phone number!</small>
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12">
+          <label style="font-size: 12px;">Job Title <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="this.agent.jobtitle" name="jobtitle" required  #jobtitle="ngModel" >
+          <small class="form-text text-danger" *ngIf="!jobtitle.valid && (jobtitle.dirty || jobtitle.touched)">Please enter a job title!</small>
+        </div>
+
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4">
+              <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-8">
+                <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"   style="display:none;">
+                  <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+                 <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+              </div>
+           </div>
+        </div>
+      </div>
+      <br>
+
+            <div class="row">
+              <div class="col-lg-12 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Time Zone <span style="color: red;">*</span></label>
+                <select class="form-control" [(ngModel)]="this.agent.timezone" name="timezone" required  #timezone="ngModel">
+                  <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                  <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Perth</option>
+                  <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Darwin</option>
+                  <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Brisbane</option>
+                  <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="05">(GMT+10:30) Adelaide</option>
+                  <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Canberra, Melbourne, Sydney</option>
+                  <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Hobart</option>
+                </select>
+                <small class="form-text text-danger" *ngIf="!timezone.valid && (timezone.dirty || timezone.touched)">Please select a timezone!</small>
+                </div>
+            </div>
+
+            <br>
+
+      <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+          <label style="font-size: 12px;">Language</label>
+          <!-- <input type="text" class="form-control"> -->
+          <select class="form-control" [(ngModel)]="this.agent.language" name="language"  #language="ngModel">
+            <option>English</option>
+            <option>Hindi</option>
+            <option>Gujarati</option>
+          </select>
+        </div>
+      </div>
+
+      <br>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+        <label style="font-size: 12px;">Signature</label>
+        <div class="card">
+
+            <!-- <quill-editor [modules]="modules" [(ngModel)]="this.agent.signature" #signature="ngModel" id="signature"  name="signature" data-identifyelement="228" [style]="{height: '200px'}"></quill-editor> -->
+            <!-- <ckeditor [editor]="Editor" [(ngModel)]="this.agent.signature" #signature="ngModel" id="signature"  name="signature" data-identifyelement="228" ></ckeditor> -->
+            <quill-editor [style]="{height: '200px'}" [(ngModel)]="this.agent.signature" #signature="ngModel" id="signature"  name="signature"></quill-editor>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+          <label style="font-size: 14px;color: black;">Ticket scope</label>
+          <br>
+      <label style="font-size: 11px;">Choose groups that the agent is a part of <span style="color: red;">*</span></label>
+                <select class="form-control" [(ngModel)]="this.agent.groupid" name="groupid" required  #groupid="ngModel">
+                  <option *ngFor="let d of groupdrop" [value]="d.gguid">{{d.groupname}}</option>
+                </select>
+                </div>
+      </div>
+
+      <br>
+
+
+      <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+          <label style="font-size: 14px;color: black;">Roles <span style="color: red;">*</span></label>
+          <!-- <input type="text" class="form-control"> -->
+          <select class="form-control" [(ngModel)]="this.agent.role" name="role" required #role="ngModel">
+            <option *ngFor="let rol of roles" [value]="rol.roleGuid">{{rol.rolename}}</option>
+          </select>
+        </div>
+      </div>
+
+      </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" (click)="update()"> <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Update Agent</button>
+    <button type="button" class="btn btn-light" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #exportcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-upload"></i> Export Agent</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="margin: 20px;">
+
+    <div class="row">
+      <div class="col-12">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox" name="selectall" [(ngModel)]="this.exportdata.selectall" #selectall="ngModel" (change)="selectallchk()"> Select all fields
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox" name="name" [(ngModel)]="this.exportdata.name" #name="ngModel" (change)="change(this.exportdata.name)"> Name
+              <!-- (change)="change(this.exportdata.name, 'name')" -->
+          </label>
+        </fieldset>
+      </div>
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox"  name="roles" [(ngModel)]="this.exportdata.roles" #roles="ngModel" (change)="change(this.exportdata.roles)"> Roles
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox" name="email" [(ngModel)]="this.exportdata.email" #email="ngModel"  (change)="change(this.exportdata.email)"> Email
+          </label>
+        </fieldset>
+      </div>
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox"  name="groups" [(ngModel)]="this.exportdata.groups" #groups="ngModel"  (change)="change(this.exportdata.groups)"> Groups
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox" name="phone" [(ngModel)]="this.exportdata.phone" #phone="ngModel"  (change)="change(this.exportdata.phone)"> Phone
+          </label>
+        </fieldset>
+      </div>
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox"  name="language" [(ngModel)]="this.exportdata.language" #language="ngModel"  (change)="change(this.exportdata.language)"> Language
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox"  name="agenttype" [(ngModel)]="this.exportdata.agenttype" #agenttype="ngModel" (change)="change(this.exportdata.agenttype)"> Agent Type
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="col-6">
+        <fieldset class="checkbox">
+          <label>
+              <input type="checkbox" name="lastseen" [(ngModel)]="this.exportdata.lastseen" #lastseen="ngModel" (change)="change(this.exportdata.lastseen)"> Last Seen
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-dark" (click)="export()" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+      <i class="fa fa-spinner fa-spin" *ngIf="exportloading"></i>Export</button>
+    <button class="btn btn-outline-default" (click)="c('Close click')" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">Close</button>
+  </div>
+</ng-template>

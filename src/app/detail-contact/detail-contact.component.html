@@ -1,0 +1,453 @@
+<div class="row" style="background-color: #f5f7f9;margin-top: -10px;">
+  <div style="margin: 10px 10px 10px 20px;">
+    <a routerLink="/listcontact/list" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+      <b><i class="fas fa-arrow-left"></i> Go Back</b>
+     </a>
+     &nbsp;
+    <button type="button" [disabled]="editbtn" (click)="editmodal(editcontent,guid)" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+     <b><i class="sl-icon-note"></i> Edit</b>
+    </button>
+    &nbsp;
+    <button type="button" [disabled]="dltdtn" (click)="deletemodal(deletecontent,guid)" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+      <b><i class="fas fa-trash-alt"></i> Delete</b>
+     </button>
+     &nbsp;
+    <button type="button" [disabled]="editbtn" (click)="convertagent(convert)"  class="btn btn-outline-default" style="font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+      <b><i class="sl-icon-refresh"></i> Convert to Agent</b>
+     </button>
+  </div>
+</div>
+
+<br>
+<div class="row">
+  <!-- Column -->
+  <div class="col-lg-4 col-xlg-3 col-md-5">
+      <div class="card">
+          <div class="card-body">
+              <div class="m-t-30 text-center">
+                  <img src="{{url}}{{logo}}" class="rounded-circle" width="150" />
+                  <h4 class="card-title m-t-10">{{contactname}}</h4>
+                  <h6 class="card-subtitle">{{title}}</h6>
+                  <a [routerLink]="['/detail-company']" [queryParams]="{ id: companyname['comGuid'] }">
+                    {{companyname.companyname}}
+                  </a>
+                  <!-- <div class="row text-center justify-content-md-center">
+                      <div class="col-4">
+                          <a href="javascript:void(0)" class="link">
+                              <i class="icon-people m-r-10"></i>
+                              254
+                          </a>
+                      </div>
+                      <div class="col-4">
+                          <a href="javascript:void(0)" class="link">
+                              <i class="icon-picture m-r-10"></i>
+                              54
+                          </a>
+                      </div>
+                  </div> -->
+                  <br>
+                  <a href="/#/tickets/new" class="btn btn-outline-primary btn-rounded"  type="button"><i class="fa fa-plus"></i> New Ticket</a>
+              </div>
+          </div>
+          <div>
+              <hr> </div>
+          <div class="card-body">
+              <small class="text-muted"><i class="fa fa-envelope" style="color: blue;"></i> Email address </small>
+              <h6>{{email}}</h6>
+              <small class="text-muted p-t-30 db"><i class="fa fa-phone-square" style="color: yellowgreen;"></i> Phone</small>
+              <h6>{{phone}}</h6>
+              <small class="text-muted p-t-30 db"><i class="fa fa-phone" style="color: green;"></i> Work Phone</small>
+              <h6>{{workphone}}</h6>
+              <small class="text-muted p-t-30 db"><i class="fas fa-map-marker-alt" style="color: red;"></i> Address</small>
+              <a href="https://www.google.com/maps/search/{{address}}" target="_blank"><h6>{{address}}</h6></a>
+              <!-- <div class="map-box">
+                  <iframe src="https://www.google.com/maps/search/{{address}}"
+                      width="100%" height="150" frameborder="0" style="border:0" allowfullscreen></iframe>
+              </div> -->
+
+          </div>
+      </div>
+  </div>
+  <!-- Column -->
+  <!-- Column -->
+  <div class="col-lg-8 col-xlg-9 col-md-7">
+      <div class="card">
+          <ngb-tabset type="pills" class="custom-pills">
+              <ngb-tab title="Timeline">
+                  <ng-template ngbTabContent>
+                      <div class="card-body">
+                          <div class="profiletimeline" *ngFor="let tickets of ticketattach">
+                              <div class="sl-item">
+                                  <div class="sl-left">
+                                    <img src="{{url}}{{logo}}" alt="user" class="rounded-circle" /> </div>
+                                  </div>
+                                  <div class="sl-right">
+                                      <div>
+                                          <a href="javascript:void()" class="link">{{timezonedate(tickets.datetime) | date: 'dd/MM/yyyy hh:mm a'}}</a>
+                                          <p><a href="/#/detail-ticket?id={{tickets.tguid}}">{{tickets.subject}}</a>
+
+                                          </p>
+                                          <p>Priority: {{tickets.priority}} - Status: {{tickets.status}} </p>
+                                          <p>{{tickets.status}} {{calculateDiff(tickets.datetime)}} days ago</p>
+                                      </div>
+                                  </div>
+                              </div>
+
+                      </div>
+                  </ng-template>
+              </ngb-tab>
+              <ngb-tab title="Tickets">
+                  <ng-template ngbTabContent>
+                      <div class="card-body">
+
+                        <div *ngFor="let tickets of ticketattach">
+                        <div style="background-color: #f5f7f9;">
+                          <h5 class="mt-0 mb-1">
+                            <br>
+                            <div class="row" style="margin-left: 10px;">
+                              <div class="col-lg-1 col-md-2 col-sm-3" style="margin-top: 18px;">
+                                <i class="fas fa-ticket-alt fa-2x"></i>
+                              </div>
+                              <div class="col-lg-8 col-md-10 col-sm-9">
+                                <a href="/#/detail-ticket?id={{tickets.tguid}}">{{tickets.subject}}</a>
+                                &nbsp; &nbsp;<span *ngIf="tickets.tagGu !== null" style="color: #12344d;
+                                border: 1px solid #cfd7df;
+                                background-color: #fff;
+                                font-weight: 600;
+                                font-size: 11px;
+                                -webkit-font-smoothing: antialiased;
+                                padding: 0 5px;
+                                display: inline-block;
+                                border-radius: 4px;">{{tickets.tagGu.tagname}}</span>
+                                <br>
+                                <small>{{timezonedate(tickets.datetime) | date: 'dd/MM/yyyy hh:mm a'}}</small>
+                                <br><br>
+                                <small style="font-weight: normal !important;"><i class="fa fa-envelope"></i> Status: {{tickets.status}}
+                                - Priority: {{tickets.priority}}
+                                </small><br>
+                                <p></p>
+                              </div>
+                            </div>
+                          </h5>
+                          </div>
+                        </div>
+
+                      </div>
+                  </ng-template>
+              </ngb-tab>
+              <!-- <ngb-tab title="Notes" style="display: none;">
+                  <ng-template ngbTabContent>
+                      <div class="card-body">
+                         <div>
+
+                          <hr>
+                          <p>#1790</p>
+                          <p class="m-t-30">Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
+                              imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer
+                              tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
+                              Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
+                              <hr>
+                              <p>#1791</p>
+                              <p class="m-t-30">Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
+                                  imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer
+                                  tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
+                                  Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
+                                  <hr>
+                         </div>
+                      </div>
+                  </ng-template>
+              </ngb-tab> -->
+          </ngb-tabset>
+      </div>
+  </div>
+  <!-- Column -->
+</div>
+
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Delete Contact</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+      <h3>Are You Sure You Want to Delete this ?</h3>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #editcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Edit Contact</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="margin-left: 10px;">
+
+    <p>When someone reaches out to you, they become a contact in your account. You can create companies and associate contacts with them.
+
+    <br>
+    <form class="form" (ngSubmit)="update()" #f1="ngForm" >
+
+
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4">
+              <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-8">
+                <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+                  <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+                 <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+              </div>
+           </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="row" style="display: none;">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <label style="font-size: 12px;">Guid <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.contact.conGuid" name="conGuid" required  #conGuid="ngModel" >
+          <small class="form-text text-danger" *ngIf="!conGuid.valid && (conGuid.dirty || conGuid.touched)">Please enter First name!</small>
+          </div>
+
+      </div>
+
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <label style="font-size: 12px;">Full Name <span style="color: red;">*</span></label>
+              <input type="email" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.contact.fullname" name="fullname" required  #fullname="ngModel" >
+              <small class="form-text text-danger" *ngIf="!fullname.valid && (fullname.dirty || fullname.touched)">Please enter Full name!</small>
+              </div>
+
+          </div>
+
+          <br>
+
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <label style="font-size: 12px;">Title</label>
+              <input type="email" class="form-control" placeholder="Enter a title" [(ngModel)]="this.contact.title" name="title"  #title="ngModel" >
+              </div>
+
+          </div>
+
+          <br>
+
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+
+              <label style="font-size: 12px;">Email address <span style="color: red;">*</span></label>
+              <input type="email" class="form-control" placeholder="Enter an email address" [(ngModel)]="this.contact.email" name="email" required  #email="ngModel" >
+              <small class="form-text text-danger" *ngIf="!email.valid && (email.dirty || email.touched)">Please enter a email address!</small>
+              </div>
+          </div>
+
+          <br>
+
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+
+              <label style="font-size: 12px;">Phone Number</label>
+              <input type="number" class="form-control" placeholder="Enter a phone number" [(ngModel)]="this.contact.mobilephone" name="mobilephone" #mobilephone="ngModel">
+              <small class="form-text text-danger" *ngIf="!mobilephone.valid && (mobilephone.dirty || mobilephone.touched)">Please enter a Phone number!</small>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+
+              <label style="font-size: 12px;"> Work Phone <span style="color: red;">*</span></label>
+              <input type="number" class="form-control" placeholder="Enter a phone number" minlength="10" maxlength="10" required [(ngModel)]="this.contact.workphone" name="workphone"  #workphone="ngModel" >
+              </div>
+          </div>
+          <br>
+
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+
+              <label style="font-size: 12px;">Twitter</label>
+              <input type="text" class="form-control" placeholder="Enter a Twitter Id" [(ngModel)]="this.contact.tweeterid" name="tweeterid"  #tweeterid="ngModel" >
+              </div>
+          </div>
+          <br>
+
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <label style="font-size: 12px;">Company <span style="color: red;">*</span></label>
+              <select class="form-control" [(ngModel)]="this.contact.comGuid" name="comGuid" required #comGuid="ngModel" >
+                <option *ngFor="let comp of companydrop" [value]="comp.comGuid">{{comp.companyname}}</option>
+              </select>
+              <!-- <input type="text" class="form-control" placeholder="Company" [(ngModel)]="this.contact.comGuid" name="comGuid"  #comGuid="ngModel" > -->
+              </div>
+          </div>
+
+          <br>
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <label style="font-size: 12px;">Address</label>
+              <textarea placeholder="Enter the address of this person" class="form-control" [(ngModel)]="this.contact.address" name="address"  #address="ngModel"></textarea>
+              </div>
+          </div>
+
+          <br>
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <label style="font-size: 12px;" >Tags</label>
+              <select class="form-control" [(ngModel)]="this.contact.tags" name="tags"  #tags="ngModel">
+                <option *ngFor="let tags of tagdrop" [value]="tags.tagGuid">{{tags.tagname}}</option>
+                <option></option>
+              </select>
+              </div>
+          </div>
+
+          <br>
+          <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <label style="font-size: 12px;" >About</label>
+              <textarea placeholder="Enter some text" class="form-control" [(ngModel)]="this.contact.about" name="about"  #about="ngModel"></textarea>
+              </div>
+          </div>
+
+          </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark"  [disabled]="!f1.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" (click)="update()"> <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Update Contact</button>
+    <button type="button" class="btn btn-light" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #convert let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Convert to agent</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form class="form" (ngSubmit)="update()" #f="ngForm" style="margin-left: 5px;margin-right: 5px;">
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <label style="font-size: 12px;">Full Name <span style="color: red;">*</span></label>
+          <input type="email" class="form-control" [(ngModel)]="this.agent.fullname" name="fullname" required  #fullname="ngModel" >
+          <small class="form-text text-danger" *ngIf="!fullname.valid && (fullname.dirty || fullname.touched)">Please enter Full name!</small>
+          </div>
+
+      </div>
+
+      <br>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+          <label style="font-size: 12px;">Email address <span style="color: red;">*</span></label>
+          <input type="email" class="form-control" [(ngModel)]="this.agent.email" name="email" required  #email="ngModel" >
+          <small class="form-text text-danger" *ngIf="!email.valid && (email.dirty || email.touched)">Please enter a email address!</small>
+          </div>
+      </div>
+
+      <br>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+          <label style="font-size: 12px;">Phone Number <span style="color: red;">*</span></label>
+          <input type="number" class="form-control" [(ngModel)]="this.agent.phone" name="phone" required  #phone="ngModel" >
+          <small class="form-text text-danger" *ngIf="!phone.valid && (phone.dirty || phone.touched)">Please enter a Phone number!</small>
+          </div>
+      </div>
+
+
+
+      <br>
+      <div class="row" style="display: none;">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4">
+              <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-8">
+                <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"   style="display:none;">
+                  <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+                 <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+              </div>
+           </div>
+        </div>
+      </div>
+      <br>
+      <div class="row" style="display: none;">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <label style="font-size: 12px;">Time Zone</label>
+          <input type="text" class="form-control">
+          </div>
+          <br>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+          <label style="font-size: 12px;">Language</label>
+          <!-- <input type="text" class="form-control"> -->
+          <select class="form-control" [(ngModel)]="this.agent.language" name="language"  #language="ngModel">
+            <option>English</option>
+            <option>French</option>
+          </select>
+        </div>
+      </div>
+
+      <br>
+
+      <!-- <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+        <label style="font-size: 12px;">Signature</label>
+        <div class="card">
+            <quill-editor [modules]="modules" [(ngModel)]="this.agent.signature" name="signature"  #signature="ngModel" [style]="{height: '200px'}"></quill-editor>
+          </div>
+        </div>
+      </div> -->
+      <br>
+
+      <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+          <label style="font-size: 14px;color: black;">Ticket scope</label>
+          <br>
+      <label style="font-size: 11px;">Choose groups that the agent is a part of <span style="color: red;">*</span></label>
+                <select class="form-control" [(ngModel)]="this.agent.groupid" name="groupid" required  #groupid="ngModel">
+                  <option *ngFor="let d of groupdrop" [value]="d.gguid">{{d.groupname}}</option>
+                </select>
+                </div>
+      </div>
+
+      <br>
+
+
+      <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+          <label style="font-size: 14px;color: black;">Roles <span style="color: red;">*</span></label>
+          <!-- <input type="text" class="form-control"> -->
+          <select class="form-control" [(ngModel)]="this.agent.role" name="role" required #role="ngModel">
+            <option *ngFor="let rol of roles" [value]="rol.roleGuid">{{rol.rolename}}</option>
+          </select>
+        </div>
+      </div>
+
+      </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" [disabled]="!f.valid" (click)="converttoagent()"> <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Convert to Agent</button>
+    <button type="button" class="btn btn-light" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

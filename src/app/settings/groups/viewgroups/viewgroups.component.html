@@ -1,0 +1,200 @@
+<style>
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+</style>
+
+<div class="row">
+  <div class="col-lg-9 col-md-12 col-sm-12 m-t-30" style="max-height: 100%;overflow-y: scroll;">
+    <div class="card">
+      <span style="padding: 15px 28px 0;">
+        <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+          <b><i class="fas fa-arrow-left"></i> Go Back</b>
+         </a>
+      </span>
+      <div class="card-body"  style="padding: 40px 36px 0;">
+        <h3 style="color: black;font-weight: 600;">Groups
+          <a routerLink="/settings/groups/newgroup" class="btn btn-dark" style="float: right;;background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">New group</a>
+        </h3>
+
+      <br>
+      <!-- <div style="padding: 16px;border-radius: 2px;background-color: #fff;border: 1px solid #cfd7df;color: black;">
+        <i class="sl-icon-note" style="float: right;"></i>
+        <div>
+        Account Managers (0) <br>
+        <small>Account Managers</small>
+      </div>
+      </div> -->
+
+
+            <div class="table-responsive">
+              <div style="margin-left: 50%;margin-right: auto;" *ngIf="loadingtbl"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+                <table class="table" style="border-radius: 2px;border: 1px solid #cfd7df;">
+
+                    <tbody>
+                        <tr *ngFor="let a of groupdata" style="border-bottom: 1px solid;border-color: #cfd7df;">
+                            <th scope="row"> {{a.groupname}} <br>
+                              <small>{{a.describeforthisgroup}}</small></th>
+                              <td style="float: right;"><button title="Delete" placement="top" ngbTooltip="Delete" style="cursor: pointer;width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="deletemodal(deletecontent,a.gguid)" > <i class="fas fa-trash-alt"></i></button></td>
+                            <td style="float: right;"><button placement="top" ngbTooltip="Edit" style="cursor: pointer;width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" title="Edit" (click)="editmodal(editcontent,a.gguid)"> <i class="sl-icon-note"></i></button></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+      <br>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="col-lg-3 col-md-12 col-sm-12 m-t-30" style="max-height: 500px;overflow-y: scroll;background-color: #f5f7f9;">
+    <br>
+    <div style="margin-top: 10px;margin-left: 20px;">
+          <h5>Groups</h5>
+          <p>You can organize your agents into specific Groups like “Support” and “Sales”. This lets you easily assign tickets, create specific canned responses, manage workflows and generate group-level reports. Note that an agent can be a member of multiple groups.</p>
+
+          <h5>Business Hours</h5>
+          <p>You can associate different business hours to each of these groups based on their working hours. You can group agents by shifts and assign different business hours to each group, or create separate groups for each location that your agents work from.</p>
+
+          <h5>Automatic ticket assignment</h5>
+          <h6>To each group</h6>
+          <p>Once you’ve created your groups, you can set up rules in dispatch’r to automatically route tickets to each group.</p>
+
+          <h6>To agents within group</h6>
+          <p>You can also auto-assign tickets to online agents within a group by three methods: <br>
+            1. Round robin - Assign tickets to agents in a circular fashion<br>
+            2. Load balanced - Set a limit on the number of tickets that are assigned to each agent<br>
+            3. Skill based - Assign tickets to agents based on their expertise<br>
+            Read more
+
+            </p>
+
+  </div>
+</div>
+
+</div>
+
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Group</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+      <p>Are you sure you want to delete this group? Deleting a group will not delete the agents in it.</p>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button"  class="btn btn-outline-default" style="width: 80px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Cancel</button>
+    <button type="button" class="btn btn-dark" style="width: 80px;float: right;;background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" (click)="Delete(this.id)">Delete</button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #editcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-user"></i> Edit Group</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div style="margin-left: 50%;margin-right: auto;" *ngIf="loadingdata"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+
+    <form class="form" (ngSubmit)="update()" #f="ngForm" >
+
+
+      <div class="row" style="display: none;">
+        <div class="col-lg-12 col-md-8 col-sm-12">
+            <label style="font-size: 12px;">Guid <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="this.group.gguid" name="gguid" required  #gguid="ngModel">
+          <small class="form-text text-danger" *ngIf="!gguid.valid && (gguid.dirty || gguid.touched)">Please enter a group name!</small>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-8 col-sm-12">
+            <label style="font-size: 12px;">Group name <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="this.group.groupname" name="groupname" required  #groupname="ngModel">
+          <small class="form-text text-danger" *ngIf="!groupname.valid && (groupname.dirty || groupname.touched)">Please enter a group name!</small>
+        </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-8 col-sm-12">
+          <label style="font-size: 12px;">Describe this group </label>
+          <textarea type="text" class="form-control" [(ngModel)]="this.group.describeforthisgroup" name="describeforthisgroup"  #describeforthisgroup="ngModel"></textarea>
+          </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-lg-12 col-md-8 col-sm-12">
+          <label style="font-size: 12px;">Business hours</label>
+          <select class="form-control" [(ngModel)]="this.group.bussinessGuid" name="bussinessGuid"  #bussinessGuid="ngModel">
+            <option *ngFor="let bd of bussinesshoursdrop" [value]="bd.bussinessGuid">{{bd.bussinessname}}</option>
+          </select>
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+          <h5>Escalation settings</h5>
+          <div class="row">
+            <div class="col-8">
+              <br>
+              If a ticket remains unassigned for more than
+            </div>
+            <div class="col-4">
+              <br>
+              <select class="form-control" [(ngModel)]="this.group.esctime" name="esctime"  #v="ngModel">
+                <option value="">Any</option>
+                <option value="30m">30 minutes</option>
+                <option value="1h">1 hour</option>
+                <option value="2h">2 hours</option>
+                <option value="3h">3 hours</option>
+                <option value="4h">4 hours</option>
+                <option value="8h">8 hours</option>
+                <option value="12h">12 hours</option>
+                <option value="1d">1 day</option>
+                <option value="2d">2 days</option>
+                <option value="3d">3 days</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-8">
+              <br>
+              then send an email to
+            </div>
+            <div class="col-4">
+              <br>
+              <select class="form-control" [(ngModel)]="this.group.escmailto" name="escmailto"  #escmailto="ngModel">
+                <option *ngFor="let ad of agentdropd" [value]="ad.agGuid">{{ad.fullname}}</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" [disabled]="!f.valid" (click)="update()"> <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Update</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

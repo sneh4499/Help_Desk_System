@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div style="margin: 20px 10px 10px 20px;">
+        <!-- <a routerLink="/reports/allreports" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+          <b><i class="fas fa-arrow-left"></i> Go Back</b>
+         </a> -->
+         <h3>Group Performance</h3>
+      </div>
+      <div class="card-body">
+        <div class="row" style="margin: 0px 10px 0px 10px;">
+          <ngx-datatable #table [rows]="gorups"  class='material table-striped table-responsive'  [columnMode]="'force'" [loadingIndicator]="loading"  [headerHeight]="50" [footerHeight]="50"
+          [rowHeight]="'auto'" [limit]="50" [sorts]="[{prop: 'name', dir: 'desc'}]">
+
+                    <ngx-datatable-column name="Groups" prop="groupname" [width]="350" cellClass="d-flex align-items-center">
+                      <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                        <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname }"> <span>{{row.groupname}}</span></a>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Tickets Assigned" [width]="250" cellClass="d-flex align-items-center">
+                      <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                        <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Open' }"> <span>{{getopentickets(row.gguid)}}</span></a> -->
+                        <span>{{gettotaltickets(row.gguid)}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Tickets Resolved" [width]="250" cellClass="d-flex align-items-center">
+                      <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                        <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Pending' }"> <span>{{getpendingtickets(row.gguid)}}</span></a> -->
+                        <span>{{getresolvedtickets(row.gguid)}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Tickets Unresolved" [width]="250" cellClass="d-flex align-items-center">
+                      <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                        <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Waiting on Customer' }"> <span>{{getwaitingoncusttickets(row.gguid)}}</span></a> -->
+                        <span>{{getunresolvedtickets(row.gguid)}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Resolution Ratio %" [width]="250" cellClass="d-flex align-items-center">
+                      <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                        <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Waiting on Third Party' }"> <span>{{getwaitingonthirdtickets(row.gguid)}}</span></a> -->
+                        <span>{{getresolvedtickets(row.gguid) / gettotaltickets(row.gguid) | percent}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Responses" cellClass="d-flex align-items-center">
+                      <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                        <span>{{ getresponses(row.gguid) }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+          </ngx-datatable>
+
+          <div style="height: 300px !important;width: 100%;">
+            <ngx-charts-advanced-pie-chart *ngIf="piechart" class="chart-container" [scheme]="colorScheme" [results]="single"
+              [gradient]="gradient" [tooltipDisabled]="tooltipDisabled">
+            </ngx-charts-advanced-pie-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

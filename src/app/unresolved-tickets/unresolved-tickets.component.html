@@ -1,0 +1,109 @@
+
+<div class="card" style="margin-bottom: 0px !important;">
+  <div class="card-body">
+    <ngb-tabset type="pills">
+      <ngb-tab title=" Groups ">
+        <ng-template ngbTabContent>
+          <br>
+            <div class="row">
+              <ngx-datatable #table [rows]="gorups"  class='material table-striped table-responsive'  [columnMode]="'force'" [loadingIndicator]="loading"  [headerHeight]="50" [footerHeight]="50"
+              [rowHeight]="'auto'" [limit]="50" [sorts]="[{prop: 'name', dir: 'desc'}]">
+
+                        <ngx-datatable-column name="Groups" prop="groupname" [width]="350" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                            <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname }"> <span>{{row.groupname}}</span></a>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Open" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Open' }"> <span>{{getopentickets(row.gguid)}}</span></a> -->
+                            <span>{{getopentickets(row.gguid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Pending" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Pending' }"> <span>{{getpendingtickets(row.gguid)}}</span></a> -->
+                            <span>{{getpendingtickets(row.gguid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Waiting on Customer" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Waiting on Customer' }"> <span>{{getwaitingoncusttickets(row.gguid)}}</span></a> -->
+                            <span>{{getwaitingoncusttickets(row.gguid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Waiting on Third Party" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname, status: 'Waiting on Third Party' }"> <span>{{getwaitingonthirdtickets(row.gguid)}}</span></a> -->
+                            <span>{{getwaitingonthirdtickets(row.gguid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Total" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ group: row.groupname }"> <span>{{getopentickets(row.gguid) + getpendingtickets(row.gguid) + getwaitingoncusttickets(row.gguid) + getwaitingonthirdtickets(row.gguid)}}</span></a>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+              </ngx-datatable>
+            </div>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab title="Agents">
+        <ng-template ngbTabContent>
+          <br>
+            <div class="row">
+              <ngx-datatable #table [rows]="agents"  class='material table-striped table-responsive'  [columnMode]="'force'" [loadingIndicator]="loading"  [headerHeight]="50" [footerHeight]="50"
+              [rowHeight]="'auto'" [limit]="50" [sorts]="[{prop: 'name', dir: 'desc'}]">
+
+                        <ngx-datatable-column name="Agents" prop="fullname" [width]="350" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                            <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ ag: row.fullname }"> <span>{{row.fullname}}</span></a>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Open" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ ag: row.fullname, status: 'Open' }"> <span>{{getopenticketsagent(row.agGuid)}}</span></a> -->
+                            <span>{{getopenticketsagent(row.agGuid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Pending" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ ag: row.fullname, status: 'Pending' }"> <span>{{getpendingticketsagent(row.agGuid)}}</span></a> -->
+                            <span>{{getpendingticketsagent(row.agGuid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Waiting on Customer" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ ag: row.fullname, status: 'Waiting on Customer' }"> <span>{{getwaitingoncustticketsagent(row.agGuid)}}</span></a> -->
+                            <span>{{getwaitingoncustticketsagent(row.agGuid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Waiting on Third Party" [width]="250" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ ag: row.fullname, status: 'Waiting on Third Party' }"> <span>{{getwaitingonthirdticketsagent(row.agGuid)}}</span></a> -->
+                            <span>{{getwaitingonthirdticketsagent(row.agGuid)}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Total" cellClass="d-flex align-items-center">
+                          <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                            <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ ag: row.fullname }"> <span>{{getopenticketsagent(row.agGuid) + getpendingticketsagent(row.agGuid) + getwaitingoncustticketsagent(row.agGuid) + getwaitingonthirdticketsagent(row.agGuid)}}</span></a>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+              </ngx-datatable>
+            </div>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+</div>

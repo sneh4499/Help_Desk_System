@@ -1,0 +1,153 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <!-- <div style="margin: 10px 10px 10px 20px;">
+        <a routerLink="/reports/allreports" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+          <b><i class="fas fa-arrow-left"></i> Go Back</b>
+         </a>
+      </div> -->
+        <div class="card-body" *ngIf="daybtn">
+            <h4 class="card-title" style="margin-left: 20px;">
+              <i class="fas fa-ticket-alt" ng-reflect-ng-class="fas fa-ticket-alt"></i>
+               Ticket Volume Trends
+            </h4>
+
+            <div class="btn-group mr-2 btn-group-md" role="group" aria-label="Basic example" style="float: right;margin-top: -30px;">
+              <button type="button" class="btn btn-secondary" [disabled]="daybtn" (click)="changegraph('days')">Days</button>
+              <button type="button" class="btn btn-secondary" [disabled]="monbtn" (click)="changegraph('month')">Month</button>
+              <button type="button" class="btn btn-secondary" [disabled]="yearbtn" (click)="changegraph('year')">Year</button>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-2">
+                <button (click)="filterdate()" *ngIf="!showdatefilter" class="btn btn-dark" id="btnsubmit" style="margin-left: 20px;border-radius: 6px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+                  <span>Filter Date</span></button>
+                  <button (click)="filterdate()" *ngIf="showdatefilter" class="btn btn-danger" id="btnsubmit" style="margin-left: 20px;border-radius: 6px;font-weight: 400;color:white">
+                    <span>Clear Filter</span></button>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3">
+                <div class="form-group" *ngIf="showdatefilter">
+                  <div class="input-group">
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="startdate" [(ngModel)]="model" ngbDatepicker #startdate="ngbDatepicker" (dateSelect)="chage()">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary no-shadow" (click)="startdate.toggle()" type="button">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 3px;margin-right: -18px;" *ngIf="showdatefilter">To</div>
+              <div class="col-lg-3 col-md-3 col-sm-3">
+                <div class="form-group" *ngIf="showdatefilter">
+                  <div class="input-group">
+                    <input class="form-control" placeholder="dd-mm-yyyy" name="enddate" [(ngModel)]="model1" ngbDatepicker #enddate="ngbDatepicker" (dateSelect)="chage()">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary no-shadow" (click)="enddate.toggle()" type="button">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-3" *ngIf="showdatefilter">
+                <button (click)="filterbydate()"  class="btn btn-dark" id="btnsubmit" style="margin-left: 20px;border-radius: 6px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+                  <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Apply Filter</button>
+              </div>
+            </div>
+
+            <br>
+            <div style="height: 400px !important;width: 100%;">
+              <ngx-charts-bar-vertical-2d *ngIf="s" class="chart-container" [scheme]="colorScheme" [schemeType]="schemeType" [results]="multi" [gradient]="gradient"
+                [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+                [tooltipDisabled]="tooltipDisabled" [xAxisLabel]="'Dates'" [yAxisLabel]="yAxisLabel" [showGridLines]="showGridLines" [barPadding]="barPadding"
+                [groupPadding]="20" [roundDomains]="roundDomains" width="200">
+              </ngx-charts-bar-vertical-2d>
+
+              <ngx-charts-bar-vertical-2d *ngIf="filteredgraph" class="chart-container" [scheme]="colorScheme" [schemeType]="schemeType" [results]="multifilt" [gradient]="gradient"
+                [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+                [tooltipDisabled]="tooltipDisabled" [xAxisLabel]="'Dates'" [yAxisLabel]="yAxisLabel" [showGridLines]="showGridLines" [barPadding]="barPadding"
+                [groupPadding]="20" [roundDomains]="roundDomains" width="200">
+              </ngx-charts-bar-vertical-2d>
+            </div>
+        </div>
+
+        <div class="card-body" *ngIf="monbtn">
+          <h4 class="card-title" style="margin-left: 20px;">
+            <i class="fas fa-ticket-alt" ng-reflect-ng-class="fas fa-ticket-alt"></i>
+             Ticket Volume Trends
+          </h4>
+
+          <div class="btn-group mr-2 btn-group-md" role="group" aria-label="Basic example" style="float: right;margin-top: -30px;">
+            <button type="button" class="btn btn-secondary" [disabled]="daybtn" (click)="changegraph('days')">Days</button>
+            <button type="button" class="btn btn-secondary" [disabled]="monbtn" (click)="changegraph('month')">Month</button>
+            <button type="button" class="btn btn-secondary" [disabled]="yearbtn" (click)="changegraph('year')">Year</button>
+          </div>
+
+          <br>
+
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2">
+              <button (click)="filterdate()" *ngIf="!showdatefilter" class="btn btn-dark" id="btnsubmit" style="margin-left: 20px;border-radius: 6px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+                <span>Filter Month</span></button>
+                <button (click)="filterdate()" *ngIf="showdatefilter" class="btn btn-danger" id="btnsubmit" style="margin-left: 20px;border-radius: 6px;font-weight: 400;color:white">
+                  <span>Clear Filter</span></button>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+              <div class="form-group" *ngIf="showdatefilter">
+                <input class="form-control" type="month" id="example-month-input" name="startmonth" [(ngModel)]="monthdrop.startmonth" #startmonth="ngModel" (change)="chage()">
+              </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1" style="margin-top: 3px;margin-right: -18px;" *ngIf="showdatefilter">To</div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+              <div class="form-group" *ngIf="showdatefilter">
+                <input class="form-control" type="month" id="example-month-input" name="endmonth" [(ngModel)]="monthdrop.endmonth" #endmonth="ngModel" (change)="chage()">
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3" *ngIf="showdatefilter">
+              <button (click)="filterbymonth()"  class="btn btn-dark" id="btnsubmit" style="margin-left: 20px;border-radius: 6px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Apply Filter</button>
+            </div>
+          </div>
+
+          <br>
+          <div style="height: 400px !important;width: 100%;">
+            <ngx-charts-bar-vertical-2d *ngIf="s" class="chart-container" [scheme]="colorScheme" [schemeType]="schemeType" [results]="monthgraph" [gradient]="gradient"
+              [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+              [tooltipDisabled]="tooltipDisabled" [xAxisLabel]="'Months'" [yAxisLabel]="yAxisLabel" [showGridLines]="showGridLines" [barPadding]="barPadding"
+              [groupPadding]="20" [roundDomains]="roundDomains" width="200">
+            </ngx-charts-bar-vertical-2d>
+
+            <ngx-charts-bar-vertical-2d *ngIf="filteredgraph" class="chart-container" [scheme]="colorScheme" [schemeType]="schemeType" [results]="multifilt" [gradient]="gradient"
+                [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+                [tooltipDisabled]="tooltipDisabled" [xAxisLabel]="'Months'" [yAxisLabel]="yAxisLabel" [showGridLines]="showGridLines" [barPadding]="barPadding"
+                [groupPadding]="20" [roundDomains]="roundDomains" width="200">
+              </ngx-charts-bar-vertical-2d>
+            </div>
+        </div>
+
+        <div class="card-body" *ngIf="yearbtn">
+          <h4 class="card-title" style="margin-left: 20px;">
+            <i class="fas fa-ticket-alt" ng-reflect-ng-class="fas fa-ticket-alt"></i>
+             Ticket Volume Trends
+          </h4>
+
+          <div class="btn-group mr-2 btn-group-md" role="group" aria-label="Basic example" style="float: right;margin-top: -30px;">
+            <button type="button" class="btn btn-secondary" [disabled]="daybtn" (click)="changegraph('days')">Days</button>
+            <button type="button" class="btn btn-secondary" [disabled]="monbtn" (click)="changegraph('month')">Month</button>
+            <button type="button" class="btn btn-secondary" [disabled]="yearbtn" (click)="changegraph('year')">Year</button>
+          </div>
+
+          <br>
+          <div style="height: 400px !important;width: 100%;">
+            <ngx-charts-bar-vertical-2d *ngIf="s" class="chart-container" [scheme]="colorScheme" [schemeType]="schemeType" [results]="yeargraph" [gradient]="gradient"
+              [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+              [tooltipDisabled]="tooltipDisabled" [xAxisLabel]="'Year'" [yAxisLabel]="yAxisLabel" [showGridLines]="showGridLines" [barPadding]="barPadding"
+              [groupPadding]="20" [roundDomains]="roundDomains" width="200">
+            </ngx-charts-bar-vertical-2d>
+          </div>
+        </div>
+    </div>
+</div>
+</div>

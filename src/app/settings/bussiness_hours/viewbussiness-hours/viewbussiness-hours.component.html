@@ -1,0 +1,93 @@
+<style>
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+</style>
+
+<div class="row">
+  <div class="col-lg-9 col-md-12 col-sm-12 m-t-30" style="max-height: 100%;overflow-y: scroll;">
+    <div class="card">
+      <span style="padding: 15px 28px 0;">
+        <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+          <b><i class="fas fa-arrow-left"></i> Go Back</b>
+         </a>
+      </span>
+      <div class="card-body"  style="padding: 40px 36px 0;">
+        <h3 style="color: black;font-weight: 600;">Business Hours
+          <a routerLink="/settings/bussiness_hours/newbussiness-hours" class="btn btn-dark" style="float: right;;background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">New Bussiness Hours</a>
+        </h3>
+
+      <br>
+
+      <div class="table-responsive">
+        <div style="margin-left: 50%;margin-right: auto;" *ngIf="loadingtbl"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+                <table class="table" style="border-radius: 2px;border: 1px solid #cfd7df;">
+
+                    <tbody>
+                        <tr *ngFor="let a of bdata" style="border-bottom: 1px solid;border-color: #cfd7df;">
+                            <th scope="row"><a href="/#/settings/bussiness_hours/newbussiness-hours?id={{a.bussinessGuid}}"> {{a.bussinessname}} </a><br>
+                              <small>{{a.bussinessdescription}}</small></th>
+                              <td style="float: right;"><button title="Delete" placement="top" ngbTooltip="Delete" style="cursor: pointer;width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="deletemodal(deletecontent,a.bussinessGuid)" > <i class="fas fa-trash-alt"></i></button></td>
+                            <td style="float: right;"><button (click)="edit(a.bussinessGuid)" placement="top" ngbTooltip="Edit" style="cursor: pointer;width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" title="Edit"> <i class="sl-icon-note"></i></button></td>
+                              <!-- <td style="float: right;"><button style="cursor: pointer;" class="btn btn-outline-danger" title="Delete" (click)="deletemodal(deletecontent,a.bussinessGuid)"> <i class="fa fa-trash"></i></button></td>
+                            <td style="float: right;"><a href="/#/settings/bussiness_hours/newbussiness-hours?id={{a.bussinessGuid}}" style="cursor: pointer;" class="btn btn-outline-primary" title="Edit"> <i class="sl-icon-note"></i></a></td> -->
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+      <br>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="col-lg-3 col-md-12 col-sm-12 m-t-30" style="max-height: 500px;overflow-y: scroll;background-color: #f5f7f9;">
+    <br>
+    <div style="margin-top: 10px;margin-left: 20px;">
+          <h5>Groups</h5>
+          <p>You can organize your agents into specific Groups like “Support” and “Sales”. This lets you easily assign tickets, create specific canned responses, manage workflows and generate group-level reports. Note that an agent can be a member of multiple groups.</p>
+
+          <h5>Business Hours</h5>
+          <p>You can associate different business hours to each of these groups based on their working hours. You can group agents by shifts and assign different business hours to each group, or create separate groups for each location that your agents work from.</p>
+
+          <h5>Automatic ticket assignment</h5>
+          <h6>To each group</h6>
+          <p>Once you’ve created your groups, you can set up rules in dispatch’r to automatically route tickets to each group.</p>
+
+          <h6>To agents within group</h6>
+          <p>You can also auto-assign tickets to online agents within a group by three methods: <br>
+            1. Round robin - Assign tickets to agents in a circular fashion<br>
+            2. Load balanced - Set a limit on the number of tickets that are assigned to each agent<br>
+            3. Skill based - Assign tickets to agents based on their expertise<br>
+            Read more
+
+            </p>
+
+  </div>
+</div>
+
+</div>
+
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"> Delete Bussiness Hours</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+      <h3>Are You Sure You Want to Delete this ?</h3>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

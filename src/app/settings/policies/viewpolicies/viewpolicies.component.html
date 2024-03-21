@@ -1,0 +1,82 @@
+<style>
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+
+  .loader {
+  margin: 5px 0 0 102px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 1s linear infinite; /* Safari */
+    animation: spin 1s linear infinite;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
+
+<div class="row">
+  <div class="col-lg-9 col-md-12 col-sm-12 m-t-30" style="max-height: 100%;overflow-y: scroll;">
+    <div class="card" >
+      <span style="padding: 15px 28px 0;">
+        <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+          <b><i class="fas fa-arrow-left"></i> Go Back</b>
+         </a>
+      </span>
+      <div class="card-body" style="padding: 40px 36px 0;">
+        <h3 style="color: black;font-weight: 600;">SLA Policies
+          <a routerLink="/settings/policies/newpolicy" class="btn btn-dark" style="display: none;float: right;;background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">Add Policy</a>
+        </h3>
+        <p>Service Level Agreement(SLA) policies help you setup and maintain targets for the <br>
+          duration within which your teams respond and resolve tickets.</p>
+      <br>
+            <div class="table-responsive" style="border-radius: 5px;">
+              <div style="margin-left: 50%;margin-right: auto;" *ngIf="loading"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+
+                <table class="table" style="border-radius: 2px;border: 1px solid #cfd7df;" *ngFor="let sla of slapolicies">
+
+                    <tbody>
+                        <tr>
+                          <td scope="row" style="width: 70%;"><a routerLink="/settings/policies/newpolicy" [queryParams]="{ id: sla.slaGuid }" style="color: blue;">{{sla.policyname}}  </a> <br>
+                            {{sla.policydescription}}
+                          <td style="color: blue;float: right;"><a routerLink="/settings/policies/newpolicy" [queryParams]="{ id: sla.slaGuid }" title="Edit" style="cursor: pointer;"> <i class="sl-icon-note" style="color: blue;"></i> </a></td>
+
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+      <br>
+    </div>
+  </div>
+  </div>
+
+  <div class="col-lg-3 col-md-12 col-sm-12 m-t-30" style="max-height: 500px;overflow-y: scroll;background-color: #f5f7f9;">
+    <br>
+    <div style="margin-top: 10px;margin-left: 20px;">
+          <h5>SLA policy</h5>
+          <p>A service level agreement (SLA) policy lets you set standards of performance for your support team.
+            <br><br>
+            You can set SLA policies for the time within which agents should respond to, and resolve tickets based on ticket priorities.
+            <br><br>
+            You can choose whether you want each SLA rule to be calculated over calendar hours or your business hours.
+
+  </div>
+</div>
+
+</div>

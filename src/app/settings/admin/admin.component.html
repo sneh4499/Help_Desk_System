@@ -1,0 +1,733 @@
+<style>
+  .hov:hover {
+    border: 1px solid;
+    border-color: #bf00ff;
+    background-color: #fff5ff;
+    cursor: pointer;
+  }
+  a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+  .icolor {
+    color: #bf00ff;
+  }
+</style>
+<div class="container">
+  <!-- <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <div class="input-group mb-3" style="height: 50px;">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+        </div>
+        <input type="text" class="form-control" placeholder="Search Settings" aria-describedby="basic-addon1">
+      </div>
+    </div>
+  </div> -->
+
+
+  <div style="margin-top: 20%;margin-left: 50%;margin-right: auto;" *ngIf="loading"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+
+  <div class="row" *ngIf="pageaccess">
+    <div class="col-12 m-t-30">
+          <ngb-alert type="danger" [dismissible]="false">
+              <strong>Sorry !</strong> You Don't have permission to access this page. Please Contact adminitstrator.
+              <a routerLink="/starter">Go back to Home</a>
+            </ngb-alert>
+          </div>
+  </div>
+
+  <div class="row" *ngIf="settings">
+    <div class="col-12 m-t-30">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">General Settings</h4>
+          <hr>
+
+          <div class="row">
+            <div class="col-4">
+
+              <a routerLink="/settings/helpdesk" style="color: #3e5569;" class="disabled" *ngIf="helpdesk">
+                <div class="card" style="background-color: #f5f5f5;">
+                  <div class="card-body">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                      class="modal-icons item-icon" data-test-id="helpdesk">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        transform="translate(1 1)">
+                        <path stroke="#6F7C87" d="M5.154 11.568V9.126a8.75 8.75 0 0117.5.097v2.44"></path>
+                        <path fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M7.298 20.834a.875.875 0 01-.875.875h-.875a5.171 5.171 0 01-5.11-5.206h0a5.171 5.171 0 015.197-5.128h.875a.875.875 0 01.875.875l-.087 8.584zm15.067.954h-.875a.875.875 0 01-.875-.875v-8.584c0-.483.392-.875.875-.875h.875a5.171 5.171 0 015.198 5.171h0a5.171 5.171 0 01-5.198 5.163h0z">
+                        </path>
+                        <path stroke="#6F7C87" d="M15.689 26.74h3.666a3.299 3.299 0 003.299-3.299h0v-1.653"></path>
+                        <rect width="3.299" height="1.654" x="13.213" y="25.909" fill="#E6D0F0" fill-rule="nonzero"
+                          stroke="#AE64CE" rx=".827"></rect>
+                      </g>
+                    </svg> &nbsp; <b> Helpdesk</b>
+                  </div>
+                </div>
+              </a>
+
+              <a routerLink="/settings/helpdesk" style="color: #3e5569;" *ngIf="!helpdesk">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                      class="modal-icons item-icon" data-test-id="helpdesk">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        transform="translate(1 1)">
+                        <path stroke="#6F7C87" d="M5.154 11.568V9.126a8.75 8.75 0 0117.5.097v2.44"></path>
+                        <path fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M7.298 20.834a.875.875 0 01-.875.875h-.875a5.171 5.171 0 01-5.11-5.206h0a5.171 5.171 0 015.197-5.128h.875a.875.875 0 01.875.875l-.087 8.584zm15.067.954h-.875a.875.875 0 01-.875-.875v-8.584c0-.483.392-.875.875-.875h.875a5.171 5.171 0 015.198 5.171h0a5.171 5.171 0 01-5.198 5.163h0z">
+                        </path>
+                        <path stroke="#6F7C87" d="M15.689 26.74h3.666a3.299 3.299 0 003.299-3.299h0v-1.653"></path>
+                        <rect width="3.299" height="1.654" x="13.213" y="25.909" fill="#E6D0F0" fill-rule="nonzero"
+                          stroke="#AE64CE" rx=".827"></rect>
+                      </g>
+                    </svg> &nbsp; <b> Helpdesk</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4">
+              <a routerLink="/settings/agents/viewagents" style="color: #3e5569;" class="disabled" *ngIf="agents">
+                <div class="card" style="background-color: #f5f5f5;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" class="modal-icons item-icon"
+                      data-test-id="agents">
+                      <g fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width=".875">
+                        <g stroke="#6f7c87">
+                          <path
+                            d="M21.665 8.102a7.665 7.665 0 00-15.33 0c.008.55.075 1.1.2 1.636-.136.42-.204.86-.2 1.304 0 1.304.525 2.362 1.18 2.362a.665.665 0 00.35-.114c.875 3.5 3.28 6.01 6.125 6.01s5.25-2.52 6.125-6.01c.104.07.225.1.35.114.648 0 1.18-1.06 1.18-2.362a4.242 4.242 0 00-.2-1.304 7.658 7.658 0 00.22-1.636z">
+                          </path>
+                          <path stroke-linecap="round"
+                            d="M12.25 27.563l-3.5-8.25-6.125 3.045a2.34 2.34 0 00-1.234 1.54l-.954 3.666m27.126-.001l-.875-3.666a2.36 2.36 0 00-1.312-1.54l-6.125-3.054-3.5 8.26">
+                          </path>
+                        </g>
+                        <path fill="#ae64ce" fill-opacity=".3" fill-rule="nonzero" stroke="#ae64ce"
+                          d="M21.665 8.102a7.665 7.665 0 00-15.33 0c.008.55.075 1.1.2 1.636a12.4 12.4 0 011.566.131s-.254-3.5.586-3.5 3.5.114 3.5-2.362c0 1.068 3.5 3.5 7.08 3.5.06.815.258 1.614.586 2.362l1.566-.13c.14-.535.223-1.084.245-1.636z">
+                        </path>
+                        <g stroke="#6f7c87">
+                          <path stroke-linecap="round" d="M21.07 13.125c0 2.214-3.98 2.95-5.31 2.95"></path>
+                          <rect width="2.363" height="1.173" x="13.405" y="15.479" fill="#dadfe3" fill-rule="nonzero"
+                            rx=".586"></rect>
+                        </g>
+                        <path fill="#ae64ce" fill-opacity=".3" fill-rule="nonzero" stroke="#ae64ce"
+                          d="M15.75 27.563L14.57 25.2s1.18-1.47 1.18-2.354-.875-1.18-1.75-1.18-1.75.297-1.75 1.18 1.18 2.362 1.18 2.362l-1.18 2.354h3.5z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Agents</b>
+                  </div>
+                </div>
+              </a>
+
+              <a routerLink="/settings/agents/viewagents" style="color: #3e5569;" *ngIf="!agents">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" class="modal-icons item-icon"
+                      data-test-id="agents">
+                      <g fill="none" fill-rule="evenodd" stroke-linejoin="round" stroke-width=".875">
+                        <g stroke="#6f7c87">
+                          <path
+                            d="M21.665 8.102a7.665 7.665 0 00-15.33 0c.008.55.075 1.1.2 1.636-.136.42-.204.86-.2 1.304 0 1.304.525 2.362 1.18 2.362a.665.665 0 00.35-.114c.875 3.5 3.28 6.01 6.125 6.01s5.25-2.52 6.125-6.01c.104.07.225.1.35.114.648 0 1.18-1.06 1.18-2.362a4.242 4.242 0 00-.2-1.304 7.658 7.658 0 00.22-1.636z">
+                          </path>
+                          <path stroke-linecap="round"
+                            d="M12.25 27.563l-3.5-8.25-6.125 3.045a2.34 2.34 0 00-1.234 1.54l-.954 3.666m27.126-.001l-.875-3.666a2.36 2.36 0 00-1.312-1.54l-6.125-3.054-3.5 8.26">
+                          </path>
+                        </g>
+                        <path fill="#ae64ce" fill-opacity=".3" fill-rule="nonzero" stroke="#ae64ce"
+                          d="M21.665 8.102a7.665 7.665 0 00-15.33 0c.008.55.075 1.1.2 1.636a12.4 12.4 0 011.566.131s-.254-3.5.586-3.5 3.5.114 3.5-2.362c0 1.068 3.5 3.5 7.08 3.5.06.815.258 1.614.586 2.362l1.566-.13c.14-.535.223-1.084.245-1.636z">
+                        </path>
+                        <g stroke="#6f7c87">
+                          <path stroke-linecap="round" d="M21.07 13.125c0 2.214-3.98 2.95-5.31 2.95"></path>
+                          <rect width="2.363" height="1.173" x="13.405" y="15.479" fill="#dadfe3" fill-rule="nonzero"
+                            rx=".586"></rect>
+                        </g>
+                        <path fill="#ae64ce" fill-opacity=".3" fill-rule="nonzero" stroke="#ae64ce"
+                          d="M15.75 27.563L14.57 25.2s1.18-1.47 1.18-2.354-.875-1.18-1.75-1.18-1.75.297-1.75 1.18 1.18 2.362 1.18 2.362l-1.18 2.354h3.5z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Agents</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4">
+              <a routerLink="/settings/groups/viewgroups" style="color: #3e5569;" class="disabled" *ngIf="groups">
+                <div class="card" style="background-color: #f5f5f5;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" fill-rule="evenodd"
+                      class="modal-icons item-icon" data-test-id="groups">
+                      <g stroke="#6f7c87" stroke-linecap="round" stroke-linejoin="round" stroke-width=".875">
+                        <path
+                          d="M18.253 3.5a4.461 4.461 0 012.53-.77 4.525 4.525 0 014.083 6.838 4.504 4.504 0 01-4.083 2.2 3.962 3.962 0 01-.875-.088">
+                        </path>
+                        <path
+                          d="M27.563 25.813v-7.3a6.79 6.79 0 00-6.781-6.781c-.245 0-.5 0-.744.044m-11.892-.14c-.288.062-.58.1-.875.088-2.42-.106-4.325-2.098-4.325-4.52S4.853 2.8 7.27 2.695c.887.016 1.75.296 2.476.805m-1.783 8.286c-.245 0-.5-.044-.744-.044-1.8-.002-3.525.7-4.798 1.984a6.77 6.77 0 00-1.983 4.798v7.3">
+                        </path>
+                      </g>
+                      <g fill="#ae64ce" fill-opacity=".3" fill-rule="nonzero">
+                        <circle cx="14" cy="4.961" r="4.524" stroke="#ae64ce" stroke-linejoin="round"
+                          stroke-width=".875"></circle>
+                        <path d="M23.04 28v-9.476A9.04 9.04 0 0014 9.476a9.04 9.04 0 00-9.039 9.048V28H23.04z"></path>
+                      </g>
+                      <path stroke="#ae64ce" stroke-linecap="round" stroke-linejoin="round" stroke-width=".875"
+                        d="M4.96 27.563v-9.04A9.04 9.04 0 0114 9.476a9.04 9.04 0 019.039 9.048v9.04"></path>
+                    </svg>
+                    &nbsp; <b> Groups</b>
+                  </div>
+                </div>
+              </a>
+
+              <a routerLink="/settings/groups/viewgroups" style="color: #3e5569;" *ngIf="!groups">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" fill-rule="evenodd"
+                      class="modal-icons item-icon" data-test-id="groups">
+                      <g stroke="#6f7c87" stroke-linecap="round" stroke-linejoin="round" stroke-width=".875">
+                        <path
+                          d="M18.253 3.5a4.461 4.461 0 012.53-.77 4.525 4.525 0 014.083 6.838 4.504 4.504 0 01-4.083 2.2 3.962 3.962 0 01-.875-.088">
+                        </path>
+                        <path
+                          d="M27.563 25.813v-7.3a6.79 6.79 0 00-6.781-6.781c-.245 0-.5 0-.744.044m-11.892-.14c-.288.062-.58.1-.875.088-2.42-.106-4.325-2.098-4.325-4.52S4.853 2.8 7.27 2.695c.887.016 1.75.296 2.476.805m-1.783 8.286c-.245 0-.5-.044-.744-.044-1.8-.002-3.525.7-4.798 1.984a6.77 6.77 0 00-1.983 4.798v7.3">
+                        </path>
+                      </g>
+                      <g fill="#ae64ce" fill-opacity=".3" fill-rule="nonzero">
+                        <circle cx="14" cy="4.961" r="4.524" stroke="#ae64ce" stroke-linejoin="round"
+                          stroke-width=".875"></circle>
+                        <path d="M23.04 28v-9.476A9.04 9.04 0 0014 9.476a9.04 9.04 0 00-9.039 9.048V28H23.04z"></path>
+                      </g>
+                      <path stroke="#ae64ce" stroke-linecap="round" stroke-linejoin="round" stroke-width=".875"
+                        d="M4.96 27.563v-9.04A9.04 9.04 0 0114 9.476a9.04 9.04 0 019.039 9.048v9.04"></path>
+                    </svg>
+                    &nbsp; <b> Groups</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4" style="display: none;">
+              <a routerLink="/a/admin/skills" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" class="modal-icons item-icon"
+                      data-test-id="skills">
+                      <path fill="none" stroke="#6f7c87" stroke-linecap="round" stroke-linejoin="round"
+                        d="M16.25 15.12h8.9v6.17"></path>
+                      <circle cx="4.85" cy="25.15" r="3.85" fill="#ae64ce" fill-opacity=".3" stroke="#ae64ce"
+                        stroke-linecap="round" stroke-linejoin="round"></circle>
+                      <path fill="#6f7c87" d="M28 22.29V28h-5.71v-5.71H28m1-1h-7.71V29H29v-7.71z"></path>
+                      <path fill="none" stroke="#ae64ce" stroke-linecap="round" stroke-linejoin="round"
+                        d="M15 9.9v4M4.85 21.29v-6.17h8.9"></path>
+                      <path fill="#ae64ce" fill-opacity=".3" stroke="#ae64ce" stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M22.62 8.58V7.5l-.24-.14a2.17 2.17 0 010-3.8l.24-.13V2.35a1.38 1.38 0 00-.39-1 1.34 1.34 0 00-.95-.35H8.77a1.33 1.33 0 00-1.34 1.35v1.08l.24.13a2.17 2.17 0 010 3.8l-.24.14v1.08a1.34 1.34 0 00.39.95 1.37 1.37 0 00.95.39h12.51a1.34 1.34 0 001.34-1.34zm-5.14-1.46h-4.91a.71.71 0 01-.71-.72V4.54a.72.72 0 01.71-.72h4.91a.72.72 0 01.71.72V6.4a.71.71 0 01-.71.72z">
+                      </path>
+                      <circle cx="15" cy="15.15" r="1.25" fill="#fff" stroke="#ae64ce" stroke-linecap="round"
+                        stroke-linejoin="round"></circle>
+                    </svg>
+                    &nbsp; <b> Skills</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+
+            <div class="col-4">
+              <a routerLink="/settings/roles/viewroles" style="color: #3e5569;" class="disabled" *ngIf="viewroles">
+                <div class="card" style="background-color: #f5f5f5;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"
+                      class="modal-icons item-icon" data-test-id="roles">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <circle cx="11.637" cy="6.921" r="6.484" stroke="#6F7C87"></circle>
+                        <path stroke="#6F7C87"
+                          d="M11.637 13.414a11.209 11.209 0 015.425 1.391m-5.425-1.391a11.191 11.191 0 00-11.2 11.2v2.957">
+                        </path>
+                        <path fill="#AE64CE" fill-opacity=".3" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M27.563 22.934v-2.529h-1.9a4.147 4.147 0 00-.28-.674l1.348-1.356-1.75-1.75-1.356 1.33a4.156 4.156 0 00-.674-.28V15.75h-2.546v1.925a4.156 4.156 0 00-.674.28l-1.356-1.33-1.75 1.75 1.339 1.339a4.156 4.156 0 00-.28.674H15.75v2.528h1.899c.073.233.167.458.28.674l-1.304 1.356 1.75 1.75 1.356-1.321c.216.113.442.207.674.28v1.899h2.52v-1.881a4.23 4.23 0 00.7-.298l1.339 1.339 1.75-1.75-1.339-1.339c.113-.216.207-.441.28-.674l1.907-.017zm-5.898.42a1.689 1.689 0 110-3.378 1.689 1.689 0 010 3.378h0z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Roles</b>
+                  </div>
+                </div>
+              </a>
+
+              <a routerLink="/settings/roles/viewroles" style="color: #3e5569;" *ngIf="!viewroles">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"
+                      class="modal-icons item-icon" data-test-id="roles">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <circle cx="11.637" cy="6.921" r="6.484" stroke="#6F7C87"></circle>
+                        <path stroke="#6F7C87"
+                          d="M11.637 13.414a11.209 11.209 0 015.425 1.391m-5.425-1.391a11.191 11.191 0 00-11.2 11.2v2.957">
+                        </path>
+                        <path fill="#AE64CE" fill-opacity=".3" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M27.563 22.934v-2.529h-1.9a4.147 4.147 0 00-.28-.674l1.348-1.356-1.75-1.75-1.356 1.33a4.156 4.156 0 00-.674-.28V15.75h-2.546v1.925a4.156 4.156 0 00-.674.28l-1.356-1.33-1.75 1.75 1.339 1.339a4.156 4.156 0 00-.28.674H15.75v2.528h1.899c.073.233.167.458.28.674l-1.304 1.356 1.75 1.75 1.356-1.321c.216.113.442.207.674.28v1.899h2.52v-1.881a4.23 4.23 0 00.7-.298l1.339 1.339 1.75-1.75-1.339-1.339c.113-.216.207-.441.28-.674l1.907-.017zm-5.898.42a1.689 1.689 0 110-3.378 1.689 1.689 0 010 3.378h0z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Roles</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4" style="display: none;">
+              <a routerLink="/a/admin/security" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                      class="modal-icons item-icon" data-test-id="security">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="#6F7C87"
+                          d="M15 1.438h0a7.665 7.665 0 00-7.665 7.664v3.71h15.33v-3.71A7.665 7.665 0 0015 1.437z">
+                        </path>
+                        <path stroke="#6F7C87" d="M10.87 12.813V9.155a4.13 4.13 0 018.26 0v3.658h-8.26z"></path>
+                        <path fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M27.688 14.291a1.479 1.479 0 00-1.48-1.479H3.792a1.48 1.48 0 00-1.478 1.48l-.876 12.792a1.48 1.48 0 001.48 1.479h24.167a1.48 1.48 0 001.478-1.48l-.875-12.792zm-11.69 6.886l.77 3.85H13.25l.77-3.85h0a1.75 1.75 0 01-.77-1.46 1.75 1.75 0 013.5 0 1.75 1.75 0 01-.77 1.46h.018z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Security</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+
+            <div class="col-4" style="display: block;">
+              <a routerLink="/settings/policies/viewpolicies" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28" viewBox="0 0 29 28"
+                      class="modal-icons item-icon" data-test-id="sla-policies">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <path stroke="#6F7C87"
+                          d="M2.205 15.75c0-.74.071-1.478.21-2.205l-1.978.893v2.624l1.987.875a11.83 11.83 0 01-.219-2.187h0zm23.608 0a11.91 11.91 0 00-.21-2.205l1.986.875v2.625l-1.986.875a11.83 11.83 0 00.21-2.17h0zM14 .438v3.534M10.465.438h7.07">
+                        </path>
+                        <path fill="#AE64CE" fill-opacity=".3" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M14 3.973A11.795 11.795 0 1025.795 15.75C25.785 9.243 20.507 3.972 14 3.973zM14 25.2a9.433 9.433 0 119.433-9.45A9.45 9.45 0 0114 25.2z">
+                        </path>
+                        <path stroke="#6F7C87"
+                          d="M24.614 5.154l-2.275 2.275m1.094-3.456l2.362 2.362M14 9.572v6.196l4.2 1.75"></path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> SLA Policies</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4" style="display: none;">
+              <a routerLink="/a/admin/business_calendars" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                      class="modal-icons item-icon" data-test-id="business-hours">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        transform="translate(1 1)">
+                        <path stroke="#6F7C87" d="M27.563 27.563H.438m1.181 0V.438H18.13v27.125"></path>
+                        <path stroke="#6F7C87"
+                          d="M5.154 3.973h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zM5.154 9.87h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zm-5.897 5.898h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zM7.516 27.563v-4.717h4.716v4.716">
+                        </path>
+                        <circle cx="20.563" cy="20.563" r="7" fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE">
+                        </circle>
+                        <path fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE" d="M20.563 16.284v4.279m0 0H23.1">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Business Hours</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4">
+              <a routerLink="/settings/admin/tags" style="color: #3e5569;"  class="disabled" *ngIf="tags">
+                <div class="card" style="background-color: #f5f5f5;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                      class="modal-icons item-icon" data-test-id="tags">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <path stroke="#6F7C87"
+                          d="M27.125 15.995L22.75 20.37a1.514 1.514 0 01-2.144 0L7.674 7.376a1.514 1.514 0 01-.412-1.382l.875-4.113a.875.875 0 01.7-.682l3.956-.735c.489-.093.993.06 1.347.411l12.985 12.976a1.514 1.514 0 010 2.144z">
+                        </path>
+                        <circle cx="11.905" cy="5.132" r="1.146" stroke="#6F7C87"
+                          transform="rotate(-45.02 11.905 5.132)"></circle>
+                        <path fill="#AE64CE" fill-opacity=".3" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M16.564 20.641L7.35 11.436a1.514 1.514 0 00-1.347-.42l-3.964.735a.875.875 0 00-.7.683l-.875 4.112c-.106.501.05 1.021.411 1.383l9.196 9.196a1.514 1.514 0 002.179 0l4.375-4.375a1.514 1.514 0 00-.061-2.109zm-10.64-4.147A1.146 1.146 0 114.3 14.875a1.146 1.146 0 011.624 1.619h0z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Tags</b>
+                  </div>
+                </div>
+              </a>
+
+              <a routerLink="/settings/admin/tags" style="color: #3e5569;" *ngIf="!tags">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                      class="modal-icons item-icon" data-test-id="tags">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <path stroke="#6F7C87"
+                          d="M27.125 15.995L22.75 20.37a1.514 1.514 0 01-2.144 0L7.674 7.376a1.514 1.514 0 01-.412-1.382l.875-4.113a.875.875 0 01.7-.682l3.956-.735c.489-.093.993.06 1.347.411l12.985 12.976a1.514 1.514 0 010 2.144z">
+                        </path>
+                        <circle cx="11.905" cy="5.132" r="1.146" stroke="#6F7C87"
+                          transform="rotate(-45.02 11.905 5.132)"></circle>
+                        <path fill="#AE64CE" fill-opacity=".3" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M16.564 20.641L7.35 11.436a1.514 1.514 0 00-1.347-.42l-3.964.735a.875.875 0 00-.7.683l-.875 4.112c-.106.501.05 1.021.411 1.383l9.196 9.196a1.514 1.514 0 002.179 0l4.375-4.375a1.514 1.514 0 00-.061-2.109zm-10.64-4.147A1.146 1.146 0 114.3 14.875a1.146 1.146 0 011.624 1.619h0z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Tags</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+
+
+            <div class="col-4">
+              <a routerLink="/settings/admin/types" style="color: #3e5569;" class="disabled" *ngIf="types">
+                <div class="card" style="background-color: #f5f5f5;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                      class="modal-icons item-icon" data-test-id="tags">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <path stroke="#6F7C87"
+                          d="M27.125 15.995L22.75 20.37a1.514 1.514 0 01-2.144 0L7.674 7.376a1.514 1.514 0 01-.412-1.382l.875-4.113a.875.875 0 01.7-.682l3.956-.735c.489-.093.993.06 1.347.411l12.985 12.976a1.514 1.514 0 010 2.144z">
+                        </path>
+                        <circle cx="11.905" cy="5.132" r="1.146" stroke="#6F7C87"
+                          transform="rotate(-45.02 11.905 5.132)"></circle>
+                        <path fill="#AE64CE" fill-opacity=".3" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M16.564 20.641L7.35 11.436a1.514 1.514 0 00-1.347-.42l-3.964.735a.875.875 0 00-.7.683l-.875 4.112c-.106.501.05 1.021.411 1.383l9.196 9.196a1.514 1.514 0 002.179 0l4.375-4.375a1.514 1.514 0 00-.061-2.109zm-10.64-4.147A1.146 1.146 0 114.3 14.875a1.146 1.146 0 011.624 1.619h0z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Types</b>
+                  </div>
+                </div>
+              </a>
+
+
+              <a routerLink="/settings/admin/types" style="color: #3e5569;" *ngIf="!types">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29"
+                      class="modal-icons item-icon" data-test-id="tags">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <path stroke="#6F7C87"
+                          d="M27.125 15.995L22.75 20.37a1.514 1.514 0 01-2.144 0L7.674 7.376a1.514 1.514 0 01-.412-1.382l.875-4.113a.875.875 0 01.7-.682l3.956-.735c.489-.093.993.06 1.347.411l12.985 12.976a1.514 1.514 0 010 2.144z">
+                        </path>
+                        <circle cx="11.905" cy="5.132" r="1.146" stroke="#6F7C87"
+                          transform="rotate(-45.02 11.905 5.132)"></circle>
+                        <path fill="#AE64CE" fill-opacity=".3" fill-rule="nonzero" stroke="#AE64CE"
+                          d="M16.564 20.641L7.35 11.436a1.514 1.514 0 00-1.347-.42l-3.964.735a.875.875 0 00-.7.683l-.875 4.112c-.106.501.05 1.021.411 1.383l9.196 9.196a1.514 1.514 0 002.179 0l4.375-4.375a1.514 1.514 0 00-.061-2.109zm-10.64-4.147A1.146 1.146 0 114.3 14.875a1.146 1.146 0 011.624 1.619h0z">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Types</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+
+            <div class="col-4">
+              <a routerLink="/settings/bussiness_hours/viewbussiness-hours" style="color: #3e5569;" class="disabled" *ngIf="agents">
+                <div class="card" style="background-color: #f5f5f5;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" class="modal-icons item-icon" data-test-id="business-hours"><g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" transform="translate(1 1)"><path stroke="#6F7C87" d="M27.563 27.563H.438m1.181 0V.438H18.13v27.125"></path><path stroke="#6F7C87" d="M5.154 3.973h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zM5.154 9.87h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zm-5.897 5.898h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zM7.516 27.563v-4.717h4.716v4.716"></path><circle cx="20.563" cy="20.563" r="7" fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE"></circle><path fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE" d="M20.563 16.284v4.279m0 0H23.1"></path></g></svg>
+                    &nbsp; <b> Bussiness Hours</b>
+                  </div>
+                </div>
+              </a>
+
+              <a routerLink="/settings/bussiness_hours/viewbussiness-hours" style="color: #3e5569;" *ngIf="!agents">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" class="modal-icons item-icon" data-test-id="business-hours"><g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" transform="translate(1 1)"><path stroke="#6F7C87" d="M27.563 27.563H.438m1.181 0V.438H18.13v27.125"></path><path stroke="#6F7C87" d="M5.154 3.973h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zM5.154 9.87h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zm-5.897 5.898h3.535v3.535H5.154zm5.897 0h3.535v3.535h-3.535zM7.516 27.563v-4.717h4.716v4.716"></path><circle cx="20.563" cy="20.563" r="7" fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE"></circle><path fill="#E6D0F0" fill-rule="nonzero" stroke="#AE64CE" d="M20.563 16.284v4.279m0 0H23.1"></path></g></svg>
+                    &nbsp; <b>  Bussiness Hours</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+
+            <div class="col-4" style="display: block;"  class="disabled" *ngIf="helpdesk">
+              <a routerLink="/settings/ticketfields" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"
+                      class="modal-icons item-icon" data-test-id="multiple-products">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <rect width="12.714" height="12.714" x="14.849" y=".438" stroke="#6F7C87" rx="1.698"></rect>
+                        <rect width="12.714" height="12.714" x=".438" y="14.849" stroke="#6F7C87" rx="1.698"
+                          transform="rotate(180 6.794 21.206)"></rect>
+                        <rect width="9.328" height="9.328" x="16.117" y="16.117" fill="#AE64CE" fill-opacity=".3"
+                          fill-rule="nonzero" stroke="#AE64CE" rx="1.698" transform="rotate(90 20.781 20.781)"></rect>
+                        <rect width="9.328" height="9.328" x="2.555" y="2.555" fill="#AE64CE" fill-opacity=".3"
+                          fill-rule="nonzero" stroke="#AE64CE" rx="1.698" transform="rotate(-90 7.219 7.219)"></rect>
+                      </g>
+                    </svg> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" class="modal-icons item-icon" data-test-id="ticket_fields"><g fill="none" fill-rule="evenodd" stroke-linejoin="round"><path stroke="#6f7c87" stroke-linecap="round" d="M1.438 1.438h18.848m2.214 0h5.696M1.438 4.894h20.318"></path><g fill="#e6d0f0" fill-rule="nonzero" stroke="#ae64ce"><rect width="16.503" height="4.375" x="1.438" y="9.523" rx="1"></rect><rect width="16.503" height="4.375" x="1.438" y="16.855" rx="1"></rect></g><path fill="#dadfe3" fill-rule="nonzero" stroke="#6f7c87" d="M26.76 9.25h-.875l-.105.192a1.75 1.75 0 01-3.071 0l-.105-.192h-.875c-.6 0-1.085.486-1.085 1.085v10.09c.005.596.49 1.076 1.085 1.076h.875l.105-.192a1.75 1.75 0 013.071 0l.105.192h.875c.596 0 1.08-.48 1.085-1.076v-10.09A1.089 1.089 0 0026.76 9.25zm-1.172 4.15v3.955a.585.585 0 01-.577.577h-1.505a.58.58 0 01-.578-.577V13.4a.58.58 0 01.578-.578H25c.317.005.573.26.577.578z"></path><rect width="27.125" height="4.375" x="1.438" y="24.188" fill="#e6d0f0" fill-rule="nonzero" stroke="#ae64ce" rx="1"></rect></g></svg>
+                    &nbsp; <b> Ticket Fields</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4" style="display: block;" *ngIf="!helpdesk">
+              <a routerLink="/settings/ticketfields" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"
+                      class="modal-icons item-icon" data-test-id="multiple-products">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width=".875">
+                        <rect width="12.714" height="12.714" x="14.849" y=".438" stroke="#6F7C87" rx="1.698"></rect>
+                        <rect width="12.714" height="12.714" x=".438" y="14.849" stroke="#6F7C87" rx="1.698"
+                          transform="rotate(180 6.794 21.206)"></rect>
+                        <rect width="9.328" height="9.328" x="16.117" y="16.117" fill="#AE64CE" fill-opacity=".3"
+                          fill-rule="nonzero" stroke="#AE64CE" rx="1.698" transform="rotate(90 20.781 20.781)"></rect>
+                        <rect width="9.328" height="9.328" x="2.555" y="2.555" fill="#AE64CE" fill-opacity=".3"
+                          fill-rule="nonzero" stroke="#AE64CE" rx="1.698" transform="rotate(-90 7.219 7.219)"></rect>
+                      </g>
+                    </svg> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" class="modal-icons item-icon" data-test-id="ticket_fields"><g fill="none" fill-rule="evenodd" stroke-linejoin="round"><path stroke="#6f7c87" stroke-linecap="round" d="M1.438 1.438h18.848m2.214 0h5.696M1.438 4.894h20.318"></path><g fill="#e6d0f0" fill-rule="nonzero" stroke="#ae64ce"><rect width="16.503" height="4.375" x="1.438" y="9.523" rx="1"></rect><rect width="16.503" height="4.375" x="1.438" y="16.855" rx="1"></rect></g><path fill="#dadfe3" fill-rule="nonzero" stroke="#6f7c87" d="M26.76 9.25h-.875l-.105.192a1.75 1.75 0 01-3.071 0l-.105-.192h-.875c-.6 0-1.085.486-1.085 1.085v10.09c.005.596.49 1.076 1.085 1.076h.875l.105-.192a1.75 1.75 0 013.071 0l.105.192h.875c.596 0 1.08-.48 1.085-1.076v-10.09A1.089 1.089 0 0026.76 9.25zm-1.172 4.15v3.955a.585.585 0 01-.577.577h-1.505a.58.58 0 01-.578-.577V13.4a.58.58 0 01.578-.578H25c.317.005.573.26.577.578z"></path><rect width="27.125" height="4.375" x="1.438" y="24.188" fill="#e6d0f0" fill-rule="nonzero" stroke="#ae64ce" rx="1"></rect></g></svg>
+                    &nbsp; <b> Ticket Fields</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4" style="display: none;">
+              <a routerLink="/a/admin/field-service-management" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62.92 68.29" class="modal-icons item-icon"
+                      data-test-id="field-service-management">
+                      <g data-name="Layer 2">
+                        <g data-name="Layer 5">
+                          <path fill="#e5cff0"
+                            d="M13.63 16.24s-1.37-7.17 3-11.87c4.85-5.21 17.45-5 21 2.3 2.64 5.45 1.06 9.66 1.06 9.66a32.14 32.14 0 00-13.92-2.57 30.87 30.87 0 00-11.14 2.48z">
+                          </path>
+                          <path fill="#707c88"
+                            d="M61.17 68.19H37.31a1.75 1.75 0 01-1.75-1.75v-33.7A1.75 1.75 0 0137.31 31h7.14v3.69H54V31h7.14a1.75 1.75 0 011.75 1.75v33.7a1.75 1.75 0 01-1.72 1.74zm-23.86-35.7a.25.25 0 00-.25.25v33.7a.25.25 0 00.25.25h23.86a.25.25 0 00.25-.25v-33.7a.25.25 0 00-.25-.25h-5.64v3.69H43v-3.69z">
+                          </path>
+                          <path fill="#707c88"
+                            d="M55.11 32.43h-4.3v-.74a1.57 1.57 0 10-3.13 0v.74H44v-1.5h2.31a3.07 3.07 0 016 0h2.9z">
+                          </path>
+                          <path fill="#e5cff0"
+                            d="M11.69 43.34v11.95s-2.06.22-2.06 2.93v9.67h33.12v-9.56s.23-3.15-2.6-3.15V43.89l-3.87-1.43v12.7H15.74V42a38 38 0 01-4.05 1.34z">
+                          </path>
+                          <path fill="#ae64cd"
+                            d="M42.86 68.29H9.74a.75.75 0 01-.74-.75v-9.66a3.49 3.49 0 012.06-3.51V43a.75.75 0 011.5 0v12a.75.75 0 01-.67.74c-.22 0-1.39.29-1.39 2.19v8.91h31.61V58a2.93 2.93 0 00-.56-1.93 1.65 1.65 0 00-1.28-.47.75.75 0 01-.53-.22.71.71 0 01-.22-.53V43.54a.75.75 0 01.75-.75.76.76 0 01.75.75v10.62a2.91 2.91 0 011.63.88 4.41 4.41 0 011 3v9.5a.75.75 0 01-.75.75z">
+                          </path>
+                          <path fill="#ae64cd"
+                            d="M36.29 56H15.6a.76.76 0 01-.75-.75V42a.75.75 0 011.5 0v12.47h19.19V42.53a.75.75 0 011.5 0v12.69a.75.75 0 01-.75.78zm-18.92 3.74h-3.69a.75.75 0 010-1.5h3.69a.75.75 0 010 1.5zm21.29 0H35a.75.75 0 010-1.5h3.69a.75.75 0 010 1.5z">
+                          </path>
+                          <path fill="#707c88"
+                            d="M49.64 67s-.64-4.19-1.82-13.07c-1-7.71-5.65-8.85-5.85-8.89h-.11l-3.1-1.19-5.6-2.28-7.09 5.92-7-6-6.11 1.77a22.53 22.53 0 00-6.58 2.86c-2 1.34-3 6-3.21 7.65L1.49 66.41 0 66.22l1.66-12.63c0-.27.89-6.71 3.86-8.7a23.85 23.85 0 017-3.06l6.87-2 6.69 5.66 6.81-5.69 6.42 2.62 3 1.17c.67.17 5.81 1.74 7 10.14 1.21 8.86 1.81 13 1.82 13.05z">
+                          </path>
+                          <path fill="#707c88" d="M18.83 34.84h1.5v5.83h-1.5zm13.37-.07h1.5v5.83h-1.5z"></path>
+                          <path fill="#707c88"
+                            d="M27.57 37.24H25.2a10.77 10.77 0 01-10.75-10.75v-7.25H16v7.25a9.26 9.26 0 009.25 9.25h2.37a9.26 9.26 0 009.25-9.25v-7.25h1.5v7.25a10.77 10.77 0 01-10.8 10.75zm11.52-19.91l-.74-.33a31.65 31.65 0 00-13.56-2.5 30.38 30.38 0 00-10.86 2.42l-.85.37-.18-.92c-.06-.31-1.39-7.59 3.2-12.51C18.82.9 24-.56 29 .2c4.35.65 7.75 2.88 9.3 6.1 2.7 5.7 1.15 10.07 1.08 10.26zM25.9 13a33.56 33.56 0 0112.28 2.3A13.16 13.16 0 0036.94 7c-1.34-2.77-4.32-4.7-8.18-5.28-4.51-.72-9.16.55-11.57 3.13-3.16 3.4-3.11 8.27-2.93 10.28A31.85 31.85 0 0124.73 13z">
+                          </path>
+                          <path fill="#707c88"
+                            d="M17.15 20.22a3.89 3.89 0 01-2.3-.7 4.62 4.62 0 01-1.71-2.92l1.49-.2a3.09 3.09 0 001.1 1.9 2.89 2.89 0 002.27.33c1.54-.31 2.72-.64 3.77-.94a14.88 14.88 0 014.11-.76 24.56 24.56 0 014.95.95 22 22 0 004 .82c1.69 0 2.4-.1 3.16-2.5l1.43.44c-1 3-2.23 3.56-4.59 3.56a21.76 21.76 0 01-4.34-.86 23.25 23.25 0 00-4.58-.91 13.52 13.52 0 00-3.71.71c-1.07.3-2.28.64-3.88 1a5.82 5.82 0 01-1.17.08z">
+                          </path>
+                          <path fill="#fff"
+                            d="M21.46 1.82s-1.3 6.61 5 8.82a7.73 7.73 0 004.78-8.57s-3.82-1.84-9.78-.25z"></path>
+                          <path fill="#707c88"
+                            d="M26.51 11.45l-.26-.09c-6.84-2.4-5.5-9.6-5.49-9.67a.75.75 0 011.48.31c0 .24-1.06 5.82 4.23 7.87A7.28 7.28 0 0030.56 2 .75.75 0 0132 1.77a8.92 8.92 0 01-5.28 9.58z">
+                          </path>
+                          <path fill="#707c88"
+                            d="M28 4h-3.46a.75.75 0 010-1.5H28A.75.75 0 0128 4zm0 2.61h-3.46a.75.75 0 010-1.5H28a.75.75 0 110 1.5zM14.37 23.39h-.64A2.75 2.75 0 0111 20.64V17.8a2.75 2.75 0 012.75-2.75v1.5a1.25 1.25 0 00-1.25 1.25v2.84a1.25 1.25 0 001.25 1.25h.64zm24.45 0h-.64v-1.5h.64a1.25 1.25 0 001.25-1.25V17.8a1.25 1.25 0 00-1.25-1.25v-1.5a2.75 2.75 0 012.75 2.75v2.84a2.75 2.75 0 01-2.75 2.75zm19.6 16.89H40.83a.75.75 0 010-1.5h17.59a.75.75 0 010 1.5zm0 3.99H47.24a.75.75 0 010-1.5h11.18a.75.75 0 010 1.5zm0 4h-8.36a.75.75 0 010-1.5h8.36a.75.75 0 010 1.5z">
+                          </path>
+                        </g>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Field Service Management</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row" style="display: none;">
+    <div class="col-12 m-t-30">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Account Settings</h4>
+          <hr>
+
+          <div class="row">
+            <div class="col-4">
+              <a routerLink="/a/admin/account" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                      class="modal-icons item-icon" data-test-id="account" data-identifyElement="651">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        data-identifyElement="652">
+                        <path stroke="#6F7C87"
+                          d="M15 1.438h10.552a3.01 3.01 0 013.01 3.01V15c0 7.49-6.072 13.563-13.562 13.563h0C7.51 28.563 1.437 22.49 1.437 15h0C1.438 7.51 7.51 1.437 15 1.437z"
+                          data-identifyElement="653"></path>
+                        <path fill="#FE9" fill-rule="nonzero" stroke="#E67E39"
+                          d="M28.563 23.059v-2.993h-2.258a4.891 4.891 0 00-.324-.796l1.593-1.593-2.127-2.126-1.592 1.593a4.891 4.891 0 00-.796-.324v-2.258h-2.993v2.258c-.274.084-.54.193-.796.324l-1.593-1.593-2.126 2.126 1.593 1.593c-.131.255-.24.522-.324.796h-2.258v2.993h2.258c.084.274.193.54.324.796l-1.593 1.593 2.126 2.126 1.593-1.593c.255.131.522.24.796.324v2.258h2.993v-2.258c.274-.084.54-.193.796-.324l1.593 1.593 2.126-2.127-1.593-1.592c.131-.255.24-.522.324-.796h2.258zm-7 .507a2.004 2.004 0 112.003-2.003 2.012 2.012 0 01-2.003 2.003h0z"
+                          data-identifyElement="654"></path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Account</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4">
+              <a routerLink="/a/admin/subscription" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" class="modal-icons item-icon"
+                      data-test-id="billing" data-identifyElement="659">
+                      <g fill="none" fill-rule="evenodd" stroke-linejoin="round" data-identifyElement="660">
+                        <g stroke="#6f7c87" data-identifyElement="661">
+                          <rect width="27.125" height="17.693" x="1.438" y="1.438" rx="1.35" data-identifyElement="662">
+                          </rect>
+                          <path fill="#dadfe3" fill-rule="nonzero" d="M1.438 4.973h27.125v3.535H1.438z"
+                            data-identifyElement="663"></path>
+                          <path stroke-linecap="round"
+                            d="M18.3 15.586h2.363m-7.09 0h2.362m-7.078 0h2.354m-7.072 0h2.354"
+                            data-identifyElement="664"></path>
+                        </g>
+                        <g fill="#fe9" fill-rule="nonzero" stroke="#e67e39" data-identifyElement="665">
+                          <path stroke-linecap="round" d="M16.62 14.563h4.944a7 7 0 110 14H16.62m2.475-14a7 7 0 110 14"
+                            data-identifyElement="666"></path>
+                          <circle cx="16.619" cy="21.563" r="7" data-identifyElement="667"></circle>
+                          <path stroke-linecap="round"
+                            d="M14.71 23.155a1.75 1.75 0 001.907 1.592 1.75 1.75 0 001.881-1.592 1.75 1.75 0 00-1.907-1.593 1.75 1.75 0 01-1.908-1.593 1.75 1.75 0 011.908-1.592A1.75 1.75 0 0118.5 19.97m-1.88-2.222v7.63"
+                            data-identifyElement="668"></path>
+                        </g>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Plans & Billing</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+
+            <div class="col-4">
+              <a routerLink="/a/admin/zen_import" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="29" fill="none" fill-rule="evenodd"
+                      stroke-linejoin="round" class="modal-icons item-icon" data-test-id="zendesk-import">
+                      <path stroke="#6f7c87"
+                        d="M23.25 18.7a5.25 5.25 0 005.311-5.18 5.25 5.25 0 00-4.891-5.136A8.75 8.75 0 0015 1.438a8.75 8.75 0 00-8.846 8.628v.64a4.82 4.82 0 00-.586-.079 4.034 4.034 0 100 8.062l17.684.018z">
+                      </path>
+                      <g stroke="#e67e39">
+                        <circle cx="15" cy="21.528" r="7" fill="#fe9" fill-rule="nonzero"></circle>
+                        <path stroke-linecap="round" d="M15 25.535V17.53m-3 5.004l3 3 3-3"></path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Import data from Zendesk</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+            <div class="col-4">
+              <a routerLink="/a/admin/day_passes" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                      class="modal-icons item-icon" data-test-id="day-pass">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"
+                        transform="translate(1 1)">
+                        <path stroke="#6F7C87"
+                          d="M7.516 27.563h-1.75A5.311 5.311 0 01.437 22.25h0a5.311 5.311 0 015.313-5.3H7.5l.017 10.613zm14.735 0h-1.75V16.948h1.75a5.311 5.311 0 015.311 5.302h0a5.311 5.311 0 01-5.31 5.311z">
+                        </path>
+                        <path stroke="#6F7C87"
+                          d="M22.846 27.527V12.82c.013-.23.013-.461 0-.692m-6.702-7.884c-.7-.18-1.42-.271-2.144-.271a8.846 8.846 0 00-8.846 8.846v14.708">
+                        </path>
+                        <circle cx="21.665" cy="6.335" r="5.897" fill="#FE9" fill-rule="nonzero" stroke="#E67E39">
+                        </circle>
+                        <path fill="#FE9" fill-rule="nonzero" stroke="#E67E39" d="M21.665 2.8v7.07M25.2 6.335h-7.07">
+                        </path>
+                      </g>
+                    </svg>
+                    &nbsp; <b> Day Pass</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+            <div class="col-4">
+              <a routerLink="/a/admin/audit-log" style="color: #3e5569;">
+                <div class="card" style="border: none;">
+                  <div class="card-body hov">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
+                      class="modal-icons item-icon" data-test-id="audit-log">
+                      <g fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+                        <path fill="#DADFE3" fill-rule="nonzero" stroke="#6F7C87"
+                          d="M5.23.55v4a1 1 0 01-.94 1H.5l4.73-5z"></path>
+                        <path stroke="#6F7C87"
+                          d="M25 9.47v-8a1 1 0 00-.94-1H5.23L.5 5.58V30.5a1 1 0 00.94 1h22.61a1 1 0 00.94-1V30M5.62 12.09h10.31M5.62 8.73h15.31M5.62 15.75h8.31m-8.31 3.66h7.31m-7.31 3.66h5.01">
+                        </path>
+                        <circle cx="23.5" cy="19.5" r="8" fill="#FE9" fill-rule="nonzero" stroke="#E67E39"></circle>
+                        <path stroke="#E67E39" d="M23.5 14.61v4.89h2.9"></path>
+                      </g>
+                    </svg>
+                    &nbsp; <b>Audit Log</b>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

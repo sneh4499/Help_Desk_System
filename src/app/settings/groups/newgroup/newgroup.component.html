@@ -1,0 +1,139 @@
+<style>
+  card .card-title {
+    margin-bottom: 10px;
+  }
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+</style>
+
+<div class="row">
+  <div class="col-12 m-t-30">
+      <div class="card" >
+        <span style="padding: 15px 28px 0;">
+          <a routerLink="/settings/groups/viewgroups" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+            <b><i class="fas fa-arrow-left"></i> Go Back</b>
+           </a>
+        </span>
+        <div class="card-body" style="padding: 40px 36px 0;">
+          <form class="form" (ngSubmit)="onTemplateFormSubmit()" #f="ngForm" >
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <h3 style="color: black;font-weight: 600;">New group</h3>
+                <br>
+                  <label style="font-size: 12px;">Group name <span style="color: red;">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="this.group.name" name="name" required  #name="ngModel">
+                <small class="form-text text-danger" *ngIf="!name.valid && (name.dirty || name.touched)">Please enter a group name!</small>
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Describe this group </label>
+                <textarea type="text" class="form-control" [(ngModel)]="this.group.description" name="description"  #description="ngModel"></textarea>
+                </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Business hours</label>
+                <select class="form-control" [(ngModel)]="this.group.bussinesshours" name="bussinesshours"  #bussinesshours="ngModel">
+                  <option *ngFor="let bd of bussinesshoursdrop" [value]="bd.bussinessGuid">{{bd.bussinessname}}</option>
+                </select>
+                <!-- <input type="text" class="form-control" [(ngModel)]="this.group.bussinesshours" name="bussinesshours"  #bussinesshours="ngModel"> -->
+                </div>
+            </div>
+
+            <br>
+            <div class="row" style="display: block;">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Agents</label>
+                <!-- <input type="text" class="form-control"> -->
+
+                <ng-multiselect-dropdown
+                  [placeholder]="'Select Contact'"
+                  name="agentdrop"
+                  #agentdrop="ngModel"
+                  [data]="dropdownList"
+                  [(ngModel)]="this.group.agent"
+                  [settings]="agentdropdownSettings">
+                </ng-multiselect-dropdown>
+
+                <!-- <select class="form-control">
+                  <option *ngFor="let d of agentdrop" [value]="d.aguid">{{d.fullname}}</option>
+                </select> -->
+              </div>
+            </div>
+
+            <br>
+
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <h5>Escalation settings</h5>
+                <div class="row">
+                  <div class="col-8">
+                    <br>
+                    If a ticket remains unassigned for more than
+                  </div>
+                  <div class="col-4">
+                    <br>
+                    <select class="form-control" [(ngModel)]="this.group.esctime" name="esctime"  #v="ngModel">
+                      <option value="">Any</option>
+                      <option value="30m">30 minutes</option>
+                      <option value="1h">1 hour</option>
+                      <option value="2h">2 hours</option>
+                      <option value="3h">3 hours</option>
+                      <option value="4h">4 hours</option>
+                      <option value="8h">8 hours</option>
+                      <option value="12h">12 hours</option>
+                      <option value="1d">1 day</option>
+                      <option value="2d">2 days</option>
+                      <option value="3d">3 days</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-8">
+                    <br>
+                    then send an email to
+                  </div>
+                  <div class="col-4">
+                    <br>
+                    <select class="form-control" [(ngModel)]="this.group.escmailto" name="escmailto"  #escmailto="ngModel">
+                      <option *ngFor="let ad of agentdropd" [value]="ad.agGuid">{{ad.fullname}}</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <br>
+            <hr>
+
+            <div class="row">
+              <div class="col-12">
+                <button  class="btn btn-dark" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+                  <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                  Save</button>
+                &nbsp;&nbsp;
+                <a routerLink="/settings/groups/viewgroups" class="btn btn-outline-default" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);color: black;">
+                   <b> Cancel </b>
+                </a>
+              </div>
+            </div>
+            <br>
+
+          </form>
+          </div>
+
+          </div>
+      </div>
+  </div>

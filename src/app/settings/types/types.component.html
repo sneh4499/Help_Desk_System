@@ -1,0 +1,166 @@
+<style>
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+</style>
+
+<div class="row">
+  <div class="col-lg-9 col-md-12 col-sm-12 m-t-30" style="max-height: 100%;overflow-y: scroll;">
+    <div class="card" >
+      <span style="padding: 15px 28px 0;">
+        <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+          <b><i class="fas fa-arrow-left"></i> Go Back</b>
+         </a>
+      </span>
+      <div class="card-body" style="padding: 40px 28px 0;">
+        <h3 style="color: black;font-weight: 600;"> Manage Types </h3>
+
+          <br>
+          <div class="list-page-body" id="TagsList">
+
+            <form class="form" (ngSubmit)="onTemplateFormSubmit()" #f="ngForm" >
+              <div id="tags-list" class="detailed_view tags-list">
+                <div class="row">
+                  <div class="col-4">
+                    <input type="email" class="form-control" [(ngModel)]="this.typedata.typename" name="typename" placeholder="Type name" required  #typename="ngModel" >
+                    <small class="form-text text-danger" *ngIf="!typename.valid && (typename.dirty || typename.touched)">Please enter type name!</small>
+                  </div>
+                <div class="col-4">
+                  <button  class="btn btn-dark" id="btnsubmit" [disabled]="!f.valid" style="width: 90px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                    Add</button>
+                </div>
+              </div>
+          <br><br>
+          <div class="table-responsive" style="border-radius: 5px;">
+            <div style="margin-left: 50%;margin-right: auto;" *ngIf="loadingtbl"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+          <table class="table table-striped" style="border-radius: 2px;border: 1px solid #cfd7df;">
+            <tbody>
+              <tr *ngFor="let a of typetable">
+            <td class="name" >
+                    <a (click)="deletemodal(deletecontent,a.typeGuid)" title="Delete" style="cursor: pointer;"><i class="far fa-trash-alt" style="color: red;"></i> </a>
+                    &nbsp; &nbsp;
+                    <a (click)="editmodal(editcontent,a.typeGuid)" title="Edit" style="cursor: pointer;"><i class="sl-icon-note" style="color: blue;"></i> </a>
+                    &nbsp; &nbsp;
+                    <span class="tag-name">
+                      {{a.name}}
+                  </span>
+                  <span id="tag_text_container_82000021101" class="hide">
+                    <input type="text" tag_id="82000021101" class="textbox tag_text" value="vnvjhhh" maxlength="32">
+                  </span>
+
+            </td>
+
+
+            <td class=" tickets muted disabled" id="Tickets_82000021101" data-tag-type="Helpdesk::Ticket">
+              <span class="oval-border">
+                <i class="fa fa-ticket-alt" id="" size="16"></i>
+                <span class="cnt-label"> {{a.ticket.length}}</span>
+
+              </span>
+          </td>
+
+            <!-- <td class=" customers muted disabled" id="Customers_82000021101" data-tag-type="User">
+              <span class="oval-border">
+                <i class="fa fa-user  fsize-16 " id="" size="16"></i>
+                <span class="cnt-label"> 0</span>
+
+              </span>
+          </td> -->
+
+            <!-- <td class=" articles muted disabled" id="Articles_82000021101" data-tag-type="Solution::Article">
+              <span class="oval-border">
+                <i class="fa fa-newspaper fsize-16 " id="" size="16"></i>
+                <span class="cnt-label">0</span>
+
+              </span>
+          </td> -->
+
+
+            <!-- <td class="total">
+              <span class="tags-total-counter"> 0</span>
+            </td> -->
+          </tr>
+
+
+            </tbody>
+          </table>
+
+      </div>
+
+          </div>
+           </form>
+
+            </div>
+      </div>
+      <br>
+
+
+
+        </div>
+
+  </div>
+
+
+</div>
+
+
+
+<ng-template #deletecontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-sliders-h"></i> Delete Type</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+      <h3>Are You Sure You Want to Delete this ?</h3>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">Yes Delete</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #editcontent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title"><i class="fas fa-sliders-h"></i> Edit Type</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form class="form" (ngSubmit)="update()" #f1="ngForm" >
+
+
+      <div class="row" style="display: none;">
+        <div class="col-lg-12 col-md-8 col-sm-12">
+            <label style="font-size: 12px;">Guid <span style="color: red;">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="this.typedata.typeGuid" name="typeGuid" required  #typeGuid="ngModel">
+          <small class="form-text text-danger" *ngIf="!typeGuid.valid && (typeGuid.dirty || typeGuid.touched)">Please enter!</small>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <input type="text" class="form-control" [(ngModel)]="this.typedata.name" name="name" placeholder="Type name" required  #name="ngModel" >
+          <small class="form-text text-danger" *ngIf="!name.valid && (name.dirty || name.touched)">Please enter type name!</small>
+        </div>
+      </div>
+
+
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark" (click)="update()"  [disabled]="!f1.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white"> <i class="fa fa-spinner fa-spin" *ngIf="loading1"></i> Update</button>
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

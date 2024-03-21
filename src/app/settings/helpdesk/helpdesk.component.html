@@ -1,0 +1,181 @@
+<style>
+  card .card-title {
+    margin-bottom: 10px;
+  }
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+</style>
+
+<div class="row">
+  <div class="col-lg-9 col-md-12 cole-sm-12 m-t-30">
+      <div class="card" >
+        <span style="padding: 15px 28px 0;">
+          <a routerLink="/settings/admin" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+            <b><i class="fas fa-arrow-left"></i> Go Back</b>
+           </a>
+        </span>
+        <br>
+          <div class="card-body" style="padding: 15px 28px 0;">
+            <form #f="ngForm">
+              <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                  <b>Helpdesk Name</b>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <input type="text" class="form-control" [(ngModel)]="this.helpdeskdata.systemname" name="systemname" required  #Systemname="ngModel" >
+                  <small class="form-text text-danger" *ngIf="!Systemname.valid && (Systemname.dirty || Systemname.touched)">Please enter system name!</small>
+                  <small>This will be the help desk name that is shown in the header and mail notifications.</small>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                  <b>Email Address</b>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <input type="email" class="form-control" [(ngModel)]="this.helpdeskdata.email" name="email" required  #email="ngModel" >
+                  <small class="form-text text-danger" *ngIf="!email.valid && (email.dirty || email.touched)">Please enter email address!</small>
+                  <small>This will be the help desk email that is use in the mail.</small>
+                </div>
+              </div>
+
+              <br>
+              <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                  <b>Phone Number</b>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <input type="number" class="form-control" [(ngModel)]="this.helpdeskdata.phoneno" name="phoneno" required  #phoneno="ngModel" >
+                  <small class="form-text text-danger" *ngIf="!phoneno.valid && (phoneno.dirty || phoneno.touched)">Please enter phone number!</small>
+                </div>
+              </div>
+
+
+              <br>
+            <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-4">
+                  <b>Time Zone</b>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                  <select class="form-control" [(ngModel)]="this.helpdeskdata.timezone" name="timezone" required  #timezone="ngModel">
+                    <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                    <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Perth</option>
+                    <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Darwin</option>
+                    <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Brisbane</option>
+                    <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="05">(GMT+10:30) Adelaide</option>
+                    <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Canberra, Melbourne, Sydney</option>
+                    <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Hobart</option>
+                  </select>
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-4">
+                  <b>Date Format</b>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <select class="form-control" [(ngModel)]="this.helpdeskdata.datesformat" name="datesformat" required  #datesformat="ngModel">
+                    <option value="EEE, dd MMM, yyyy">DAY-MONTH-YEAR</option>
+                    <option value="EEE, MMM dd, yyyy">MONTH-DAY-YEAR</option>
+                  </select>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  {{dateformat1 | date:helpdeskdata.datesformat}}
+                </div>
+            </div>
+
+
+            <br>
+            <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-4">
+                  <b>Sort conversations</b>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <select class="form-control" [(ngModel)]="this.helpdeskdata.sortconversation" name="sortconversation" required  #sortconversation="ngModel">
+                    <option>Show oldest on top</option>
+                    <option>Show newest on top</option>
+                  </select>
+                  <small>This is the order in which messages will appear in tickets.</small>
+                </div>
+            </div>
+
+
+              <br>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div *ngIf="logodis">
+                      <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{getlogo}}">
+                    </div>
+                    <div *ngIf="uploadlogo">
+                    <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+                      <img class="profilepic__img avatar-block" *ngIf="message == null" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="https://indfassetsblue.freshdesk.com/production/a/assets/images/avatar-bg-1ad8d01850ad9c12a249bf4e54b10b7b.png">
+                    </div>
+                  </div>
+                  <div class="col-lg-8 col-md-8 col-sm-8">
+                      <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"   style="display:none;">
+                        <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Logo</a>
+                       <p style="font-size: 12px;">Update your agent portal to reflect your branding</p>
+                    </div>
+                 </div>
+
+                 <br>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div *ngIf="icondis">
+                      <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{geticon}}">
+                    </div>
+                    <div *ngIf="iconupload">
+                    <img class="profilepic__img avatar-block" *ngIf="imgpathicon" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpathicon}}">
+                      <img class="profilepic__img avatar-block" *ngIf="messageicon == null" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="https://indfassetsblue.freshdesk.com/production/a/assets/images/avatar-bg-1ad8d01850ad9c12a249bf4e54b10b7b.png">
+                    </div>
+                  </div>
+                  <div class="col-lg-8 col-md-8 col-sm-8">
+                      <input type="file" #fileicon placeholder="Choose file" (change)="uploadFileicon(fileicon.files)"   style="display:none;">
+                        <a (click)="fileicon.click()" style="color: blue;cursor: pointer;">Upload Favicon Icon</a>
+                       <p style="font-size: 12px;">This image will appear on tab icon.</p>
+                    </div>
+                 </div>
+
+                 <hr>
+                 <div class="row">
+                  <div class="col-12">
+                    <button  class="btn btn-dark" (click)="update()" [disabled]="!f.valid" style="float: right;margin-left: 10px;background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+                      <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                       Save</button>
+                    &nbsp;&nbsp;
+                    <a routerLink="/settings/admin" class="btn btn-outline-default" style="float: right;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+                       <b> Cancel </b>
+                    </a>
+                  </div>
+                </div>
+
+            </form>
+            <br>
+          </div>
+
+          </div>
+      </div>
+
+
+      <div class="col-lg-3 col-md-12 col-sm-12 m-t-30" style="background-color: #f5f7f9;">
+        <br>
+        <div style="margin-top: 10px;margin-left: 20px;">
+              <h5>Setting up your helpdesk</h5>
+              <p>All basic settings of your helpdesk can be customized here such as - language, time zone and colour schemes.
+                <br><br>
+                If you are on the Garden plan or above, you will have the option to set up multilingual support under Languages.
+                <br><br>
+                To configure the portal for your product, use the Edit Portal option.
+                <br>
+
+              <h5>Helpdesk restrictions</h5>
+              <p>You can restrict the access to your helpdesk to the contacts that you add and to certain domains. Others will not be able to sign up, log in or submit tickets. You can read more about it here.</p>
+
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,329 @@
+<style>
+  .col-md-3{
+    width: 50% !important;
+  }
+  a:hover {
+  color: blue !important;
+}
+</style>
+
+<div class="row">
+  <!-- Column -->
+  <div class="col-lg-2 col-md-3 col-sm-6">
+    <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ status: 'Resolved' }" style="color: black;">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex flex-row">
+                  <!-- <div class="round align-self-center round-success">
+                      <i class="ti-wallet"></i>
+                  </div> -->
+                  <div class="m-l-10 align-self-center">
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                    <h3>{{resolvedc.length}}</h3>
+                      <span class="text-dark">Resolved</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </a>
+  </div>
+  <!-- Column -->
+  <!-- Column -->
+  <!-- <div class="col-lg-2 col-md-6">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex flex-row">
+                  <div class="round align-self-center round-danger">
+                      <i class="ti-time"></i>
+                  </div>
+                  <div class="m-l-10 align-self-center">
+                      <h3>4</h3>
+                      <span class="text-muted">Overdue</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div> -->
+  <!-- Column -->
+  <!-- Column -->
+  <!-- <div class="col-lg-2 col-md-6">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex flex-row">
+                  <div class="round align-self-center round-danger">
+                      <i class="ti-calendar"></i>
+                  </div>
+                  <div class="m-l-10 align-self-center">
+                      <h3>11</h3>
+                      <span class="text-muted">Due Today</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div> -->
+  <!-- Column -->
+  <!-- Column -->
+  <div class="col-lg-2 col-md-3 col-sm-6">
+    <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ status: 'Open' }" style="color: black;">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex flex-row">
+                  <!-- <div class="round align-self-center round-info">
+                      <i class="mdi mdi-book-open-page-variant" style="color: white;"></i>
+                  </div> -->
+                  <div class="m-l-10 align-self-center">
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                      <h3>{{openc.length}}</h3>
+                      <span class="text-dark">Open</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </a>
+  </div>
+  <!-- Column -->
+
+  <!-- Column -->
+  <div class="col-lg-2 col-md-3 col-sm-6">
+    <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ status: 'Pending' }" style="color: black;">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex flex-row">
+                <!-- <div class="round align-self-center round-warning">
+                    <i class="fas fa-pause"></i>
+                </div> -->
+                <div class="m-l-10 align-self-center">
+                  <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                    <h3>{{pendingc.length}}</h3>
+                    <span class="text-dark">Pending</span>
+                </div>
+            </div>
+        </div>
+    </div>
+  </a>
+</div>
+<!-- Column -->
+
+<!-- Column -->
+<div class="col-lg-2 col-md-3 col-sm-6">
+  <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ agent: 'unassigned' }" style="color: black;">
+  <div class="card">
+      <div class="card-body">
+          <div class="d-flex flex-row">
+              <!-- <div class="round align-self-center round-info">
+                  <i class="ti-user"></i>
+              </div> -->
+              <div class="m-l-10 align-self-center">
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                  <h3><span *ngIf="loading == false"> {{unassigned}}</span></h3>
+                  <span class="text-dark">Unassigned</span>
+              </div>
+          </div>
+      </div>
+  </div>
+</a>
+</div>
+<!-- Column -->
+
+<!-- Column -->
+<div class="col-lg-2 col-md-3 col-sm-6">
+  <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ status: 'Closed' }" style="color: black;">
+  <div class="card">
+      <div class="card-body">
+          <div class="d-flex flex-row">
+              <!-- <div class="round align-self-center round-danger">
+                  <i class="far fa-window-close"></i>
+              </div> -->
+              <div class="m-l-10 align-self-center">
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                  <h3>{{closec.length}}</h3>
+                  <span class="text-dark">Closed</span>
+              </div>
+          </div>
+      </div>
+  </div>
+</a>
+</div>
+<!-- Column -->
+<!-- Column -->
+<div class="col-lg-2 col-md-3 col-sm-6">
+  <a [routerLink]="['/tickets/filters/all-tickets']" style="color: black;">
+  <div class="card">
+      <div class="card-body">
+          <div class="d-flex flex-row">
+              <!-- <div class="round align-self-center bg-success">
+                  <i class="fas fa-align-justify"></i>
+              </div> -->
+              <div class="m-l-10 align-self-center">
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                  <h3><span *ngIf="loading == false"> {{tdata.length}} </span></h3>
+                  <span class="text-dark">Total</span>
+              </div>
+          </div>
+      </div>
+  </div>
+</a>
+</div>
+<!-- Column -->
+</div>
+
+
+<div class="row">
+  <!-- Column -->
+  <div class="col-md-12 col-lg-12">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex align-items-center">
+                  <div>
+                      <h4 class="card-title">Ticket Overview</h4>
+                      <h5 class="card-subtitle">Overview of Last 7 Days</h5>
+                  </div>
+                  <div class="ml-auto">
+                      <ul class="list-inline font-12 dl m-r-10">
+                          <li class="list-inline-item">
+                              <i class="fas fa-dot-circle text-info"></i> Open
+                          </li>
+                          <li class="list-inline-item">
+                              <i class="fas fa-dot-circle text-danger"></i> Closed</li>
+                              <li class="list-inline-item">
+                                <i class="fas fa-dot-circle text-success"></i> Resolved</li>
+                                <li class="list-inline-item">
+                                  <i class="fas fa-dot-circle text-warning"></i> Pending</li>
+                      </ul>
+                  </div>
+              </div>
+              <div id="product-sales" style="height:305px"></div>
+          </div>
+      </div>
+
+  </div>
+  </div>
+
+
+  <div class="row">
+    <!-- Column -->
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ status: 'Resolved' }" style="color: black;"> -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row">
+                    <div class="m-l-10 align-self-center">
+                      <h5 class="text-dark">Unresolved tickets <i class="fas fa-times-circle" style="color: red;"></i>
+                        <a [routerLink]="['/unresolved-tickets']" style="float: right;"> <small>View Details</small></a>
+                      </h5>
+                      <!-- <span class="text-muted">Across System</span> -->
+                      <br>
+                      <i class="fa fa-spinner fa-spin" *ngIf="loading" style="margin: 20px;"></i>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Groups</th>
+                              <th></th>
+                              <th scope="col">Open</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let gd of groups">
+                              <th scope="row" style="width: 250px;">{{gd.groupname}}</th>
+                              <td></td>
+                              <td>{{getopentickets(gd.gguid)}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      <!-- </a> -->
+    </div>
+
+    <!-- Column -->
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ status: 'Resolved' }" style="color: black;"> -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row">
+                    <div class="m-l-10 align-self-center">
+                      <h5 class="text-dark">Resolved tickets <i class="fas fa-check-circle" style="color: green;"></i>
+                        <a [routerLink]="['/unresolved-tickets']" style="float: right;"> <small>View Details</small></a>
+                      </h5>
+                      <br>
+                      <i class="fa fa-spinner fa-spin" *ngIf="loading" style="margin: 20px;"></i>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Groups</th>
+                              <th></th>
+                              <th scope="col">Open</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let gd of groups">
+                              <th scope="row" style="width: 250px;">{{gd.groupname}}</th>
+                              <td></td>
+                              <td>{{getresolvedtickets(gd.gguid)}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      <!-- </a> -->
+    </div>
+
+
+    <!-- Column -->
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <!-- <a [routerLink]="['/tickets/filters/all-tickets']" [queryParams]="{ status: 'Resolved' }" style="color: black;"> -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row">
+                    <div class="m-l-10 align-self-center">
+                      <h5 class="text-dark">Today's trends </h5>
+                      <br>
+                      <i class="fa fa-spinner fa-spin" *ngIf="loading" style="margin: 20px;"></i>
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Status</th>
+                              <th scope="col">Total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th scope="row" style="width: 250px;">Open</th>
+                              <td>{{todaysopentickets}}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row" style="width: 250px;">Unassigned</th>
+                              <td>{{todaysunassignedtickets}}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row" style="width: 250px;">Closed</th>
+                              <td>{{todaysclosedtickets}}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row" style="width: 250px;">Resolved</th>
+                              <td>{{todaysresolvedtickets}}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row" style="width: 250px;">Waiting on Customer</th>
+                              <td>{{todayswaintingoncusttickets}}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row" style="width: 250px;">Waiting on Third Party</th>
+                              <td>{{todayswaintingonthirdtickets}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      <!-- </a> -->
+    </div>
+  </div>

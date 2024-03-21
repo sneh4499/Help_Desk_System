@@ -1,0 +1,388 @@
+<style>
+  card .card-title {
+    margin-bottom: 10px;
+  }
+  .page-wrapper > .container-fluid {
+    padding: 0px !important;
+}
+.m-t-30 {
+     margin-top: 0px;
+}
+</style>
+
+<div class="row">
+  <div class="col-12 m-t-30">
+      <div class="card">
+        <span style="padding: 15px 28px 0;">
+          <a routerLink="/settings/agents/viewagents" class="btn btn-outline-default" style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+            <b><i class="fas fa-arrow-left"></i> Go Back</b>
+           </a>
+        </span>
+          <div class="card-body" style="padding: 40px 36px 0;">
+            <form class="form" (ngSubmit)="onTemplateFormSubmit()" #f="ngForm" >
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <h3 style="color: black;font-weight: 600;">New agent</h3>
+                <br>
+                <h5>Agent Type</h5>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="card">
+                      <label for="radio1" style="margin-bottom: 0rem !important;">
+                        <fieldset class="radio">
+                          <label>
+                            <div class="card-body" style="padding: 0.95rem !important;cursor: pointer;">
+                              <input type="radio" value="full" [(ngModel)]="this.agent.agenttype" name="agenttype" #agenttype="ngModel" checked> Full Time
+                            </div>
+                          </label>
+                        </fieldset>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                  <div class="card">
+                    <label for="radio1" style="margin-bottom: 0rem !important;">
+                      <fieldset class="radio">
+                        <label>
+                          <div class="card-body" style="padding: 0.95rem !important;cursor: pointer;">
+                            <input type="radio" value="occasional" [(ngModel)]="this.agent.agenttype" name="agenttype" #agenttype="ngModel"> Occasional (3 day Passes)
+                          </div>
+                        </label>
+                      </fieldset>
+                  </label>
+                  </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <h5>Agent details</h5>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-12">
+                <label style="font-size: 12px;">First Name <span style="color: red;">*</span></label>
+                <input type="email" class="form-control" [(ngModel)]="this.agent.firstname" name="firstname" required  #firstname="ngModel" >
+                <small class="form-text text-danger" *ngIf="!firstname.valid && (firstname.dirty || firstname.touched)">Please enter First name!</small>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-12">
+                  <label style="font-size: 12px;">Last Name <span style="color: red;">*</span></label>
+                  <input type="email" class="form-control" [(ngModel)]="this.agent.lastname" name="lastname" required  #lastname="ngModel" >
+                  <small class="form-text text-danger" *ngIf="!lastname.valid && (lastname.dirty || lastname.touched)">Please enter Last name!</small>
+                  </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+
+                <label style="font-size: 12px;">Email address <span style="color: red;">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="this.agent.email" id="email" email name="email" required  #email="ngModel">
+                <small class="form-text text-danger" *ngIf="!email.valid && (email.dirty || email.touched)">Please enter a email address!</small>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-8 col-sm-12">
+
+                <label style="font-size: 12px;">Phone Number <span style="color: red;">*</span></label>
+                <input type="number" class="form-control" [(ngModel)]="this.agent.phone" name="phone" required  #phone="ngModel" maxlength="14" minlength="8" (change)="number(this.agent.phone)">
+                <small class="form-text text-danger" *ngIf="!phone.valid && (phone.dirty || phone.touched)">Please enter a Phone number!</small>
+                <small class="form-text text-danger" *ngIf="number(this.agent.phone) === false">Please enter Number Only</small>
+              </div>
+              <div class="col-lg-3 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Job Title <span style="color: red;">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="this.agent.jobtitle" name="jobtitle" required  #jobtitle="ngModel" >
+                <small class="form-text text-danger" *ngIf="!jobtitle.valid && (jobtitle.dirty || jobtitle.touched)">Please enter a job title!</small>
+              </div>
+            </div>
+
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Time Zone <span style="color: red;">*</span></label>
+                <select class="form-control" [(ngModel)]="this.agent.timezone" name="timezone" required  #timezone="ngModel">
+                  <!-- <option timeZoneId="1" gmtAdjustment="GMT-12:00" useDaylightTime="0" value="-17.30">(GMT-12:00) International Date Line West</option>
+                  <option timeZoneId="2" gmtAdjustment="GMT-11:00" useDaylightTime="0" value="-16.30">(GMT-11:00) Midway Island, Samoa</option>
+                  <option timeZoneId="3" gmtAdjustment="GMT-10:00" useDaylightTime="0" value="-15.30">(GMT-10:00) Hawaii</option>
+                  <option timeZoneId="4" gmtAdjustment="GMT-09:00" useDaylightTime="1" value="-14.30">(GMT-09:00) Alaska</option>
+                  <option timeZoneId="5" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-13.30">(GMT-08:00) Pacific Time (US & Canada)</option>
+                  <option timeZoneId="6" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-13.30">(GMT-08:00) Tijuana, Baja California</option>
+                  <option timeZoneId="7" gmtAdjustment="GMT-07:00" useDaylightTime="0" value="-12.30">(GMT-07:00) Arizona</option>
+                  <option timeZoneId="8" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-12.30">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
+                  <option timeZoneId="9" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-12.30">(GMT-07:00) Mountain Time (US & Canada)</option>
+                  <option timeZoneId="10" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-11.30">(GMT-06:00) Central America</option>
+                  <option timeZoneId="11" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-11.30">(GMT-06:00) Central Time (US & Canada)</option>
+                  <option timeZoneId="12" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-11.30">(GMT-06:00) Guadalajara, Mexico City, Monterrey</option>
+                  <option timeZoneId="13" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-11.30">(GMT-06:00) Saskatchewan</option>
+                  <option timeZoneId="14" gmtAdjustment="GMT-05:00" useDaylightTime="0" value="-10.30">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</option>
+                  <option timeZoneId="15" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-10.30">(GMT-05:00) Eastern Time (US & Canada)</option>
+                  <option timeZoneId="16" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-10.30">(GMT-05:00) Indiana (East)</option>
+                  <option timeZoneId="17" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-09.30">(GMT-04:00) Atlantic Time (Canada)</option>
+                  <option timeZoneId="18" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-09.30">(GMT-04:00) Caracas, La Paz</option>
+                  <option timeZoneId="19" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-09.30">(GMT-04:00) Manaus</option>
+                  <option timeZoneId="20" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-09.30">(GMT-04:00) Santiago</option>
+                  <option timeZoneId="21" gmtAdjustment="GMT-03:30" useDaylightTime="1" value="-09">(GMT-03:30) Newfoundland</option>
+                  <option timeZoneId="22" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-08.30">(GMT-03:00) Brasilia</option>
+                  <option timeZoneId="23" gmtAdjustment="GMT-03:00" useDaylightTime="0" value="-08.30">(GMT-03:00) Buenos Aires, Georgetown</option>
+                  <option timeZoneId="24" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-08.30">(GMT-03:00) Greenland</option>
+                  <option timeZoneId="25" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-08.30">(GMT-03:00) Montevideo</option>
+                  <option timeZoneId="26" gmtAdjustment="GMT-02:00" useDaylightTime="1" value="-07.30">(GMT-02:00) Mid-Atlantic</option>
+                  <option timeZoneId="27" gmtAdjustment="GMT-01:00" useDaylightTime="0" value="-06.30">(GMT-01:00) Cape Verde Is.</option>
+                  <option timeZoneId="28" gmtAdjustment="GMT-01:00" useDaylightTime="1" value="-06.30">(GMT-01:00) Azores</option>
+                  <option timeZoneId="29" gmtAdjustment="GMT+00:00" useDaylightTime="0" value="-05.30">(GMT+00:00) Casablanca, Monrovia, Reykjavik</option>
+                  <option timeZoneId="30" gmtAdjustment="GMT+00:00" useDaylightTime="1" value="-05.30">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
+                  <option timeZoneId="31" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+                  <option timeZoneId="32" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+                  <option timeZoneId="33" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+                  <option timeZoneId="34" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
+                  <option timeZoneId="35" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) West Central Africa</option>
+                  <option timeZoneId="36" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Amman</option>
+                  <option timeZoneId="37" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Athens, Bucharest, Istanbul</option>
+                  <option timeZoneId="38" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Beirut</option>
+                  <option timeZoneId="39" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Cairo</option>
+                  <option timeZoneId="40" gmtAdjustment="GMT+02:00" useDaylightTime="0" value="-03.30">(GMT+02:00) Harare, Pretoria</option>
+                  <option timeZoneId="41" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
+                  <option timeZoneId="42" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Jerusalem</option>
+                  <option timeZoneId="43" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Minsk</option>
+                  <option timeZoneId="44" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Windhoek</option>
+                  <option timeZoneId="45" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="-02.30">(GMT+03:00) Kuwait, Riyadh, Baghdad</option>
+                  <option timeZoneId="46" gmtAdjustment="GMT+03:00" useDaylightTime="1" value="-02.30">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
+                  <option timeZoneId="47" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="-02.30">(GMT+03:00) Nairobi</option>
+                  <option timeZoneId="48" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="-02.30">(GMT+03:00) Tbilisi</option>
+                  <option timeZoneId="49" gmtAdjustment="GMT+03:30" useDaylightTime="1" value="-02">(GMT+03:30) Tehran</option>
+                  <option timeZoneId="50" gmtAdjustment="GMT+04:00" useDaylightTime="0" value="-01.30">(GMT+04:00) Abu Dhabi, Muscat</option>
+                  <option timeZoneId="51" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="-01.30">(GMT+04:00) Baku</option>
+                  <option timeZoneId="52" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="-01.30">(GMT+04:00) Yerevan</option>
+                  <option timeZoneId="53" gmtAdjustment="GMT+04:30" useDaylightTime="0" value="-01">(GMT+04:30) Kabul</option>
+                  <option timeZoneId="54" gmtAdjustment="GMT+05:00" useDaylightTime="1" value="-00.30">(GMT+05:00) Yekaterinburg</option>
+                  <option timeZoneId="55" gmtAdjustment="GMT+05:00" useDaylightTime="0" value="-00.30">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+                  <option timeZoneId="56" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Sri Jayawardenapura</option> -->
+                  <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                  <!-- <option timeZoneId="58" gmtAdjustment="GMT+05:45" useDaylightTime="0" value="00.15">(GMT+05:45) Kathmandu</option>
+                  <option timeZoneId="59" gmtAdjustment="GMT+06:00" useDaylightTime="1" value="00.30">(GMT+06:00) Almaty, Novosibirsk</option>
+                  <option timeZoneId="60" gmtAdjustment="GMT+06:00" useDaylightTime="0" value="00.30">(GMT+06:00) Astana, Dhaka</option>
+                  <option timeZoneId="61" gmtAdjustment="GMT+06:30" useDaylightTime="0" value="01">(GMT+06:30) Yangon (Rangoon)</option>
+                  <option timeZoneId="62" gmtAdjustment="GMT+07:00" useDaylightTime="0" value="01.30">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                  <option timeZoneId="63" gmtAdjustment="GMT+07:00" useDaylightTime="1" value="01.30">(GMT+07:00) Krasnoyarsk</option>
+                  <option timeZoneId="64" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
+                  <option timeZoneId="65" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Kuala Lumpur, Singapore</option>
+                  <option timeZoneId="66" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Irkutsk, Ulaan Bataar</option> -->
+                  <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Perth</option>
+                  <!-- <option timeZoneId="68" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Taipei</option>
+                  <option timeZoneId="69" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="03.30">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
+                  <option timeZoneId="70" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="03.30">(GMT+09:00) Seoul</option>
+                  <option timeZoneId="71" gmtAdjustment="GMT+09:00" useDaylightTime="1" value="03.30">(GMT+09:00) Yakutsk</option> -->
+                  <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Darwin</option>
+                  <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Brisbane</option>
+                  <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="05">(GMT+10:30) Adelaide</option>
+                  <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Canberra, Melbourne, Sydney</option>
+                  <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Hobart</option>
+                  <!-- <option timeZoneId="77" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Guam, Port Moresby</option>
+                  <option timeZoneId="78" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="04.30">(GMT+10:00) Vladivostok</option>
+                  <option timeZoneId="79" gmtAdjustment="GMT+11:00" useDaylightTime="1" value="05.30">(GMT+11:00) Magadan, Solomon Is., New Caledonia</option>
+                  <option timeZoneId="80" gmtAdjustment="GMT+12:00" useDaylightTime="1" value="06.30">(GMT+12:00) Auckland, Wellington</option>
+                  <option timeZoneId="81" gmtAdjustment="GMT+12:00" useDaylightTime="0" value="06.30">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option>
+                  <option timeZoneId="82" gmtAdjustment="GMT+13:00" useDaylightTime="0" value="07.30">(GMT+13:00) Nuku'alofa</option> -->
+                </select>
+                <small class="form-text text-danger" *ngIf="!timezone.valid && (timezone.dirty || timezone.touched)">Please select a timezone!</small>
+                </div>
+            </div>
+
+
+
+            <br>
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <div class="row">
+                  <div class="col-lg-2 col-md-2 col-sm-4">
+                    <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{url}}{{imgpath}}">
+                      <img class="profilepic__img avatar-block" *ngIf="message == null" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="https://indfassetsblue.freshdesk.com/production/a/assets/images/avatar-bg-1ad8d01850ad9c12a249bf4e54b10b7b.png">
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8">
+                      <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"   style="display:none;">
+                        <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+                       <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+                    </div>
+                 </div>
+              </div>
+            </div>
+            <br>
+            <div class="row" style="display: none;">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Time Zone</label>
+                <input type="text" class="form-control">
+                </div>
+                <br>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-8 col-sm-12">
+                <label style="font-size: 12px;">Language</label>
+                <!-- <input type="text" class="form-control"> -->
+                <select class="form-control" [(ngModel)]="this.agent.language" name="language"  #language="ngModel">
+                  <option>English</option>
+                  <option>Hindi</option>
+                  <option>Gujarati</option>
+                </select>
+              </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+              <label style="font-size: 12px;">Signature</label>
+              <div class="card">
+                  <!-- <quill-editor [modules]="modules" [(ngModel)]="this.agent.signature" #signature="ngModel" id="signature"  name="signature" data-identifyelement="228" [style]="{height: '200px'}"></quill-editor> -->
+                  <!-- <ckeditor [editor]="Editor" [(ngModel)]="this.agent.signature" #signature="ngModel" id="signature"  name="signature" data-identifyelement="228"
+                  [config]="{
+                            ckfinder: {
+                              options: {
+                                resourceType: 'Images'
+                              },
+                              uploadUrl: this.url + 'api/upload'
+                            }}">
+                          </ckeditor> -->
+
+                          <quill-editor [style]="{height: '200px'}" [(ngModel)]="this.agent.signature" #signature="ngModel" id="signature"  name="signature"></quill-editor>
+                </div>
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-lg-3 col-md-8 col-sm-12">
+                <label style="font-size: 14px;color: black;">Ticket scope</label>
+                <br>
+            <label style="font-size: 11px;">Choose groups that the agent is a part of <span style="color: red;">*</span></label>
+                      <select class="form-control" [(ngModel)]="this.agent.groupid" name="groupid" required  #groupid="ngModel">
+                        <option *ngFor="let d of groupdrop" [value]="d.gguid">{{d.groupname}}</option>
+                      </select>
+                      </div>
+            </div>
+            <!-- <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 14px;color: black;">Ticket scope</label>
+                <div class="row">
+                <div class="col-lg-12">
+                    <label for="radio3" style="margin-bottom: 0rem !important;cursor: pointer;">
+                    <div class="card-body" style="padding: 0.95rem !important;">
+                      <fieldset class="radio">
+                           <input type="radio" id="radio3" name="radio" value="3" checked> Global access
+                      </fieldset>
+                      <p style="font-size: 11px;margin-left: 17px;">Can access all tickets in Helpdesk</p>
+
+                      <label style="font-size: 11px;margin-left: 17px;">Choose groups that the agent is a part of</label>
+                      <select class="form-control" style="margin-left: 17px;" [(ngModel)]="this.agent.groupid" name="groupid"  #groupid="ngModel">
+
+                        <option *ngFor="let d of groupdrop" [value]="d.groupname">{{d.groupname}}</option>
+                      </select>
+                    </div>
+                  </label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <label for="radio4" style="margin-bottom: 0rem !important;cursor: pointer;">
+                    <div class="card-body" style="padding: 0.95rem !important;">
+                      <fieldset class="radio">
+                           <input type="radio" id="radio4" name="radio" value="4" [(ngModel)]="this.agent.radio4" name="radio"  #radio4="ngModel"> Assigned to their group
+                      </fieldset>
+                      <p style="font-size: 11px;margin-left: 17px;">Can view and edit tickets in their group(s) and tickets assigned to them</p>
+                      <div style="display: none;">
+                      <label style="font-size: 11px;margin-left: 17px;">Choose groups that the agent is a part of</label>
+                      <select class="form-control" style="margin-left: 17px;">
+                        <option value="">Please Select</option>
+                        <option *ngFor="let d of groupdrop" [value]="d.guid">{{d.groupname}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  </label>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-12">
+                    <label for="radio5" style="margin-bottom: 0rem !important;cursor: pointer;">
+                    <div class="card-body" style="padding: 0.95rem !important;">
+                      <fieldset class="radio">
+                           <input type="radio" id="radio5" name="radio" value=""> Restricted Access
+                      </fieldset>
+                      <p style="font-size: 11px;margin-left: 17px;">Can only access the tickets assigned to them</p>
+                      <div style="display: none;">
+                      <label style="font-size: 11px;margin-left: 17px;">Choose groups that the agent is a part of</label>
+                      <select class="form-control" style="margin-left: 17px;">
+                        <option value="">Please Select</option>
+                        <option *ngFor="let d of groupdrop" [value]="d.guid">{{d.groupname}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  </label>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+
+            <br>
+            <!-- <div class="row">
+              <div class="col-lg-6 col-md-8 col-sm-12">
+                <label style="font-size: 14px;color: black;">Support Channels</label>
+                <fieldset class="checkbox" style="margin-left: 30px;">
+                  <label>
+                      <input type="checkbox" value="" checked disabled> Ticket
+                  </label>
+                </fieldset>
+                <fieldset class="checkbox" style="margin-left: 30px;">
+                  <label>
+                      <input type="checkbox" value=""> Phone
+                  </label>
+                </fieldset>
+              </div>
+            </div> -->
+
+
+            <div class="row">
+              <div class="col-lg-3 col-md-8 col-sm-12">
+                <label style="font-size: 14px;color: black;">Roles <span style="color: red;">*</span></label>
+                <!-- <input type="text" class="form-control"> -->
+                <select class="form-control" [(ngModel)]="this.agent.role" name="role" required #role="ngModel">
+                  <option *ngFor="let rol of roles" [value]="rol.roleGuid">{{rol.rolename}}</option>
+                </select>
+              </div>
+            </div>
+
+            <br>
+            <hr>
+
+            <div class="row">
+              <div class="col-12">
+                <button  class="btn btn-dark" [disabled]="!f.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+                  <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                   Create Agent</button>
+                &nbsp;&nbsp;
+                <a routerLink="/settings/agents/viewagents" class="btn btn-outline-default" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+                   <b> Cancel </b>
+                </a>
+              </div>
+            </div>
+
+            <br>
+
+            </form>
+
+
+          </div>
+
+          </div>
+      </div>
+  </div>

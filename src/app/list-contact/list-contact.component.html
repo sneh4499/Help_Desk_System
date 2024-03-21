@@ -1,0 +1,719 @@
+<style>
+  :host ::ng-deep .datatable-body-cell {
+    font-size: 13px !important;
+  }
+  :host ::ng-deep .datatable-header-cell-wrapper {
+    font-size: 14px !important;
+    font-weight: 800;
+  }
+  :host ::ng-deep .datatable-header-cell {
+    background-color: #f5f7f9;
+  }
+  :host ::ng-deep .material .table-striped .table-responsive {
+    border: none;
+  }
+  :host ::ng-deep .datatable-body-cell-label {
+    width: 300px;
+  }
+  .ngx-datatable {
+    /* display: block; */
+    overflow-x: auto;
+  }
+  .card-body {
+    padding: 0 !important;
+  }
+</style>
+
+<div class="row" style="background-color: #f5f7f9;margin-top: -10px;font-size: 13px;">
+  <div class="col-3">
+    <span style="float: left;margin: 13px 8px 3px 23px;">
+     <span class="input-group mb-3" style="height: 20px;">
+                <span class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                </span>
+                <input type="text" (keyup)='updateFilter($event)' class="form-control" placeholder="Search for contacts" aria-describedby="basic-addon1">
+              </span>
+    </span>
+  </div>
+
+  <div class="col-5" style="margin-left: -30px;">
+    <span *ngIf="tab" style="float: left;margin: 13px 8px 3px 23px;">
+      <button type="button" (click)="Deletecontacts(deletecontacts)" class="btn btn-outline-default"
+        style="width: 94px;font-size: 13px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+        <b><i class="far fa-trash-alt"></i> Delete</b>
+      </button>
+    </span>
+  </div>
+
+  <div class="col-4">
+    <span style="float: right;margin: 15px -15px 10px 30px;">
+      <button class="btn btn-outline-default" placement="bottom" ngbTooltip="Export to excel" (click)="exportmodal(exportcontent)" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+        <i class="mdi mdi-export"></i> <b> Export </b>
+      </button>&nbsp;
+      <button class="btn btn-outline-default" placement="bottom" ngbTooltip="Filters" (click)="filtertab()" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">
+        <svg xmlns="http://www.w3.org/2000/svg" style="margin-bottom: -3px;" width="15" height="15" viewBox="0 0 32 32" class="app-icon app-icon--small icon-detail-right"><path d="M20.038 4.29H4.895a.606.606 0 00-.606.606v22.21c0 .335.271.606.606.606h15.143V4.291zm2.423 0v23.421h4.644a.606.606 0 00.606-.606V4.895a.606.606 0 00-.606-.606h-4.644zM4.895 1.867h22.21a3.029 3.029 0 013.029 3.029v22.21a3.029 3.029 0 01-3.029 3.029H4.895a3.029 3.029 0 01-3.029-3.029V4.896a3.029 3.029 0 013.029-3.029zM13.479 16l-4.191-4.191a1.211 1.211 0 011.713-1.713l5.048 5.048c.473.473.473 1.24 0 1.713l-5.048 5.048a1.211 1.211 0 01-1.713-1.713l4.191-4.191z"></path></svg>
+      </button>
+
+    </span>
+
+  </div>
+
+</div>
+
+
+<div class="row" *ngIf="!pageaccess">
+  <div class="col-12 m-t-30">
+        <ngb-alert type="danger" [dismissible]="false">
+            <strong>Sorry !</strong> You Don't have permission to access this page. Please Contact adminitstrator.
+            <a routerLink="/starter">Go back to Home</a>
+          </ngb-alert>
+        </div>
+</div>
+
+<br>
+
+<div class="row" *ngIf="pageaccess">
+    <!-- column -->
+    <div class="col-lg-9" *ngIf="viewfiltertab">
+      <div class="card">
+        <div class="card-body">
+
+                <ngx-datatable #table [rows]="rows"  class='material table-striped table-responsive'  [columnMode]="'force'" [loadingIndicator]="loading"  [headerHeight]="50" [footerHeight]="50"
+                [rowHeight]="'auto'" [selectionType]="'checkbox'" (select)="onSelect($event)" [selected]="selected" [limit]="50" [sorts]="[{prop: 'name', dir: 'desc'}]">
+
+                <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                  [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="checkboxes">
+                </ngx-datatable-column>
+
+                          <!-- <ngx-datatable-column name="Guid" cellClass="d-flex align-items-center"></ngx-datatable-column> -->
+
+                          <ngx-datatable-column name="Contact" prop="fullname" [width]="140" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row"  let-value="value">
+                              <div class="row">
+                                <div class="col-3">
+                                  <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="40px" height="40px" alt="'picture" data-test-user="user-avatar" src="{{baseurl}}{{row.uploadphoto}}">
+                                </div>
+                                <div class="col-9">
+                                  <br>
+                                  <a [routerLink]="['/detail-contact']" [queryParams]="{ id: row.conGuid }">{{row.fullname}}</a>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Title" prop="title" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.title}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Company" prop="comGu.companyname" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span *ngIf="row.comGu == null"></span>
+                              <span *ngIf="row.comGu != null">{{row.comGu.companyname}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Email Address" prop="email" [width]="140" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.email}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Work Phone" prop="workphone" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.workphone}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Twitter" prop="tweeterid" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.tweeterid}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Action" [sortable]="false" [canAutoResize]="false" [width]="165" [draggable]="false" [resizeable]="false" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template let-rowIndex="row.conGuid" let-row="row" let-value="value">
+                              <button *ngIf="editbtn" class="btn btn-outline-default" placement="top" ngbTooltip="Edit" style="width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="editmodal(editcontent,rowIndex)"><i class="sl-icon-note" style="margin: -5px;"></i></button>
+                              <button *ngIf="dltdtn" class="btn btn-outline-default" placement="top" ngbTooltip="Delete" style="width: 34px;height: 34px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="deletemodal(deletecontent,rowIndex)"><i class="fas fa-trash-alt" style="margin: -5px;"></i></button>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+
+                        </ngx-datatable>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-lg-12" *ngIf="!viewfiltertab">
+      <div class="card">
+        <div class="card-body">
+
+                <ngx-datatable #table [rows]="rows"  class='material table-striped table-responsive'  [columnMode]="'force'" [loadingIndicator]="loading"  [headerHeight]="50" [footerHeight]="50"
+                [rowHeight]="'auto'" [selectionType]="'checkbox'" (select)="onSelect($event)" [selected]="selected" [limit]="50" [sorts]="[{prop: 'name', dir: 'desc'}]">
+
+                <ngx-datatable-column [width]="30" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                  [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="checkboxes">
+                </ngx-datatable-column>
+
+                          <!-- <ngx-datatable-column name="Guid" cellClass="d-flex align-items-center"></ngx-datatable-column> -->
+
+                          <ngx-datatable-column name="Contact" prop="fullname" [width]="200" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <div class="row">
+                                <div class="col-3">
+                                  <img class="profilepic__img avatar-block" style="border-radius: 3px;" width="40px" height="44px" alt="'picture" data-test-user="user-avatar" src="{{baseurl}}{{row.uploadphoto}}">
+                                </div>
+                                <div class="col-9">
+                                  <br>
+                                  <a [routerLink]="['/detail-contact']" [queryParams]="{ id: row.conGuid }">{{row.fullname}}</a>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Title" prop="title" [width]="100" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.title}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Company" prop="comGu.companyname" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span *ngIf="row.comGu == null"></span>
+                              <span *ngIf="row.comGu != null">{{row.comGu.companyname}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Email Address" prop="email" [width]="200" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.email}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Work Phone" prop="workphone" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.workphone}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Twitter" [width]="100" prop="tweeterid" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+                              <span>{{row.tweeterid}}</span>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Action" [sortable]="false" [canAutoResize]="false" [width]="165" [draggable]="false" [resizeable]="false" cellClass="d-flex align-items-center">
+                            <ng-template ngx-datatable-cell-template let-rowIndex="row.conGuid" let-row="row" let-value="value">
+                              <button *ngIf="editbtn" class="btn btn-outline-default" placement="top" ngbTooltip="Edit" style="width: 34px;height: 34px;margin-right: 5px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="editmodal(editcontent,rowIndex)"><i class="sl-icon-note" style="margin: -5px;"></i></button>
+                              <button *ngIf="dltdtn" class="btn btn-outline-default" placement="top" ngbTooltip="Delete" style="width: 34px;height: 34px;color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="deletemodal(deletecontent,rowIndex)"><i class="fas fa-trash-alt" style="margin: -5px;"></i></button>
+                            </ng-template>
+                          </ngx-datatable-column>
+
+
+                        </ngx-datatable>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-lg-3" *ngIf="viewfiltertab">
+      <div class="card" style="background-color: #f5f7f9;">
+        <div class="card-body" style="max-height: 450px;overflow-y: scroll;">
+          <div>
+            <div>
+              <span style="font-size: 16px;font-weight: 500;">FILTERS</span>
+              <a style="cursor: pointer;" (click)="clearfilters()"><span style="float: right;font-size: 12px;color: red;"> <i class="fa fa-times"></i> Clear Filters</span></a>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-12">
+                <label class="mr-sm-2">Time Zone</label>
+                <select class="form-control" style="background-color: #f5f7f9;border: 1px solid #adadad;" [(ngModel)]="this.filterselection.timezone" name="timezone" #timezone="ngModel">
+                  <option timeZoneId="1" gmtAdjustment="GMT-12:00" useDaylightTime="0" value="-17.30">(GMT-12:00) International Date Line West</option>
+                  <option timeZoneId="2" gmtAdjustment="GMT-11:00" useDaylightTime="0" value="-16.30">(GMT-11:00) Midway Island, Samoa</option>
+                  <option timeZoneId="3" gmtAdjustment="GMT-10:00" useDaylightTime="0" value="-15.30">(GMT-10:00) Hawaii</option>
+                  <option timeZoneId="4" gmtAdjustment="GMT-09:00" useDaylightTime="1" value="-14.30">(GMT-09:00) Alaska</option>
+                  <option timeZoneId="5" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-13.30">(GMT-08:00) Pacific Time (US & Canada)</option>
+                  <option timeZoneId="6" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="-13.30">(GMT-08:00) Tijuana, Baja California</option>
+                  <option timeZoneId="7" gmtAdjustment="GMT-07:00" useDaylightTime="0" value="-12.30">(GMT-07:00) Arizona</option>
+                  <option timeZoneId="8" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-12.30">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
+                  <option timeZoneId="9" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="-12.30">(GMT-07:00) Mountain Time (US & Canada)</option>
+                  <option timeZoneId="10" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-11.30">(GMT-06:00) Central America</option>
+                  <option timeZoneId="11" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-11.30">(GMT-06:00) Central Time (US & Canada)</option>
+                  <option timeZoneId="12" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="-11.30">(GMT-06:00) Guadalajara, Mexico City, Monterrey</option>
+                  <option timeZoneId="13" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="-11.30">(GMT-06:00) Saskatchewan</option>
+                  <option timeZoneId="14" gmtAdjustment="GMT-05:00" useDaylightTime="0" value="-10.30">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</option>
+                  <option timeZoneId="15" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-10.30">(GMT-05:00) Eastern Time (US & Canada)</option>
+                  <option timeZoneId="16" gmtAdjustment="GMT-05:00" useDaylightTime="1" value="-10.30">(GMT-05:00) Indiana (East)</option>
+                  <option timeZoneId="17" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-09.30">(GMT-04:00) Atlantic Time (Canada)</option>
+                  <option timeZoneId="18" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-09.30">(GMT-04:00) Caracas, La Paz</option>
+                  <option timeZoneId="19" gmtAdjustment="GMT-04:00" useDaylightTime="0" value="-09.30">(GMT-04:00) Manaus</option>
+                  <option timeZoneId="20" gmtAdjustment="GMT-04:00" useDaylightTime="1" value="-09.30">(GMT-04:00) Santiago</option>
+                  <option timeZoneId="21" gmtAdjustment="GMT-03:30" useDaylightTime="1" value="-09">(GMT-03:30) Newfoundland</option>
+                  <option timeZoneId="22" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="--08.30">(GMT-03:00) Brasilia</option>
+                  <option timeZoneId="23" gmtAdjustment="GMT-03:00" useDaylightTime="0" value="--08.30">(GMT-03:00) Buenos Aires, Georgetown</option>
+                  <option timeZoneId="24" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-08.30">(GMT-03:00) Greenland</option>
+                  <option timeZoneId="25" gmtAdjustment="GMT-03:00" useDaylightTime="1" value="-08.30">(GMT-03:00) Montevideo</option>
+                  <option timeZoneId="26" gmtAdjustment="GMT-02:00" useDaylightTime="1" value="-07.30">(GMT-02:00) Mid-Atlantic</option>
+                  <option timeZoneId="27" gmtAdjustment="GMT-01:00" useDaylightTime="0" value="-06.30">(GMT-01:00) Cape Verde Is.</option>
+                  <option timeZoneId="28" gmtAdjustment="GMT-01:00" useDaylightTime="1" value="-06.30">(GMT-01:00) Azores</option>
+                  <option timeZoneId="29" gmtAdjustment="GMT+00:00" useDaylightTime="0" value="-05.30">(GMT+00:00) Casablanca, Monrovia, Reykjavik</option>
+                  <option timeZoneId="30" gmtAdjustment="GMT+00:00" useDaylightTime="1" value="-05.30">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
+                  <option timeZoneId="31" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
+                  <option timeZoneId="32" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+                  <option timeZoneId="33" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</option>
+                  <option timeZoneId="34" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
+                  <option timeZoneId="35" gmtAdjustment="GMT+01:00" useDaylightTime="1" value="-04.30">(GMT+01:00) West Central Africa</option>
+                  <option timeZoneId="36" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Amman</option>
+                  <option timeZoneId="37" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Athens, Bucharest, Istanbul</option>
+                  <option timeZoneId="38" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Beirut</option>
+                  <option timeZoneId="39" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Cairo</option>
+                  <option timeZoneId="40" gmtAdjustment="GMT+02:00" useDaylightTime="0" value="-03.30">(GMT+02:00) Harare, Pretoria</option>
+                  <option timeZoneId="41" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
+                  <option timeZoneId="42" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Jerusalem</option>
+                  <option timeZoneId="43" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Minsk</option>
+                  <option timeZoneId="44" gmtAdjustment="GMT+02:00" useDaylightTime="1" value="-03.30">(GMT+02:00) Windhoek</option>
+                  <option timeZoneId="45" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="-02.30">(GMT+03:00) Kuwait, Riyadh, Baghdad</option>
+                  <option timeZoneId="46" gmtAdjustment="GMT+03:00" useDaylightTime="1" value="-02.30">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
+                  <option timeZoneId="47" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="-02.30">(GMT+03:00) Nairobi</option>
+                  <option timeZoneId="48" gmtAdjustment="GMT+03:00" useDaylightTime="0" value="-02.30">(GMT+03:00) Tbilisi</option>
+                  <option timeZoneId="49" gmtAdjustment="GMT+03:30" useDaylightTime="1" value="-02">(GMT+03:30) Tehran</option>
+                  <option timeZoneId="50" gmtAdjustment="GMT+04:00" useDaylightTime="0" value="-01.30">(GMT+04:00) Abu Dhabi, Muscat</option>
+                  <option timeZoneId="51" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="-01.30">(GMT+04:00) Baku</option>
+                  <option timeZoneId="52" gmtAdjustment="GMT+04:00" useDaylightTime="1" value="-01.30">(GMT+04:00) Yerevan</option>
+                  <option timeZoneId="53" gmtAdjustment="GMT+04:30" useDaylightTime="0" value="-01">(GMT+04:30) Kabul</option>
+                  <option timeZoneId="54" gmtAdjustment="GMT+05:00" useDaylightTime="1" value="-00.30">(GMT+05:00) Yekaterinburg</option>
+                  <option timeZoneId="55" gmtAdjustment="GMT+05:00" useDaylightTime="0" value="-00.30">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+                  <option timeZoneId="56" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Sri Jayawardenapura</option>
+                  <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                  <option timeZoneId="58" gmtAdjustment="GMT+05:45" useDaylightTime="0" value="00.15">(GMT+05:45) Kathmandu</option>
+                  <option timeZoneId="59" gmtAdjustment="GMT+06:00" useDaylightTime="1" value="00.30">(GMT+06:00) Almaty, Novosibirsk</option>
+                  <option timeZoneId="60" gmtAdjustment="GMT+06:00" useDaylightTime="0" value="00.30">(GMT+06:00) Astana, Dhaka</option>
+                  <option timeZoneId="61" gmtAdjustment="GMT+06:30" useDaylightTime="0" value="01">(GMT+06:30) Yangon (Rangoon)</option>
+                  <option timeZoneId="62" gmtAdjustment="GMT+07:00" useDaylightTime="0" value="01.30">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                  <option timeZoneId="63" gmtAdjustment="GMT+07:00" useDaylightTime="1" value="01.30">(GMT+07:00) Krasnoyarsk</option>
+                  <option timeZoneId="64" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
+                  <option timeZoneId="65" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Kuala Lumpur, Singapore</option>
+                  <option timeZoneId="66" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Irkutsk, Ulaan Bataar</option>
+                  <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Perth</option>
+                  <option timeZoneId="68" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Taipei</option>
+                  <option timeZoneId="69" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="03.30">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
+                  <option timeZoneId="70" gmtAdjustment="GMT+09:00" useDaylightTime="0" value="03.30">(GMT+09:00) Seoul</option>
+                  <option timeZoneId="71" gmtAdjustment="GMT+09:00" useDaylightTime="1" value="03.30">(GMT+09:00) Yakutsk</option>
+                  <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Adelaide</option>
+                  <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Darwin</option>
+                  <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Brisbane</option>
+                  <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="04.30">(GMT+10:00) Canberra, Melbourne, Sydney</option>
+                  <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="04.30">(GMT+10:00) Hobart</option>
+                  <option timeZoneId="77" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Guam, Port Moresby</option>
+                  <option timeZoneId="78" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="04.30">(GMT+10:00) Vladivostok</option>
+                  <option timeZoneId="79" gmtAdjustment="GMT+11:00" useDaylightTime="1" value="05.30">(GMT+11:00) Magadan, Solomon Is., New Caledonia</option>
+                  <option timeZoneId="80" gmtAdjustment="GMT+12:00" useDaylightTime="1" value="06.30">(GMT+12:00) Auckland, Wellington</option>
+                  <option timeZoneId="81" gmtAdjustment="GMT+12:00" useDaylightTime="0" value="06.30">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option>
+                  <option timeZoneId="82" gmtAdjustment="GMT+13:00" useDaylightTime="0" value="07.30">(GMT+13:00) Nuku'alofa</option>
+                </select>
+                <small class="form-text text-danger" *ngIf="!timezone.valid && (timezone.dirty || timezone.touched)">Please select a timezone!</small>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <label class="mr-sm-2">Tags</label>
+                <select class="form-control" [(ngModel)]="this.filterselection.tagsfilter" style="background-color: #f5f7f9;border: 1px solid #adadad;" name="tagsfilter" #tagsfilter="ngModel">
+                  <option *ngFor="let tags of tagdrop" [value]="tags.tagGuid">{{tags.tagname}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <label class="mr-sm-2">Companies</label>
+                <select class="form-control" [(ngModel)]="this.filterselection.companyfilter" style="background-color: #f5f7f9;border: 1px solid #adadad;" name="companyfilter" #companyfilter="ngModel">
+                  <option *ngFor="let comp of companydrop" [value]="comp.comGuid">{{comp.companyname}}</option>
+                </select>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        <br>
+        <button  class="btn btn-dark" (click)="applyfilter()" id="btnsubmit" style="margin-left: 10%;margin-right: 10%;width: 80%;border-radius: 5px;background-image: linear-gradient(to bottom,#264966,#12344d);font-weight: 400;color:white">
+          <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+           Apply</button>
+           <br>
+      </div>
+  </div>
+</div>
+
+<div class="table-responsive" style="display: none;">
+  <table class="table" #myTable id="myTable">
+      <thead class="thead-light">
+          <tr>
+              <th scope="col">name</th>
+              <th scope="col">title</th>
+              <th scope="col">email</th>
+              <th scope="col">work phone</th>
+              <th scope="col">mobile phone</th>
+              <th scope="col">twitter</th>
+              <th scope="col">company</th>
+              <th scope="col">address</th>
+              <th scope="col">timezone</th>
+              <th scope="col">tags</th>
+              <th scope="col">about</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let a of rows">
+              <th scope="row">{{a.fullname}}</th>
+              <td>{{a.title}}</td>
+              <td >{{a.email}}</td>
+              <td>{{a.workphone}}</td>
+              <td>{{a.mobilephone}}</td>
+              <td>{{a.tweeterid}}</td>
+              <td *ngIf="a.comGuid === null"></td><td *ngIf="a.comGuid !== null">{{a.comGu.companyname}}</td>
+              <td>{{a.address}}</td>
+              <td>{{a.timezone}}</td>
+              <td *ngIf="a.tagGuid === null"></td><td *ngIf="a.tagGuid !== null">{{a.tagGu.tagname}}</td>
+              <td>{{a.about}}</td>
+          </tr>
+
+      </tbody>
+  </table>
+</div>
+
+  <ng-template #deletecontent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Delete Contact</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <p>When you delete a contact, all future communication from this contact will be marked as spam. Are you sure you want to proceed?</p>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Cancel</button>
+      <button type="button" class="btn btn-danger btn-raised mr-1" style="background-color: #d72d30;border-radius: 5px;font-weight: 500;" (click)="Delete(this.id)">Confirm</button>
+
+      <!-- <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Delete(this.id)">Yes Delete</button>
+      <button type="button" class="btn btn-light" (click)="c('Close click')">Cancel</button> -->
+    </div>
+  </ng-template>
+
+  <ng-template #deletecontacts let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Delete Contacts</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <p>When you delete a contact, all future communication from this contact will be marked as spam. Are you sure you want to proceed?</p>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" style="color:black;border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Cancel</button>
+      <button type="button" class="btn btn-danger btn-raised mr-1" style="background-color: #d72d30;border-radius: 5px;font-weight: 500;" (click)="Deletemultiple()">Confirm</button>
+
+      <!-- <button type="button" class="btn btn-danger btn-raised mr-1" (click)="Deletemultiple()">Yes Delete</button>
+      <button type="button" class="btn btn-light" (click)="c('Close click')">Cancel</button> -->
+    </div>
+  </ng-template>
+
+
+  <ng-template #editcontent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title"><i class="fas fa-user"></i> Edit Contact</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="margin-left: 10px;">
+
+      <p>When someone reaches out to you, they become a contact in your account. You can create companies and associate contacts with them.
+
+      <br>
+      <form class="form" (ngSubmit)="update()" #f1="ngForm" >
+
+
+        <div class="row">
+          <div class="col-lg-10 col-md-10 col-sm-12">
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-4">
+                <img class="profilepic__img avatar-block" *ngIf="imgpath" style="border-radius: 3px;" width="44px" height="44px" alt="'s picture" data-test-user="user-avatar" src="{{baseurl}}{{imgpath}}">
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-8">
+                  <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+                    <a (click)="file.click()" style="color: blue;cursor: pointer;">Upload Photo</a>
+                   <p style="font-size: 12px;">An image of the person, it's best if it has the same length and height</p>
+                </div>
+             </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="row" style="display: none;">
+          <div class="col-lg-10 col-md-10 col-sm-12">
+            <label style="font-size: 12px;">Guid <span style="color: red;">*</span></label>
+            <input type="text" class="form-control" placeholder="Enter the name of this person" [(ngModel)]="this.contact.conGuid" name="conGuid" required  #conGuid="ngModel" >
+            <small class="form-text text-danger" *ngIf="!conGuid.valid && (conGuid.dirty || conGuid.touched)">Please enter First name!</small>
+            </div>
+
+        </div>
+
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <input type="text" class="form-control" placeholder="Enter the name of this person" minlength="4" maxlength="24" id="fullname" [(ngModel)]="this.contact.fullname" name="fullname" required  #fullname="ngModel" >
+                <small class="form-text text-danger" *ngIf="!fullname.valid && (fullname.dirty || fullname.touched)">Please enter First name!</small>
+              </div>
+
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <label style="font-size: 12px;">Title</label>
+                <input type="email" class="form-control" placeholder="Enter a title" [(ngModel)]="this.contact.title" name="title"  #title="ngModel" >
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+
+                <label style="font-size: 12px;">Email address <span style="color: red;">*</span></label>
+                <input type="text" id="email" email class="form-control" placeholder="Enter an email address" [(ngModel)]="this.contact.email" name="email" required  #email="ngModel" >
+                <small class="form-text text-danger" *ngIf="!email.valid && (email.dirty || email.touched)">Please enter a email address!</small>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+
+                <label style="font-size: 12px;">Phone Number</label>
+                <input type="text" class="form-control" placeholder="Enter a phone number" [(ngModel)]="this.contact.mobilephone" name="mobilephone" #mobilephone="ngModel" maxlength="14" minlength="8" (change)="number(this.contact.mobilephone)">
+                <small class="form-text text-danger" *ngIf="!mobilephone.valid && (mobilephone.dirty || mobilephone.touched)">Please enter a Phone number!</small>
+                <small class="form-text text-danger" *ngIf="number(this.contact.mobilephone) === false">Please enter Number Only</small>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <input type="text" class="form-control" placeholder="Enter a phone number" required [(ngModel)]="this.contact.workphone" name="workphone" #workphone="ngModel" maxlength="14" minlength="8">
+                <small class="form-text text-danger" *ngIf="!workphone.valid && (workphone.dirty || workphone.touched)">Please enter a Mobile number!</small>
+                <small class="form-text text-danger" *ngIf="number(this.contact.workphone) === false">Please enter Number Only</small>
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+
+                <label style="font-size: 12px;">Twitter</label>
+                <input type="text" class="form-control" placeholder="Enter a Twitter Id" [(ngModel)]="this.contact.tweeterid" name="tweeterid"  #tweeterid="ngModel" >
+                </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <label style="font-size: 12px;">Company <span style="color: red;">*</span></label>
+                <select class="form-control" [(ngModel)]="this.contact.comGuid" name="comGuid" required #comGuid="ngModel" >
+                  <option *ngFor="let comp of companydrop" [value]="comp.comGuid">{{comp.companyname}}</option>
+                </select>
+                <!-- <input type="text" class="form-control" placeholder="Company" [(ngModel)]="this.contact.comGuid" name="comGuid"  #comGuid="ngModel" > -->
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <label style="font-size: 12px;">Address</label>
+                <textarea placeholder="Enter the address of this person" class="form-control" [(ngModel)]="this.contact.address" name="address"  #address="ngModel"></textarea>
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <label style="font-size: 12px;">Time Zone <span style="color: red;">*</span></label>
+                <select class="form-control" [(ngModel)]="this.contact.timezone" name="timezone" required  #timezone="ngModel">
+                  <option timeZoneId="57" gmtAdjustment="GMT+05:30" useDaylightTime="0" value="00">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                  <option timeZoneId="67" gmtAdjustment="GMT+08:00" useDaylightTime="0" value="02.30">(GMT+08:00) Perth</option>
+                  <option timeZoneId="73" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="04">(GMT+09:30) Darwin</option>
+                  <option timeZoneId="74" gmtAdjustment="GMT+10:00" useDaylightTime="0" value="04.30">(GMT+10:00) Brisbane</option>
+                  <option timeZoneId="72" gmtAdjustment="GMT+09:30" useDaylightTime="0" value="05">(GMT+10:30) Adelaide</option>
+                  <option timeZoneId="75" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Canberra, Melbourne, Sydney</option>
+                  <option timeZoneId="76" gmtAdjustment="GMT+10:00" useDaylightTime="1" value="05.30">(GMT+11:00) Hobart</option>
+                </select>
+                <small class="form-text text-danger" *ngIf="!timezone.valid && (timezone.dirty || timezone.touched)">Please select a timezone!</small>
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <label style="font-size: 12px;" >Tags</label>
+                <select class="form-control" [(ngModel)]="this.contact.tags" name="tags"  #tags="ngModel">
+                  <option *ngFor="let tags of tagdrop" [value]="tags.tagGuid">{{tags.tagname}}</option>
+                </select>
+                </div>
+            </div>
+
+            <br>
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12">
+                <label style="font-size: 12px;" >About</label>
+                <textarea placeholder="Enter some text" class="form-control" [(ngModel)]="this.contact.about" name="about"  #about="ngModel"></textarea>
+                </div>
+            </div>
+
+            </form>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-dark"  [disabled]="!f1.valid" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white" (click)="update()"> <i class="fa fa-spinner fa-spin" *ngIf="loading"></i> Update Contact</button>
+      <button type="button" class="btn btn-light" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>
+
+  <ng-template #exportcontent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title"><i class="fas fa-upload"></i> Export Contacts</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body" style="margin: 20px;">
+
+      <div class="row">
+        <div class="col-12">
+          <fieldset class="checkbox">
+            <label>
+                <input type="checkbox" name="selectall" [(ngModel)]="this.exportdata.selectall" #selectall="ngModel" (change)="selectallchk()"> Select all fields
+            </label>
+          </fieldset>
+        </div>
+      </div>
+
+          <div class="row">
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox" name="name" [(ngModel)]="this.exportdata.name" #name="ngModel" (change)="change(this.exportdata.name)"> Full name
+                    <!-- (change)="change(this.exportdata.name, 'name')" -->
+                </label>
+              </fieldset>
+            </div>
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox"  name="title" [(ngModel)]="this.exportdata.title" #title="ngModel" (change)="change(this.exportdata.title)"> Title
+                </label>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox" name="email" [(ngModel)]="this.exportdata.email" #email="ngModel" (change)="change(this.exportdata.email)"> Email
+                </label>
+              </fieldset>
+            </div>
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox"  name="workphone" [(ngModel)]="this.exportdata.workphone" #workphone="ngModel" (change)="change(this.exportdata.workphone)"> Work phone
+                </label>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox" name="mobilephone" [(ngModel)]="this.exportdata.mobilephone" #mobilephone="ngModel" (change)="change(this.exportdata.mobilephone)"> Mobile phone
+                </label>
+              </fieldset>
+            </div>
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox"  name="twitter" [(ngModel)]="this.exportdata.twitter" #twitter="ngModel" (change)="change(this.exportdata.twitter)"> Twitter
+                </label>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox"  name="company" [(ngModel)]="this.exportdata.company" #company="ngModel" (change)="change(this.exportdata.company)"> Company
+                </label>
+              </fieldset>
+            </div>
+
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox" name="address" [(ngModel)]="this.exportdata.address" #address="ngModel" (change)="change(this.exportdata.address)"> Address
+                </label>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox"  name="timezone" [(ngModel)]="this.exportdata.timezone" #timezone="ngModel" (change)="change(this.exportdata.timezone)"> Timezone
+                </label>
+              </fieldset>
+            </div>
+
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox" name="tags" [(ngModel)]="this.exportdata.tags" #tags="ngModel" (change)="change(this.exportdata.tags)"> Tags
+                </label>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <fieldset class="checkbox">
+                <label>
+                    <input type="checkbox"  name="about" [(ngModel)]="this.exportdata.about" #about="ngModel"> About
+                </label>
+              </fieldset>
+            </div>
+
+          </div>
+
+      </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-dark" (click)="export()" style="background-image: linear-gradient(to bottom,#264966,#12344d);border-radius: 5px;font-weight: 400;color:white">
+        <i class="fa fa-spinner fa-spin" *ngIf="exportloading"></i>Export</button>
+      <button class="btn btn-outline-default" (click)="c('Close click')" style="border-radius: 5px;border: 1px solid #cfd7df;background-image: linear-gradient(to bottom,#fff,#f3f5f7);background-image: linear-gradient(to bottom,#fff,#f3f5f7);">Close</button>
+    </div>
+  </ng-template>
