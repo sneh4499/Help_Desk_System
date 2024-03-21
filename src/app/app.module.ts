@@ -128,7 +128,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(Approutes, { useHash: false }),
     PerfectScrollbarModule,
-    AgmCoreModule.forRoot({ apiKey: 'AIzaSyBUb3jDWJQ28vDJhuQZxkC0NXr_zycm8D0' }),
+    AgmCoreModule.forRoot({ apiKey: '' }),
     CKEditorModule,
     FiltersModule,
     FiltersRoutingModule,
